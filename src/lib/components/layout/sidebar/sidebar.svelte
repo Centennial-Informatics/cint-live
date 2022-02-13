@@ -3,9 +3,13 @@
 	import type { ContestConfig } from 'src/types';
 	import { getContext } from 'svelte';
 	import Logo from './logo/logo.svelte';
-import Time from './time/time.svelte';
+	import SidebarList from './sidebarList.svelte';
+	import SidebarLink from './sidebarLink.svelte';
+	import Time from './time/time.svelte';
+	import { currentPage } from '$lib/data/stores/currentPage';
 
 	let config: ContestConfig = getContext('contestConfig');
+	$: console.log($currentPage);
 </script>
 
 <div class="h-screen bg-gray-800 flex flex-col md:flex-shrink-0 md:w-60">
@@ -14,8 +18,16 @@ import Time from './time/time.svelte';
 		<div class="px-5">
 			<Time />
 		</div>
+		<div class="pb-10 pt-2 md:hidden">
+			<SidebarList label="INFO">
+				<SidebarLink to="/" tabId="home" status="info">Home</SidebarLink>
+				<SidebarLink to="/standings" tabId="standings" status="info">Scoreboard</SidebarLink>
+			</SidebarList>
+		</div>
+		<SidebarList label="PROBLEMS — {$problemNames.length}">
+			{#each $problemNames as problem}
+				<SidebarLink to="/problem/{problem.ID}" tabId={problem.ID}>{problem.Name}</SidebarLink>
+			{/each}
+		</SidebarList>
 	</div>
-	{#each $problemNames as problem}
-		<a class="text-white" href="/problem/{problem.ID}">{problem.Name}</a>
-	{/each}
 </div>
