@@ -6,10 +6,8 @@
 	import SidebarList from './sidebarList.svelte';
 	import SidebarLink from './sidebarLink.svelte';
 	import Time from './time/time.svelte';
-	import { currentPage } from '$lib/data/stores/currentPage';
 
 	let config: ContestConfig = getContext('contestConfig');
-	$: console.log($currentPage);
 </script>
 
 <div class="h-screen bg-gray-800 flex flex-col md:flex-shrink-0 md:w-60">

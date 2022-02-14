@@ -8,7 +8,6 @@
 	import { BAD, ERROR, GOOD, PENDING } from '$lib/data/constants/status';
 	import { Colors } from '$lib/data/constants/colors';
 	import Loading from '$lib/components/template/loading.svelte';
-	import { Warning } from 'postcss';
 
 	export let to: string = '/';
 	export let tabId: string = '';

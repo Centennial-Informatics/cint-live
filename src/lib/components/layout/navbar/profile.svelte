@@ -1,0 +1,49 @@
+<script context="module">
+  //@ts-nocheck
+	import { IDToken, userInfo } from '$lib/data/stores/userInfo';
+	import axios from 'axios';
+
+	import jwt_decode from 'jwt-decode';
+	window.handleCredentialResponse = async (res) => {
+		const decoded = jwt_decode(res.credential);
+		const formData = new FormData();
+		formData.append('id_token', res.credential);
+		IDToken.set(await axios.post('/api/v1/login', formData));
+		userInfo.set({
+			ID: decoded.sub,
+			name: decoded.name,
+			email: decoded.email,
+			picture: decoded.picture
+		});
+	};
+	export const ssr = false;
+</script>
+
+<svelte:head>
+	<script src="https://accounts.google.com/gsi/client" async defer></script>
+</svelte:head>
+
+<div>
+	{#if !$IDToken}
+		<div
+			id="g_id_onload"
+			data-client_id="151372106954-hqa4baeucq2n1pajodj31h9e5r141mur.apps.googleusercontent.com"
+			data-callback="handleCredentialResponse"
+		/>
+		<div class="g_id_signin" data-type="standard" />
+	{:else}
+		<div class="hover:cursor-pointer">
+			<div class="flex flex-row items-center">
+				<a href="/#register" class="flex items-center space-x-3">
+					<img src={$userInfo.picture} alt="avatar" class="w-10 h-10 rounded-full" />
+					<div class="py-15 flex flex-col">
+						<div class="font-medium tracking-normal h-5 text-md text-gray-300">
+							{$userInfo.name}
+						</div>
+						<div class="font-medium text-gray-400 tracking-normal text-sm">Team Name</div>
+					</div>
+				</a>
+			</div>
+		</div>
+	{/if}
+</div>
