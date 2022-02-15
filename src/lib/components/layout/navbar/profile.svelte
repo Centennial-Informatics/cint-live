@@ -1,22 +1,29 @@
-<script context="module">
-  //@ts-nocheck
+<script>
+	// @ts-nocheck
 	import { IDToken, userInfo } from '$lib/data/stores/userInfo';
+	import { onMount } from 'svelte';
 	import axios from 'axios';
-
 	import jwt_decode from 'jwt-decode';
-	window.handleCredentialResponse = async (res) => {
-		const decoded = jwt_decode(res.credential);
-		const formData = new FormData();
-		formData.append('id_token', res.credential);
-		IDToken.set(await axios.post('/api/v1/login', formData));
-		userInfo.set({
-			ID: decoded.sub,
-			name: decoded.name,
-			email: decoded.email,
-			picture: decoded.picture
+
+	onMount(() => {
+		window.google.accounts.id.initialize({
+			client_id: '151372106954-hqa4baeucq2n1pajodj31h9e5r141mur.apps.googleusercontent.com',
+			callback: async (res) => {
+				const decoded = jwt_decode(res.credential);
+				const formData = new FormData();
+				formData.append('id_token', res.credential);
+				IDToken.set(await axios.post('/api/v1/login', formData));
+				userInfo.set({
+					ID: decoded.sub,
+					name: decoded.name,
+					email: decoded.email,
+					picture: decoded.picture
+				});
+			},
+			auto_select: true
 		});
-	};
-	export const ssr = false;
+		if (!$IDToken) window.google.accounts.id.prompt();
+	});
 </script>
 
 <svelte:head>
@@ -25,11 +32,6 @@
 
 <div>
 	{#if !$IDToken}
-		<div
-			id="g_id_onload"
-			data-client_id="151372106954-hqa4baeucq2n1pajodj31h9e5r141mur.apps.googleusercontent.com"
-			data-callback="handleCredentialResponse"
-		/>
 		<div class="g_id_signin" data-type="standard" />
 	{:else}
 		<div class="hover:cursor-pointer">
