@@ -12,9 +12,20 @@
 		rel="stylesheet" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	%svelte.head%
-	</head>
+</head>
 
 <body>
+	<script>
+		MathJax = {
+			tex: {
+				inlineMath: [['$$$', '$$$'], ['\\(', '\\)']]
+			},
+			svg: {
+				fontCache: 'global'
+			}
+		};
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script"></script>
 	<div>%svelte.body%</div>
 </body>
 
