@@ -3,7 +3,6 @@
 	import { onMount } from 'svelte';
 
 	onMount(() => {
-    if (!$currentPage)
-      currentPage.set('home')
-  });
+		if (!$currentPage) currentPage.set('home');
+	});
 </script>

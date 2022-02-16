@@ -3,7 +3,6 @@
 	import { onMount } from 'svelte';
 
 	onMount(() => {
-    if (!$currentPage)
-      currentPage.set('standings')
-  });
+		if (!$currentPage) currentPage.set('standings');
+	});
 </script>
