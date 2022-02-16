@@ -12,16 +12,26 @@
 	import SampleTest from './sampleTest.svelte';
 
 	export let pageData: ProblemPage;
+	export let visible = false;
 	onMount(() => {
-		// eslint-disable-next-line
-		if (typeof MathJax !== 'undefined' && MathJax.typeset) {
-			// eslint-disable-next-line
-			MathJax.typeset();
+		if (visible) {
+			// @ts-expect-error Cannot find name 'MathJax'.
+			if (typeof MathJax !== 'undefined' && MathJax.typeset) {
+				// @ts-expect-error Cannot find name 'MathJax'.
+				MathJax.typeset();
+			}
 		}
 	});
+	$: if (visible) {
+		// @ts-expect-error Cannot find name 'MathJax'.
+		if (typeof MathJax !== 'undefined' && MathJax.typeset) {
+			// @ts-expect-error Cannot find name 'MathJax'.
+			MathJax.typeset();
+		}
+	}
 </script>
 
-<Page>
+<Page {visible}>
 	{#if pageData}
 		<Header>
 			<Title>{pageData.Header.Title}</Title>

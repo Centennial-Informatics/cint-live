@@ -12,8 +12,9 @@
 
 <Wrapper>
 	{#each $problemNames as problem (problem.ID)}
-		<div class={$page.params.slug === problem.ID ? 'block' : 'hidden'}>
-			<ProblemStatement pageData={$problemPages[problem.ID]} />
-		</div>
+		<ProblemStatement
+			pageData={$problemPages[problem.ID]}
+			visible={$page.params.slug === problem.ID}
+		/>
 	{/each}
 </Wrapper>
