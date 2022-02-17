@@ -2,17 +2,15 @@
 	// @ts-nocheck
 	import { IDToken, userInfo } from '$lib/data/stores/userInfo';
 	import { onMount } from 'svelte';
-	import axios from 'axios';
 	import jwt_decode from 'jwt-decode';
+import Login from '$lib/utils/networking/login';
 
 	onMount(() => {
 		window.google.accounts.id.initialize({
 			client_id: '151372106954-hqa4baeucq2n1pajodj31h9e5r141mur.apps.googleusercontent.com',
 			callback: async (res) => {
 				const decoded = jwt_decode(res.credential);
-				const formData = new FormData();
-				formData.append('id_token', res.credential);
-				IDToken.set(await axios.post('/api/v1/login', formData));
+				IDToken.set(await Login(res.credential));
 				userInfo.set({
 					ID: decoded.sub,
 					name: decoded.name,

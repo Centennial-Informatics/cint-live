@@ -3,17 +3,15 @@
 	import Sidebar from '$lib/components/layout/sidebar/sidebar.svelte';
 	import Navbar from '$lib/components/layout/navbar/navbar.svelte';
 	import { onMount, setContext } from 'svelte';
-	import axios from 'axios';
-	import type { ContestData } from 'src/types';
 	import { contestData } from '$lib/data/stores/contestData';
 	import { DefaultConfig } from '$lib/data/configs/default';
+	import Collect from '$lib/utils/networking/collect';
 
 	setContext('contestConfig', DefaultConfig);
 
 	$: console.log($contestData);
 	onMount(async () => {
-		if (!$contestData.Info)
-			contestData.set((await axios.post('/api/v1/collect')).data as ContestData);
+		if (!$contestData.Info) contestData.set(await Collect());
 	});
 </script>
 
