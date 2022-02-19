@@ -2,5 +2,4 @@
 	export let code: string = '';
 </script>
 
-<pre>{@html code.replace(/\n/g, '<br>')}</pre>
-;
+<pre class="text-gray-200">{@html code.replace(/\n/g, '<br>')}</pre>
