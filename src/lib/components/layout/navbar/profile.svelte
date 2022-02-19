@@ -3,7 +3,7 @@
 	import { IDToken, userInfo } from '$lib/data/stores/userInfo';
 	import { onMount } from 'svelte';
 	import jwt_decode from 'jwt-decode';
-import Login from '$lib/utils/networking/login';
+	import Login from '$lib/utils/networking/login';
 
 	onMount(() => {
 		window.google.accounts.id.initialize({
