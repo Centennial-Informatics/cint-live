@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { problemNames } from '$lib/data/stores/contestData';
+	import { problemNames, submissionData } from '$lib/data/stores/contestData';
 	import type { ContestConfig } from 'src/types';
 	import { getContext } from 'svelte';
 	import Logo from './logo/logo.svelte';
 	import SidebarList from './sidebarList.svelte';
 	import SidebarLink from './sidebarLink.svelte';
 	import Time from './time/time.svelte';
+	import verdictStatus from '$lib/utils/verdictStatus';
 
 	let config: ContestConfig = getContext('contestConfig');
 </script>
@@ -24,7 +25,12 @@
 		</div>
 		<SidebarList label="PROBLEMS — {$problemNames.length}">
 			{#each $problemNames as problem}
-				<SidebarLink to="/problem/{problem.ID}" tabId={problem.ID}>{problem.Name}</SidebarLink>
+				<SidebarLink
+					to="/problem/{problem.ID}"
+					tabId={problem.ID}
+					status={problem.ID in $submissionData ? verdictStatus($submissionData[problem.ID]) : ''}
+					>{problem.Name}</SidebarLink
+				>
 			{/each}
 		</SidebarList>
 	</div>

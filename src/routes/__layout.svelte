@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import axios from 'axios';
-	import type { ContestData } from 'src/types';
+	import type { ContestData, SubmissionVerdictUpdate } from 'src/types';
 	import Collect from '$lib/utils/networking/collect';
 	import { browser } from '$app/env';
 	export async function load() {
@@ -20,14 +20,25 @@
 	import Sidebar from '$lib/components/layout/sidebar/sidebar.svelte';
 	import Navbar from '$lib/components/layout/navbar/navbar.svelte';
 	import { setContext } from 'svelte';
-	import { contestData } from '$lib/data/stores/contestData';
+	import { contestData, submissionData, submissionWS } from '$lib/data/stores/contestData';
 	import { DefaultConfig } from '$lib/data/configs/default';
+	import { IDToken } from '$lib/data/stores/userInfo';
+	import NewWebSocket from '$lib/utils/networking/ws';
 
 	export let contestDataObj: ContestData;
 
 	setContext('contestConfig', DefaultConfig);
 	// setContext('contestData', contestDataObj);
 	contestData.set(contestDataObj);
+
+	$: if ($IDToken && !$submissionWS) {
+		submissionWS.set(
+			NewWebSocket($IDToken, (data) => {
+				console.log(JSON.parse(data));
+				submissionData.set(JSON.parse(data) as SubmissionVerdictUpdate);
+			})
+		);
+	}
 </script>
 
 <div class="min-h-screen">

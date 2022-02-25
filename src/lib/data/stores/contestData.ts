@@ -1,4 +1,4 @@
-import type { ContestData } from 'src/types';
+import type { SubmissionVerdictUpdate, ContestData } from 'src/types';
 import { writable, derived } from 'svelte/store';
 
 export const contestData = writable<ContestData>({} as ContestData);
@@ -26,3 +26,7 @@ export const startTime = derived(contestData, ($contestData) => {
 export const stopTime = derived(contestData, ($contestData) => {
 	return $contestData.StopTime ? new Date($contestData.StopTime) : new Date();
 });
+
+export const submissionData = writable<SubmissionVerdictUpdate>({} as SubmissionVerdictUpdate);
+
+export const submissionWS = writable<WebSocket>();

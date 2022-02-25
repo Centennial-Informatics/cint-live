@@ -33,6 +33,7 @@
 			clicked = false;
 		}
 	}
+	//TODO: no submission if contest over
 </script>
 
 <Page>
