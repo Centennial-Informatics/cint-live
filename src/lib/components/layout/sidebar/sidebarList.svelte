@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let label: string = '';
+	export let label = '';
 </script>
 
 <div class="flex flex-col overflow-y-auto">

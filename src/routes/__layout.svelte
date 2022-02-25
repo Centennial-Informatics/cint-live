@@ -1,18 +1,33 @@
+<script lang="ts" context="module">
+	import axios from 'axios';
+	import type { ContestData } from 'src/types';
+	import Collect from '$lib/utils/networking/collect';
+	import { browser } from '$app/env';
+	export async function load() {
+		const res = browser
+			? await Collect()
+			: ((await axios.post('http://localhost:8000/api/v1/collect')).data as ContestData);
+		return {
+			props: {
+				contestDataObj: res
+			}
+		};
+	}
+</script>
+
 <script lang="ts">
 	import '../app.css';
 	import Sidebar from '$lib/components/layout/sidebar/sidebar.svelte';
 	import Navbar from '$lib/components/layout/navbar/navbar.svelte';
-	import { onMount, setContext } from 'svelte';
+	import { setContext } from 'svelte';
 	import { contestData } from '$lib/data/stores/contestData';
 	import { DefaultConfig } from '$lib/data/configs/default';
-	import Collect from '$lib/utils/networking/collect';
+
+	export let contestDataObj: ContestData;
 
 	setContext('contestConfig', DefaultConfig);
-
-	$: console.log($contestData);
-	onMount(async () => {
-		if (!$contestData.Info) contestData.set(await Collect());
-	});
+	// setContext('contestData', contestDataObj);
+	contestData.set(contestDataObj);
 </script>
 
 <div class="min-h-screen">

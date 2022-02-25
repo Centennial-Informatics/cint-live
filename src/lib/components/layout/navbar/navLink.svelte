@@ -3,8 +3,8 @@
 	import Home from 'svelte-material-icons/Home.svelte';
 	import Poll from 'svelte-material-icons/Poll.svelte';
 
-	export let to: string = '/';
-	export let tabId: string = '';
+	export let to = '/';
+	export let tabId = '';
 
 	let selected = false;
 	$: selected = tabId === $currentPage;

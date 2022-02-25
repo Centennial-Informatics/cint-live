@@ -9,9 +9,9 @@
 	import { Colors } from '$lib/data/constants/colors';
 	import Loading from '$lib/components/template/loading.svelte';
 
-	export let to: string = '/';
-	export let tabId: string = '';
-	export let status: string = '';
+	export let to = '/';
+	export let tabId = '';
+	export let status = '';
 
 	let selected = false;
 	$: selected = tabId === $currentPage;

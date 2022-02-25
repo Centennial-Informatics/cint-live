@@ -50,3 +50,14 @@ export interface Problem {
 	ID: string;
 	Name: string;
 }
+
+export interface SubmissionVerdict {
+	ID: string;
+	Verdict: string;
+	Status: 'Pending' | 'Final';
+	Time: number;
+}
+
+export interface SubmissionVerdictUpdate {
+	[key: string]: SubmissionVerdict;
+}

@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let transparent: boolean = false;
+	export let transparent = false;
 </script>
 
 <div

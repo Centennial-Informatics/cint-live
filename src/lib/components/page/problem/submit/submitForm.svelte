@@ -7,8 +7,8 @@
 	import Editor from './editor.svelte';
 	import LanguageSelect from './languageSelect.svelte';
 
-	export let title: string = 'A. Problem';
-	export let ID: string = 'A';
+	export let title = 'A. Problem';
+	export let ID = 'A';
 	let langs = $contestLanguages;
 	let selectedLanguage = langs[0].ID;
 	let clicked = false;

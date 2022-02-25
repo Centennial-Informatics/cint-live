@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Centered from '../centered.svelte';
 
-	export let centered: boolean = false;
+	export let centered = false;
 </script>
 
 <div class={centered ? 'w-full' : ''}>

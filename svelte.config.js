@@ -1,5 +1,6 @@
-import adapter from '@sveltejs/adapter-static';
+// import adapter from '@sveltejs/adapter-static';
 import preprocess from 'svelte-preprocess';
+import adapter from '@sveltejs/adapter-auto';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -8,9 +9,7 @@ const config = {
 	preprocess: preprocess(),
 
 	kit: {
-		adapter: adapter({
-			fallback: '200.html'
-		})
+		adapter: adapter()
 	}
 };
 
