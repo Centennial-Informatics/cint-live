@@ -6,7 +6,7 @@ export const Colors = {
 	},
 	BAD: {
 		0: '#fca5a5',
-		50: '#ef4444',
+		50: '#f87171',
 		100: '#991b1b'
 	},
 	NEUTRAL: {

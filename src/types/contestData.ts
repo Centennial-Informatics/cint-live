@@ -5,6 +5,7 @@ export interface ContestData {
 	Problems: Problem[];
 	StartTime: string;
 	StopTime: string;
+	Points: { [key: string]: number };
 }
 
 export interface ContestInfo {

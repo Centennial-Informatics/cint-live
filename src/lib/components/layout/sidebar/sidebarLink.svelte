@@ -32,7 +32,7 @@
 		{:else if status === BAD}
 			<span class="mr-2"><CloseCircle width="20" height="20" color={Colors.BAD[50]} /></span>
 		{:else if status === ERROR}
-			<span class="mr-2"><AlertCircle width="20" height="20" color={Colors.BAD[0]} /></span>
+			<span class="mr-2"><AlertCircle width="20" height="20" color={Colors.BAD[50]} /></span>
 		{:else if status === PENDING}
 			<span class="mr-2"><Loading size="20" color={Colors.WARNING[50]} /></span>
 		{/if}

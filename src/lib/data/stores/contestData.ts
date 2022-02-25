@@ -27,6 +27,10 @@ export const stopTime = derived(contestData, ($contestData) => {
 	return $contestData.StopTime ? new Date($contestData.StopTime) : new Date();
 });
 
+export const contestPoints = derived(contestData, ($contestData) => {
+	return $contestData.Points || {};
+});
+
 export const submissionData = writable<SubmissionVerdictUpdate>({} as SubmissionVerdictUpdate);
 
 export const submissionWS = writable<WebSocket>();
