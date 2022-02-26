@@ -1,12 +1,12 @@
 <script lang="ts">
-	import Header from '$lib/components/template/page/header.svelte';
-	import Page from '$lib/components/template/page/page.svelte';
-	import Code from '$lib/components/template/typography/code.svelte';
-	import Image from '$lib/components/template/typography/image.svelte';
-	import Paragraph from '$lib/components/template/typography/paragraph.svelte';
-	import SectionTitle from '$lib/components/template/typography/sectionTitle.svelte';
-	import Subtitle from '$lib/components/template/typography/subtitle.svelte';
-	import Title from '$lib/components/template/typography/title.svelte';
+	import Header from '$lib/components/templates/page/header.svelte';
+	import Page from '$lib/components/templates/page/page.svelte';
+	import Code from '$lib/components/templates/typography/code.svelte';
+	import Image from '$lib/components/templates/typography/image.svelte';
+	import Paragraph from '$lib/components/templates/typography/paragraph.svelte';
+	import SectionTitle from '$lib/components/templates/typography/sectionTitle.svelte';
+	import Subtitle from '$lib/components/templates/typography/subtitle.svelte';
+	import Title from '$lib/components/templates/typography/title.svelte';
 	import type { ProblemPage } from 'src/types/contestData';
 	import { onMount } from 'svelte';
 	import SampleTest from './sampleTest.svelte';

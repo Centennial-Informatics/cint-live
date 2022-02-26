@@ -2,16 +2,13 @@
 	import { currentPage } from '$lib/data/stores/currentPage';
 	import Home from 'svelte-material-icons/Home.svelte';
 	import Poll from 'svelte-material-icons/Poll.svelte';
-	import CheckCircle from 'svelte-material-icons/CheckCircle.svelte';
-	import CloseCircle from 'svelte-material-icons/CloseCircle.svelte';
-	import AlertCircle from 'svelte-material-icons/AlertCircle.svelte';
-	import { BAD, ERROR, GOOD, PENDING } from '$lib/data/constants/status';
-	import { Colors } from '$lib/data/constants/colors';
-	import Loading from '$lib/components/template/loading.svelte';
+	import VerdictIcon from '$lib/components/templates/icon/verdictIcon.svelte';
+	import type { VerdictStatus } from 'src/types/submission';
+	import { UNSUBMITTED } from '$lib/data/constants/status';
 
 	export let to = '/';
 	export let tabId = '';
-	export let status = '';
+	export let status: VerdictStatus = UNSUBMITTED;
 
 	let selected = false;
 	$: selected = tabId === $currentPage;
@@ -27,14 +24,8 @@
 			<span class="mr-2"><Home width="20" height="20" /></span>
 		{:else if tabId === 'standings'}
 			<span class="mr-2"><Poll width="20" height="20" /></span>
-		{:else if status === GOOD}
-			<span class="mr-2"><CheckCircle width="20" height="20" color={Colors.GOOD[50]} /></span>
-		{:else if status === BAD}
-			<span class="mr-2"><CloseCircle width="20" height="20" color={Colors.BAD[50]} /></span>
-		{:else if status === ERROR}
-			<span class="mr-2"><AlertCircle width="20" height="20" color={Colors.BAD[50]} /></span>
-		{:else if status === PENDING}
-			<span class="mr-2"><Loading size="20" color={Colors.WARNING[50]} /></span>
+		{:else}
+			<VerdictIcon size={'20'} defaultIcon={false} {status} />
 		{/if}
 		<span class="max-w-10 overflow-hidden overflow-ellipsis whitespace-nowrap">
 			{#if !status}

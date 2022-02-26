@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Page from '$lib/components/template/page/page.svelte';
+	import Page from '$lib/components/templates/page/page.svelte';
 	import { contestLanguages } from '$lib/data/stores/contestData';
 	import { IDToken } from '$lib/data/stores/userInfo';
 	import Submit from '$lib/utils/networking/submit';
@@ -9,6 +9,7 @@
 
 	export let title = 'A. Problem';
 	export let ID = 'A';
+	export let submissionStatus: Element;
 	let langs = $contestLanguages;
 	let selectedLanguage = langs[0].ID;
 	let clicked = false;
@@ -23,6 +24,7 @@
 				return;
 			}
 		} else if (submission.length > 0) {
+			submissionStatus.scrollIntoView({ behavior: 'smooth' });
 			clicked = true;
 			await Submit($IDToken, {
 				file: file,

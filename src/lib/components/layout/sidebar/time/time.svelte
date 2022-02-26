@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Centered from '$lib/components/template/centered.svelte';
-	import Subtitle from '$lib/components/template/typography/subtitle.svelte';
+	import Centered from '$lib/components/templates/centered.svelte';
+	import Subtitle from '$lib/components/templates/typography/subtitle.svelte';
 	import { startTime, stopTime } from '$lib/data/stores/contestData';
 	import { currentTime } from '$lib/data/stores/currentTime';
 	import fmtTime, { fmtLabel } from '$lib/utils/time';

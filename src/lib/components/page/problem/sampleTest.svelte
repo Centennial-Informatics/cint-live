@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Code from '$lib/components/template/typography/code.svelte';
+	import Code from '$lib/components/templates/typography/code.svelte';
 
 	export let input = '';
 	export let output = '';

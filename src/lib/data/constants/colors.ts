@@ -1,7 +1,7 @@
 export const Colors = {
 	GOOD: {
 		0: '#86efac',
-		50: '#22c55e',
+		50: '#4ade80',
 		100: '#166534'
 	},
 	BAD: {
