@@ -21,21 +21,21 @@
 	});
 
 	let status: VerdictStatus = UNSUBMITTED,
-		verdict: string,
-		points: number,
-		pointsPossible: number;
+		verdict: string = 'Unsubmitted',
+		points: number = 0,
+		pointsPossible: number = 0;
 	let st: Element;
 
-	$: status =
-		$page.params.slug in $submissionData
-			? verdictStatus($submissionData[$page.params.slug])
-			: UNSUBMITTED;
-	$: verdict =
-		$page.params.slug in $submissionData
-			? $submissionData[$page.params.slug].Verdict
-			: 'Unsubmitted';
-	points = 0;
-	$: pointsPossible = $page.params.slug in $contestPoints ? $contestPoints[$page.params.slug] : 0;
+	function onSubmissionDataUpdate() {
+		status = verdictStatus($submissionData[$page.params.slug]);
+		verdict = $submissionData[$page.params.slug].Verdict;
+		points = $submissionData[$page.params.slug].Points;
+		pointsPossible = $contestPoints[$page.params.slug];
+	}
+
+	$: if ($page.params.slug in $submissionData && $page.params.slug in $contestPoints) {
+		onSubmissionDataUpdate();
+	}
 </script>
 
 <div bind:this={st}>

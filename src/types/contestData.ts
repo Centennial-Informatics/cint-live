@@ -57,6 +57,7 @@ export interface SubmissionVerdict {
 	Verdict: string;
 	Status: 'Pending' | 'Final';
 	Time: number;
+	Points: number;
 }
 
 export interface SubmissionVerdictUpdate {

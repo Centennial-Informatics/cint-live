@@ -22,7 +22,7 @@
 			visible = true;
 			setTimeout(() => {
 				visible = false;
-			}, 5000);
+			}, 4000);
 			finished = true;
 		}
 	}
