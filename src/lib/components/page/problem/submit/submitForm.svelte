@@ -33,6 +33,7 @@
 				language: selectedLanguage
 			});
 			clicked = false;
+			submissionText = '';
 		}
 	}
 	//TODO: no submission if contest over
