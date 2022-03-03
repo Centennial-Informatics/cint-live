@@ -20,3 +20,9 @@ export const Colors = {
 		100: '#92400e'
 	}
 };
+
+export const RankColors: { [key: number]: string } = {
+	1: '#fbbf24',
+	2: '#cbd5e1',
+	3: '#f97316'
+};

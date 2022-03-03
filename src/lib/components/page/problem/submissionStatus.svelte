@@ -8,7 +8,7 @@
 	export let pointsPossible = 0;
 	export let points = 0;
 	export let status: VerdictStatus = UNSUBMITTED;
-	export let verdict: string = 'Unsubmitted';
+	export let verdict = 'Unsubmitted';
 </script>
 
 <Page>

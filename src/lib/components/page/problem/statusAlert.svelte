@@ -5,8 +5,8 @@
 	import verdictStatus, { verdictStatusBgColor } from '$lib/utils/verdictStatus';
 	import type { VerdictStatus } from 'src/types/submission';
 
-	export let problemName: string = '';
-	export let problemID: string = '';
+	export let problemName = '';
+	export let problemID = '';
 	let visible = false;
 	let finished = true;
 	let status: VerdictStatus = UNSUBMITTED;
@@ -29,7 +29,7 @@
 </script>
 
 <div class="{visible ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500">
-	<a href="{visible ? `/problem/${problemID}` : ""}">
+	<a href={visible ? `/problem/${problemID}` : ''}>
 		<div
 			class="fixed bottom-6 right-8 z-50 text-lg {verdictStatusBgColor(
 				status

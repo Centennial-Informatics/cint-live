@@ -63,3 +63,16 @@ export interface SubmissionVerdict {
 export interface SubmissionVerdictUpdate {
 	[key: string]: SubmissionVerdict;
 }
+
+export interface StandingsEntry {
+	Username: string;
+	Email: string; //TODO: hide this
+	Submissions: SubmissionVerdictUpdate;
+	Points: { [key: string]: number };
+	TotalPoints: number;
+	ID: string;
+}
+
+export interface StandingsData {
+	[key: string]: StandingsEntry;
+}

@@ -21,9 +21,9 @@
 	});
 
 	let status: VerdictStatus = UNSUBMITTED,
-		verdict: string = 'Unsubmitted',
-		points: number = 0,
-		pointsPossible: number = 0;
+		verdict = 'Unsubmitted',
+		points = 0,
+		pointsPossible = 0;
 	let st: Element;
 
 	function onSubmissionDataUpdate() {

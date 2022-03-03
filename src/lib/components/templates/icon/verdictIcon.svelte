@@ -9,8 +9,8 @@
 	import { BAD, ERROR, GOOD, PENDING, UNSUBMITTED } from '$lib/data/constants/status';
 
 	export let status: VerdictStatus = UNSUBMITTED;
-	export let defaultIcon: boolean = true;
-	export let size: string = '36';
+	export let defaultIcon = true;
+	export let size = '36';
 </script>
 
 {#if status === GOOD}
