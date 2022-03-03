@@ -33,6 +33,9 @@ module.exports = {
 			},
 			minHeight: {
 				64: '16rem'
+			},
+			transitionProperty: {
+				width: 'width'
 			}
 		},
 		fontFamily: {

@@ -10,10 +10,10 @@
 	$: selected = tabId === $currentPage;
 </script>
 
-<a href={to} on:click={() => currentPage.set(tabId)}>
+<a href={to} on:click={() => currentPage.set(tabId)} class="group">
 	<div
-		class="flex items-center no-underline text-gray-300 bg-brand bg-opacity-0 p-2 max-w-full rounded-md text-base font-medium font-body transition-colors {!selected &&
-			'hover:bg-opacity-40'} {selected && 'bg-opacity-80'}"
+		class="flex items-center no-underline text-gray-300 bg-brand bg-opacity-0 px-2 py-1 max-w-full rounded-md text-base font-medium font-body transition-colors {!selected &&
+			'hover'} {selected && 'bg-opacity-0'}"
 	>
 		{#if tabId === 'home'}
 			<span class="mr-2"><Home width="20" height="20" /></span>
@@ -24,4 +24,9 @@
 			<slot />
 		</span>
 	</div>
+	<div
+		class="h-2 bg-brand {selected
+			? 'w-full'
+			: 'w-0'} group-hover:w-full rounded-full transition-width"
+	/>
 </a>
