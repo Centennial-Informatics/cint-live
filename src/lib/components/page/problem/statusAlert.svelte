@@ -29,13 +29,14 @@
 </script>
 
 <div class="{visible ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500">
-	<div
-		class="fixed bottom-6 right-8 z-50 text-lg {verdictStatusBgColor(
-			status
-		)} shadow-xl py-4 px-6 text-white font-medium rounded-xl flex flex-row items-center"
-	>
-		<VerdictIcon {status} />
-		{problemName} —
-		{verdict}
-	</div>
+	<a href="{visible ? `/problem/${problemID}` : ""}">
+		<div
+			class="fixed bottom-6 right-8 z-50 text-lg {verdictStatusBgColor(
+				status
+			)} shadow-xl py-4 px-6 text-white font-medium rounded-xl flex flex-row items-center"
+		>
+			<VerdictIcon {status} />
+			{problemName}
+		</div>
+	</a>
 </div>
