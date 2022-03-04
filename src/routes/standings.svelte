@@ -27,6 +27,7 @@
 	import Page from '$lib/components/templates/page/page.svelte';
 	import StandingsRowEntry from '$lib/components/page/standings/standingsRowEntry.svelte';
 	import { userInfo } from '$lib/data/stores/userInfo';
+	import StandingsPagination from '$lib/components/page/standings/standingsPagination.svelte';
 
 	export let standingsDataObj: StandingsData;
 
@@ -67,6 +68,21 @@
 
 	let standingsEntries: StandingsEntry[];
 	$: standingsEntries = cleanData(standingsDataObj);
+
+	/* Table pagination */
+
+	const entriesPerPage = 2;
+	let page = 0;
+
+	let displayedEntries: StandingsEntry[] = [];
+
+	function displayPage(pageStart: number, pageEnd: number) {
+		page = pageStart;
+		displayedEntries = standingsEntries.slice(
+			Math.max(0, pageStart),
+			Math.min(standingsEntries.length, pageEnd)
+		);
+	}
 </script>
 
 <Wrapper transparent>
@@ -86,14 +102,19 @@
 						<StandingsCell>Total</StandingsCell>
 					</div>
 				</StandingsHead>
-				{#each standingsEntries as entry, i (entry.Email)}
+				{#each displayedEntries as entry, i (entry.ID)}
 					<StandingsRowEntry
 						standingsEntry={entry}
 						active={entry.ID === $userInfo.ID}
-						rank={i + 1}
+						rank={i + 1 + page}
 					/>
 				{/each}
 			</StandingsTable>
 		</div>
+		<StandingsPagination
+			itemsPerPage={entriesPerPage}
+			totalItems={standingsEntries.length}
+			{displayPage}
+		/>
 	</Page>
 </Wrapper>
