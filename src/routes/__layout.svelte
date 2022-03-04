@@ -43,10 +43,12 @@
 
 <div class="min-h-screen">
 	<div class="flex flex-col md:flex-row dark">
-		<Sidebar />
+		<div class="fixed">
+			<Sidebar />
+		</div>
 		<div class="flex flex-row w-full bg-gray-800">
 			<Navbar />
-			<div class="md:overflow-y-scroll md:max-h-screen w-full dark:bg-gray-800">
+			<div class="md:min-h-screen ml-60 w-full dark:bg-gray-800">
 				<slot />
 			</div>
 		</div>

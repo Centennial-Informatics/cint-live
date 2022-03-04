@@ -14,7 +14,7 @@
 <StandingsRow {active}>
 	<StandingsCell>
 		{#if rank <= 3}
-			<Trophy width={'35'} height={'35'} color={RankColors[rank]} />
+			<Trophy width={'32'} height={'32'} color={RankColors[rank]} />
 		{:else}
 			{rank}
 		{/if}
