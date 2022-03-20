@@ -1,0 +1,402 @@
+basePath: /api/v1
+definitions:
+  models.ContestInfo:
+    properties:
+      description:
+        type: string
+      logo:
+        type: string
+      name:
+        type: string
+      website:
+        type: string
+    type: object
+  models.Lang:
+    properties:
+      ext:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  models.Page:
+    properties:
+      info:
+        $ref: '#/definitions/models.ContestInfo'
+      languages:
+        items:
+          $ref: '#/definitions/models.Lang'
+        type: array
+      problemPages:
+        additionalProperties:
+          $ref: '#/definitions/models.ProblemPage'
+        type: object
+      problems:
+        items:
+          $ref: '#/definitions/models.Problem'
+        type: array
+      startTime:
+        type: string
+      stopTime:
+        type: string
+    type: object
+  models.Problem:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  models.ProblemHeader:
+    properties:
+      input:
+        type: string
+      memLimit:
+        type: string
+      output:
+        type: string
+      timeLimit:
+        type: string
+      title:
+        type: string
+    type: object
+  models.ProblemPage:
+    properties:
+      header:
+        $ref: '#/definitions/models.ProblemHeader'
+      inputSpecification:
+        items:
+          $ref: '#/definitions/models.ProblemStatementParagraph'
+        type: array
+      note:
+        items:
+          $ref: '#/definitions/models.ProblemStatementParagraph'
+        type: array
+      outputSpecification:
+        items:
+          $ref: '#/definitions/models.ProblemStatementParagraph'
+        type: array
+      sampleTests:
+        items:
+          $ref: '#/definitions/models.ProblemSampleTest'
+        type: array
+      statement:
+        items:
+          $ref: '#/definitions/models.ProblemStatementParagraph'
+        type: array
+    type: object
+  models.ProblemSampleTest:
+    properties:
+      input:
+        type: string
+      output:
+        type: string
+    type: object
+  models.ProblemStatementParagraph:
+    properties:
+      code:
+        type: string
+      image:
+        type: string
+      text:
+        type: string
+    type: object
+  models.Schedule:
+    properties:
+      start:
+        type: integer
+      stop:
+        type: integer
+    type: object
+  models.Submission:
+    properties:
+      id:
+        type: string
+      status:
+        type: string
+      time:
+        type: integer
+      verdict:
+        type: string
+    type: object
+  models.UserEntity:
+    properties:
+      email:
+        type: string
+      points:
+        additionalProperties:
+          type: integer
+        type: object
+      submissions:
+        additionalProperties:
+          $ref: '#/definitions/models.Submission'
+        type: object
+      username:
+        type: string
+    type: object
+info:
+  contact:
+    email: chscompcode@gmail.com
+    name: Developers
+  description: A live competition server for coding competitions built and maintained
+    by CCC.
+  title: CCC Live Server API
+  version: "1.0"
+paths:
+  /collect:
+    get:
+      description: Returns a JSON object containing all relevant contest-level information
+        (nothing user-specific).
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Page'
+      summary: Collect all page data.
+      tags:
+      - Contest Info
+  /languages:
+    get:
+      description: Returns an array of JSON objects representing valid languages.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Lang'
+            type: array
+      summary: Get valid languages for the contest.
+      tags:
+      - Contest Info
+  /login:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Returns an authorization token to be used in place of Google creds
+        in future api requests.
+      parameters:
+      - description: Authorization Token
+        in: body
+        name: token
+        schema:
+          type: string
+      - description: Google ID Token
+        in: body
+        name: id_token
+        schema:
+          type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "401":
+          description: ""
+      summary: Login to an account.
+      tags:
+      - Authorization
+  /problem/{problemId}:
+    get:
+      description: Returns an html DOM subtree with the problem statement info. Only
+        available after contest has started.
+      parameters:
+      - description: Problem ID
+        in: path
+        name: problemId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "401":
+          description: ""
+      summary: Get a problem statement from the contest.
+      tags:
+      - Contest Info
+  /problems:
+    get:
+      description: Returns an array of problem objects. Only available after contest
+        has started.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Problem'
+            type: array
+        "401":
+          description: ""
+      summary: Get a list of problems from the contest.
+      tags:
+      - Contest Info
+  /profile:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Returns username, email, submissions, and points.
+      parameters:
+      - description: Authorization Token
+        in: body
+        name: token
+        schema:
+          type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UserEntity'
+        "401":
+          description: ""
+      summary: Get account profile info.
+      tags:
+      - User Actions
+  /schedule:
+    get:
+      description: Returns a JSON object with the start and stop times for the contest.
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Schedule'
+      summary: Get the contest schedule.
+      tags:
+      - Contest Info
+  /standings:
+    get:
+      description: Returns an object of user objects.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/models.UserEntity'
+            type: object
+      summary: Get the scores of all participants in the contest.
+      tags:
+      - Contest Info
+  /submissions:
+    post:
+      description: Returns a JSON object with updated verdicts for user's most recent
+        submission on each problem.
+      parameters:
+      - description: Authorization Token
+        in: body
+        name: token
+        schema:
+          type: string
+      - description: Google ID Token
+        in: body
+        name: id_token
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Submission'
+            type: array
+        "401":
+          description: ""
+      summary: Get submission verdicts for a user.
+      tags:
+      - User Actions
+  /submit:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Submits code and returns a pending verdict.
+      parameters:
+      - description: Authorization Token
+        in: body
+        name: token
+        schema:
+          type: string
+      - description: Google ID Token
+        in: body
+        name: id_token
+        schema:
+          type: string
+      - description: Problem ID
+        in: body
+        name: problem
+        required: true
+        schema:
+          type: string
+      - description: Language ID
+        in: body
+        name: language
+        required: true
+        schema:
+          type: string
+      - description: Submission source code
+        in: body
+        name: submission
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Submission'
+        "401":
+          description: ""
+      summary: Submit code to a problem.
+      tags:
+      - User Actions
+  /update:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Update username or email.
+      parameters:
+      - description: Authorization Token
+        in: body
+        name: token
+        schema:
+          type: string
+      - description: Username
+        in: body
+        name: username
+        schema:
+          type: string
+      - description: Email
+        in: body
+        name: email
+        schema:
+          type: string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: ""
+        "401":
+          description: ""
+      summary: Update account profile info.
+      tags:
+      - User Actions
+swagger: "2.0"

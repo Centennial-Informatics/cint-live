@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="description" content="" />
+		<link rel="icon" href="%svelte.assets%/favicon.png" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap"
+			rel="stylesheet"
+		/>
+		<link href="https://fonts.googleapis.com/css?family=Fira+Mono" rel="stylesheet" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap"
+			rel="stylesheet"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		%svelte.head%
+	</head>
+
+	<body>
+		<script>
+			MathJax = {
+				tex: {
+					inlineMath: [
+						['$$$', '$$$'],
+						['\\(', '\\)']
+					]
+				},
+				svg: {
+					fontCache: 'global'
+				}
+			};
+		</script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+			id="MathJax-script"
+		></script>
+		<div>%svelte.body%</div>
+	</body>
+</html>

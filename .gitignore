@@ -1,8 +1,13 @@
-.DS_Store
+servermodule
+*.DS_Store
+*.vscode
+firebase_service.json
+env.sh
+
 node_modules
-/build
-/.svelte-kit
-/package
+/frontend/build
+/frontend/.svelte-kit
+/frontend/package
 .env
 .env.*
 !.env.example

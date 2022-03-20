@@ -1,0 +1,613 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A live competition server for coding competitions built and maintained by CCC.",
+        "title": "CCC Live Server API",
+        "contact": {
+            "name": "Developers",
+            "email": "chscompcode@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/api/v1",
+    "paths": {
+        "/collect": {
+            "get": {
+                "description": "Returns a JSON object containing all relevant contest-level information (nothing user-specific).",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contest Info"
+                ],
+                "summary": "Collect all page data.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Page"
+                        }
+                    }
+                }
+            }
+        },
+        "/languages": {
+            "get": {
+                "description": "Returns an array of JSON objects representing valid languages.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contest Info"
+                ],
+                "summary": "Get valid languages for the contest.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Lang"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "description": "Returns an authorization token to be used in place of Google creds in future api requests.",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Authorization"
+                ],
+                "summary": "Login to an account.",
+                "parameters": [
+                    {
+                        "description": "Authorization Token",
+                        "name": "token",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Google ID Token",
+                        "name": "id_token",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/problem/{problemId}": {
+            "get": {
+                "description": "Returns an html DOM subtree with the problem statement info. Only available after contest has started.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contest Info"
+                ],
+                "summary": "Get a problem statement from the contest.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Problem ID",
+                        "name": "problemId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/problems": {
+            "get": {
+                "description": "Returns an array of problem objects. Only available after contest has started.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contest Info"
+                ],
+                "summary": "Get a list of problems from the contest.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Problem"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/profile": {
+            "post": {
+                "description": "Returns username, email, submissions, and points.",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "User Actions"
+                ],
+                "summary": "Get account profile info.",
+                "parameters": [
+                    {
+                        "description": "Authorization Token",
+                        "name": "token",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.UserEntity"
+                        }
+                    },
+                    "401": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/schedule": {
+            "get": {
+                "description": "Returns a JSON object with the start and stop times for the contest.",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Contest Info"
+                ],
+                "summary": "Get the contest schedule.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Schedule"
+                        }
+                    }
+                }
+            }
+        },
+        "/standings": {
+            "get": {
+                "description": "Returns an object of user objects.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contest Info"
+                ],
+                "summary": "Get the scores of all participants in the contest.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "$ref": "#/definitions/models.UserEntity"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/submissions": {
+            "post": {
+                "description": "Returns a JSON object with updated verdicts for user's most recent submission on each problem.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Actions"
+                ],
+                "summary": "Get submission verdicts for a user.",
+                "parameters": [
+                    {
+                        "description": "Authorization Token",
+                        "name": "token",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Google ID Token",
+                        "name": "id_token",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Submission"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/submit": {
+            "post": {
+                "description": "Submits code and returns a pending verdict.",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Actions"
+                ],
+                "summary": "Submit code to a problem.",
+                "parameters": [
+                    {
+                        "description": "Authorization Token",
+                        "name": "token",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Google ID Token",
+                        "name": "id_token",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Problem ID",
+                        "name": "problem",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Language ID",
+                        "name": "language",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Submission source code",
+                        "name": "submission",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Submission"
+                        }
+                    },
+                    "401": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/update": {
+            "post": {
+                "description": "Update username or email.",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "User Actions"
+                ],
+                "summary": "Update account profile info.",
+                "parameters": [
+                    {
+                        "description": "Authorization Token",
+                        "name": "token",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Username",
+                        "name": "username",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Email",
+                        "name": "email",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": ""
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.ContestInfo": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "logo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "website": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Lang": {
+            "type": "object",
+            "properties": {
+                "ext": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Page": {
+            "type": "object",
+            "properties": {
+                "info": {
+                    "$ref": "#/definitions/models.ContestInfo"
+                },
+                "languages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Lang"
+                    }
+                },
+                "problemPages": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/models.ProblemPage"
+                    }
+                },
+                "problems": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Problem"
+                    }
+                },
+                "startTime": {
+                    "type": "string"
+                },
+                "stopTime": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Problem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ProblemHeader": {
+            "type": "object",
+            "properties": {
+                "input": {
+                    "type": "string"
+                },
+                "memLimit": {
+                    "type": "string"
+                },
+                "output": {
+                    "type": "string"
+                },
+                "timeLimit": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ProblemPage": {
+            "type": "object",
+            "properties": {
+                "header": {
+                    "$ref": "#/definitions/models.ProblemHeader"
+                },
+                "inputSpecification": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProblemStatementParagraph"
+                    }
+                },
+                "note": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProblemStatementParagraph"
+                    }
+                },
+                "outputSpecification": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProblemStatementParagraph"
+                    }
+                },
+                "sampleTests": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProblemSampleTest"
+                    }
+                },
+                "statement": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProblemStatementParagraph"
+                    }
+                }
+            }
+        },
+        "models.ProblemSampleTest": {
+            "type": "object",
+            "properties": {
+                "input": {
+                    "type": "string"
+                },
+                "output": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ProblemStatementParagraph": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Schedule": {
+            "type": "object",
+            "properties": {
+                "start": {
+                    "type": "integer"
+                },
+                "stop": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Submission": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "integer"
+                },
+                "verdict": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserEntity": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "points": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer"
+                    }
+                },
+                "submissions": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/models.Submission"
+                    }
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

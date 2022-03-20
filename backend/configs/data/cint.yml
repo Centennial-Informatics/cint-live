@@ -1,0 +1,15 @@
+contestid: 365919
+contesturl: https://codeforces.com/gym/365919
+starttime: '2022-02-05T00:00:00-05:00' # required
+stoptime: '2022-05-20T00:00:00-05:00' # required
+points: # required
+  a: 10
+  b: 20
+  c: 20
+  d: 30
+  e: 30
+  f: 40
+  g: 40
+  h: 50
+  i: 50
+  j: 60
