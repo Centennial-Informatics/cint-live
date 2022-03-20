@@ -71,7 +71,7 @@
 
 	/* Table pagination */
 
-	const entriesPerPage = 2;
+	const entriesPerPage = 10;
 	let page = 0;
 
 	let displayedEntries: StandingsEntry[] = [];
@@ -94,7 +94,7 @@
 					<StandingsCell>Rank</StandingsCell>
 					<StandingsCell className="pl-10 w-72 flex-grow" left>Name</StandingsCell>
 					<div class="float-right whitespace-nowrap">
-						<div class="hidden md:inline-block">
+						<div class="hidden lg:inline-block">
 							{#each $problemNames as problem (problem.ID)}
 								<StandingsCell>{problem.ID}</StandingsCell>
 							{/each}

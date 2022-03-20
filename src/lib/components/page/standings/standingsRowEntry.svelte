@@ -23,7 +23,7 @@
 		{standingsEntry.Username}
 	</StandingsCell>
 	<div class="float-right">
-		<div class="hidden md:inline-block">
+		<div class="hidden lg:inline-block">
 			{#each $problemNames as problem (problem.ID)}
 				<StandingsCell>
 					{standingsEntry.Points[problem.ID]}
