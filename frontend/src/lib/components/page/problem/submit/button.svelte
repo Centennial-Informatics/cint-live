@@ -7,7 +7,7 @@
 </script>
 
 <button
-	class="{className} {!small ? 'w-full h-20 text-xl' : 'w-32 h-10 text-sm'} {!outlined
+	class="{className} {!small ? 'w-full h-20 text-xl' : 'h-10 text-sm'} {!outlined
 		? 'bg-brand text-white hover:bg-brand-light'
 		: 'text-brand-darkest bg-brand-lightest hover:bg-brand-light'} font-medium tracking-tight rounded-xl transition-colors disabled:bg-gray-200 disabled:hover:bg-gray-200 shadow-lg
       "

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 interface LoginInfo {
+	error?: string;
 	token: string;
 	team_id: string;
 }

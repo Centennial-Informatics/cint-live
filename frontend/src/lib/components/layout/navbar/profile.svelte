@@ -11,14 +11,21 @@
 			callback: async (res) => {
 				const decoded = jwt_decode(res.credential);
 				const loginInfo = await Login(res.credential);
-				IDToken.set(loginInfo.token);
-				TeamID.set(loginInfo.team_id);
-				userInfo.set({
-					ID: decoded.sub,
-					name: decoded.name,
-					email: decoded.email,
-					picture: decoded.picture
-				});
+				if (loginInfo.error) {
+					alert(
+						'Please register for the competition first through the Google Form linked on the home page.'
+					);
+					window.google.accounts.id.prompt();
+				} else {
+					IDToken.set(loginInfo.token);
+					TeamID.set(loginInfo.team_id);
+					userInfo.set({
+						ID: decoded.sub,
+						name: decoded.name,
+						email: decoded.email,
+						picture: decoded.picture
+					});
+				}
 			},
 			auto_select: true
 		});

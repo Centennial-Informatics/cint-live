@@ -1,9 +1,20 @@
 export interface TeamInfo {
-	Name: string;
-	ID: string;
-	Members: TeammateInfo[];
+	name: string;
+	code: string;
+	division: string;
+}
+
+export interface TeamData {
+	error?: string;
+	team: TeamInfo;
+	members: TeammateInfo[];
 }
 
 export interface TeammateInfo {
-	Name: string;
+	username: string;
+	division: string;
 }
+
+import type { STANDARD, ADVANCED } from '$lib/data/constants/division';
+
+export type Division = typeof STANDARD | typeof ADVANCED;

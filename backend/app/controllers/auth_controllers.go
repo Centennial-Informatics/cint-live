@@ -6,6 +6,7 @@ import (
 	"servermodule/app/scraper"
 	"servermodule/configs/constants"
 	"servermodule/utils"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"google.golang.org/api/oauth2/v2"
@@ -33,7 +34,9 @@ func Login(c *fiber.Ctx, config *models.Configuration, ts *models.TokenService, 
 		}
 
 		if !db.HasUser(tokenInfo.Email) {
-			return c.SendStatus(constants.StatusUnauthorized)
+			return c.JSON(map[string]string{
+				"error": "You are not registered for this competition.",
+			})
 		}
 
 		userID = tokenInfo.Email
@@ -100,10 +103,18 @@ func UpdateUserTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestD
 
 	var team database.Team
 
+	userTeamCode := db.GetUser(userID).TeamCode
+
 	if teamID := c.FormValue("team_code"); teamID != "" {
+		teamID := strings.ToLower(teamID)
 		if !db.HasTeam(teamID) {
 			return c.JSON(map[string]interface{}{
 				"error": "Team not found.",
+			})
+		}
+		if userTeamCode == teamID {
+			return c.JSON(map[string]interface{}{
+				"error": "You are already on that team.",
 			})
 		}
 		members := db.GetTeamMembers(teamID)
@@ -113,6 +124,8 @@ func UpdateUserTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestD
 			})
 		}
 		team = *db.UpdateUserTeam(userID, teamID)
+	} else {
+		team, _ = db.GetTeamByCode(userTeamCode)
 	}
 
 	return c.JSON(map[string]interface{}{
