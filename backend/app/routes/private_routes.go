@@ -50,7 +50,7 @@ func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 		if time.Since(config.StartTime) >= 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
-		return controllers.UpdateUserTeam(c, ts, db)
+		return controllers.UpdateUserTeam(c, ts, db, config)
 	})
 
 	router.Post("/update", func(c *fiber.Ctx) error {

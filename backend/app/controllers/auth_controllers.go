@@ -92,7 +92,7 @@ func GetTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) erro
 // @Success 200
 // @Failure 401
 // @Router /update [post]
-func UpdateUserTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) error {
+func UpdateUserTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB, config *models.Configuration) error {
 	userID, err := ts.AuthorizeUser(c.FormValue("token"))
 	if err != nil {
 		return c.SendStatus(constants.StatusUnauthorized)
@@ -101,6 +101,17 @@ func UpdateUserTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestD
 	var team database.Team
 
 	if teamID := c.FormValue("team_code"); teamID != "" {
+		if !db.HasTeam(teamID) {
+			return c.JSON(map[string]interface{}{
+				"error": "Team not found.",
+			})
+		}
+		members := db.GetTeamMembers(teamID)
+		if len(members) == config.MaxTeamSize {
+			return c.JSON(map[string]interface{}{
+				"error": "Team is full.",
+			})
+		}
 		team = *db.UpdateUserTeam(userID, teamID)
 	}
 

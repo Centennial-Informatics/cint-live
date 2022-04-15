@@ -2,6 +2,7 @@ contestid: 328477 # required — arbitrary, not required to be the codeforces co
 contesturl: https://codeforces.com/gym/328477 # required
 starttime: '2022-02-05T00:00:00-05:00' # required
 stoptime: '2022-02-06T00:00:00-05:00' # required
+maxteamsize: 2
 pointspolicy: full # full: only award points on full AC, partial: award partial credit TODO: implement partial
 points: # required
   a: 10

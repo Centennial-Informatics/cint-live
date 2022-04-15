@@ -7,6 +7,7 @@ type Configuration struct {
 	AuthTokenLength        int
 	ContestID              string
 	ContestURL             string
+	MaxTeamSize            int
 	PointsPolicy           string
 	Points                 map[string]int
 	FirebaseURL            string
