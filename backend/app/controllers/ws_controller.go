@@ -34,7 +34,7 @@ func WsController(c *websocket.Conn, db *database.ContestDB, ts *models.TokenSer
 				//log.Println(*ts.GetUser(token))
 				auth = true
 				userID = ts.GetUserFromToken(token).ID
-				_, _, submissions := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+				submissions := db.GetTeamSubmissions(db.GetUser(userID).TeamCode)
 				err = c.WriteJSON(submissions)
 
 				if err != nil {
@@ -43,7 +43,7 @@ func WsController(c *websocket.Conn, db *database.ContestDB, ts *models.TokenSer
 				}
 			}
 		} else {
-			_, _, submissions := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+			submissions := db.GetTeamSubmissions(db.GetUser(userID).TeamCode)
 			err = c.WriteJSON(submissions)
 			if err != nil {
 				c.Close()

@@ -64,7 +64,7 @@ func TestTeam(t *testing.T) {
 	const testName = "team name"
 	team := db.CreateTeam(testName, "Standard")
 
-	testTeam, users, submissions := db.GetTeamByCode(team.Code)
+	testTeam, users := db.GetTeamByCode(team.Code)
 	if testTeam.Name != testName {
 		t.Fail()
 	}
@@ -73,11 +73,7 @@ func TestTeam(t *testing.T) {
 		t.Fail()
 	}
 
-	if len(submissions) > 0 {
-		t.Fail()
-	}
-
-	testTeam2, _, _ := db.GetTeam(testTeam.ID)
+	testTeam2, _ := db.GetTeam(testTeam.ID)
 	if testTeam2.Name != testName {
 		t.Fail()
 	}
@@ -86,7 +82,7 @@ func TestTeam(t *testing.T) {
 
 	db.UpdateTeam(team.Code, newTestName)
 
-	testTeam, users, submissions = db.GetTeamByCode(team.Code)
+	testTeam, users = db.GetTeamByCode(team.Code)
 	if testTeam.Name != newTestName {
 		t.Fail()
 	}
@@ -95,16 +91,12 @@ func TestTeam(t *testing.T) {
 		t.Fail()
 	}
 
-	if len(submissions) > 0 {
-		t.Fail()
-	}
-
 	user := db.CreateUser("test", "test", "advanced")
-	testTeam, _, _ = db.GetTeamByCode(user.TeamCode)
+	testTeam, _ = db.GetTeamByCode(user.TeamCode)
 	if testTeam.Division != "Advanced" {
 		t.Fail()
 	}
-	testTeam, _, _ = db.GetTeam(testTeam.ID)
+	testTeam, _ = db.GetTeam(testTeam.ID)
 	if testTeam.Division != "Advanced" {
 		t.Fail()
 	}
@@ -115,7 +107,7 @@ func TestUserTeamAssociation(t *testing.T) {
 
 	user := db.CreateUser("user", "email", "division")
 
-	initialTeam, _, _ := db.GetTeamByCode(user.TeamCode)
+	initialTeam, _ := db.GetTeamByCode(user.TeamCode)
 	if initialTeam.Name != user.Username {
 		t.Fail()
 	}
@@ -137,7 +129,7 @@ func TestUserTeamAssociation(t *testing.T) {
 		t.Fail()
 	}
 
-	_, users, _ := db.GetTeamByCode(user.TeamCode)
+	_, users := db.GetTeamByCode(user.TeamCode)
 	if users[0].ID != user.ID {
 		t.Fail()
 	}
@@ -145,12 +137,12 @@ func TestUserTeamAssociation(t *testing.T) {
 	// user is re-assigned to original team
 	newTeam = db.UpdateUserTeam(user.Email, initialTeam.Code)
 
-	_, users, _ = db.GetTeamByCode(newTeam.Code)
+	_, users = db.GetTeamByCode(newTeam.Code)
 	if users[0].ID != user.ID {
 		t.Fail()
 	}
 
-	_, users, _ = db.GetTeamByCode(newUserTeam.Code)
+	_, users = db.GetTeamByCode(newUserTeam.Code)
 	if !(len(users) == 0) {
 		t.Fail()
 	}
@@ -158,12 +150,12 @@ func TestUserTeamAssociation(t *testing.T) {
 	// user is assigned to an invalid team
 	newTeam = db.UpdateUserTeam(user.Email, "123")
 
-	_, users, _ = db.GetTeamByCode(newTeam.Code)
+	_, users = db.GetTeamByCode(newTeam.Code)
 	if users[0].ID != user.ID {
 		t.Fail()
 	}
 
-	_, users, _ = db.GetTeamByCode(newUserTeam.Code)
+	_, users = db.GetTeamByCode(newUserTeam.Code)
 	if !(len(users) == 0) {
 		t.Fail()
 	}
@@ -204,9 +196,9 @@ func TestSubmission(t *testing.T) {
 		t.Fail()
 	}
 
-	const newTestVerdict = "Good"
-	const newTestStatus = "Final"
-	const newTestPoints = 10
+	newTestVerdict := "Good"
+	newTestStatus := "Final"
+	newTestPoints := 10
 	db.UpdateSubmission(submission.SubmissionID, newTestPoints, newTestVerdict, newTestStatus)
 	submission = db.GetSubmission(submission.SubmissionID)
 	if submission.Verdict != newTestVerdict {
@@ -216,6 +208,25 @@ func TestSubmission(t *testing.T) {
 		t.Fail()
 	}
 	if submission.Points != newTestPoints {
+		t.Fail()
+	}
+
+	const newSubmissionID = "1234"
+	newTestPoints = 20
+	newTestVerdict = "Very good"
+	newTestStatus = "More final"
+	db.UpdateSubmissionByID(submission.ID, newSubmissionID, newTestPoints, newTestVerdict, newTestStatus)
+	submission = db.GetSubmission(newSubmissionID)
+	if submission.Verdict != newTestVerdict {
+		t.Fail()
+	}
+	if submission.Status != newTestStatus {
+		t.Fail()
+	}
+	if submission.Points != newTestPoints {
+		t.Fail()
+	}
+	if submission.SubmissionID != newSubmissionID {
 		t.Fail()
 	}
 }
@@ -231,7 +242,8 @@ func TestSubmissionTeamAssociation(t *testing.T) {
 
 	submission := db.CreateSubmission(testSubID, testProbID, team.Code, testTimestamp)
 
-	subTeam, _, submissions := db.GetTeamByCode(submission.TeamCode)
+	subTeam, _ := db.GetTeamByCode(submission.TeamCode)
+	submissions := db.GetTeamSubmissions(submission.TeamCode)
 	if submissions[0].SubmissionID != testSubID {
 		t.Fail()
 	}

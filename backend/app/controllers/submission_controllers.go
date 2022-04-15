@@ -46,7 +46,7 @@ func Submit(c *fiber.Ctx, ts *models.TokenService, config *models.Configuration,
 		return c.SendStatus(constants.StatusUnauthorized)
 	}
 
-	team, _, _ := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+	team, _ := db.GetTeamByCode(db.GetUser(userID).TeamCode)
 
 	file, err := c.FormFile("file")
 
@@ -82,7 +82,7 @@ func Submit(c *fiber.Ctx, ts *models.TokenService, config *models.Configuration,
 	// 	ProblemID:  c.FormValue("problem"),
 	// })
 
-	_, _, submissions := db.GetTeam(team.ID)
+	submissions := db.GetTeamSubmissions(team.Code)
 
 	newConns := make([]*websocket.Conn, 0)
 	teamConns := ts.GetTeamFromUser(userID)

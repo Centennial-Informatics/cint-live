@@ -159,18 +159,14 @@ func (db *ContestDB) HasTeam(code string) bool {
 }
 
 // for team members only
-func (db *ContestDB) GetTeamByCode(code string) (Team, []User, []Submission) {
+func (db *ContestDB) GetTeamByCode(code string) (Team, []User) {
 	if !db.HasTeam(code) {
-		return Team{}, nil, nil
+		return Team{}, nil
 	}
 	var team Team
 	db.db.First(&team, "code = ?", code)
 
-	var members []User
-	db.db.Where("team_code = ?", team.Code).Find(&members)
-
-	var submissions []Submission
-	db.db.Where("team_code = ?", team.Code).Find(&submissions)
+	members := db.GetTeamMembers(code)
 
 	team.Division = "Standard"
 	for _, member := range members {
@@ -180,18 +176,14 @@ func (db *ContestDB) GetTeamByCode(code string) (Team, []User, []Submission) {
 		}
 	}
 
-	return team, members, submissions
+	return team, members
 }
 
-func (db *ContestDB) GetTeam(ID int) (Team, []User, []Submission) {
+func (db *ContestDB) GetTeam(ID int) (Team, []User) {
 	var team Team
 	db.db.First(&team, ID)
 
-	var members []User
-	db.db.Where("team_code = ?", team.Code).Find(&members)
-
-	var submissions []Submission
-	db.db.Where("team_code = ?", team.Code).Find(&submissions)
+	members := db.GetTeamMembers(team.Code)
 
 	team.Division = "Standard"
 	for _, member := range members {
@@ -201,7 +193,19 @@ func (db *ContestDB) GetTeam(ID int) (Team, []User, []Submission) {
 		}
 	}
 
-	return team, members, submissions
+	return team, members
+}
+
+func (db *ContestDB) GetTeamMembers(code string) []User {
+	var members []User
+	db.db.Where("team_code = ?", code).Find(&members)
+	return members
+}
+
+func (db *ContestDB) GetTeamSubmissions(code string) []Submission {
+	var submissions []Submission
+	db.db.Where("team_code = ?", code).Find(&submissions)
+	return submissions
 }
 
 func (db *ContestDB) CreateSubmission(submissionID string, problemID string, teamCode string, timestamp int64) *Submission {

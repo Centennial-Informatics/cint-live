@@ -39,7 +39,7 @@ func Login(c *fiber.Ctx, config *models.Configuration, ts *models.TokenService, 
 		userID = tokenInfo.Email
 	}
 
-	team, _, _ := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+	team, _ := db.GetTeamByCode(db.GetUser(userID).TeamCode)
 
 	return c.JSON(map[string]string{
 		"token":   ts.UpdateToken(userID, team.Code, config.AuthTokenLength),
@@ -72,12 +72,11 @@ func GetTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) erro
 		return c.SendStatus(constants.StatusUnauthorized)
 	}
 
-	team, members, submissions := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+	team, members := db.GetTeamByCode(db.GetUser(userID).TeamCode)
 
 	return c.JSON(map[string]interface{}{
-		"team":        team,
-		"members":     members,
-		"submissions": submissions,
+		"team":    team,
+		"members": members,
 	})
 }
 

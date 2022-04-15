@@ -72,7 +72,7 @@ func LiveServer(config *models.Configuration) {
 				for _, conn := range conns {
 					if conn.Conn != nil {
 						newConns = append(newConns, conn)
-						_, _, submissions := db.GetTeamByCode(teamCode)
+						submissions := db.GetTeamSubmissions(teamCode)
 						err = conn.WriteJSON(submissions)
 						if err != nil {
 							log.Println(err)
