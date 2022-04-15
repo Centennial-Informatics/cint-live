@@ -37,17 +37,17 @@ import (
 // }
 
 func CreateUser(c *fiber.Ctx, db *database.ContestDB) error {
-		email := c.FormValue("email")
+		email := c.FormValue("Email")
 		if email == "" {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
-		division := c.FormValue("division")
+		division := c.FormValue("Division")
 		if division == "" {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
-		name := c.FormValue("name")
+		name := c.FormValue("Name")
 		if name == "" {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}

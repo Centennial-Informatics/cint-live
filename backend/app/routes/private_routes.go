@@ -30,21 +30,40 @@ func PrivateAPIRoutes(router fiber.Router, config *models.Configuration,
 	router.Post("/team", func(c *fiber.Ctx) error {
 		return controllers.GetTeam(c, ts, db)
 	})
-
-	router.Post("/update", func(c *fiber.Ctx) error {
-		return controllers.UpdateUserTeam(c, ts, db)
-	})
 }
 
 /* PrivateTimeAPIRoutes - Private login-restricted and time-restricted api endpoints. */
 func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 	ts *models.TokenService, client *scraper.Client,
 	s *workers.Submitter, db *database.ContestDB) {
+	// during contest
 	router.Post("/submit", func(c *fiber.Ctx) error {
 		if time.Since(config.StartTime) < 0 || time.Until(config.StopTime) < 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
 		return controllers.Submit(c, ts, config, client, s, db)
+	})
+
+	// before contest
+	router.Post("/join", func(c *fiber.Ctx) error {
+		if time.Since(config.StartTime) >= 0 {
+			return c.SendStatus(constants.StatusUnauthorized)
+		}
+		return controllers.UpdateUserTeam(c, ts, db)
+	})
+
+	router.Post("/update", func(c *fiber.Ctx) error {
+		if time.Since(config.StartTime) >= 0 {
+			return c.SendStatus(constants.StatusUnauthorized)
+		}
+		return controllers.UpdateTeam(c, ts, db)
+	})
+
+	router.Post("/leave", func(c *fiber.Ctx) error {
+		if time.Since(config.StartTime) >= 0 {
+			return c.SendStatus(constants.StatusUnauthorized)
+		}
+		return controllers.LeaveTeam(c, ts, db)
 	})
 }

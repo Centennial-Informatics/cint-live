@@ -98,9 +98,44 @@ func UpdateUserTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestD
 		return c.SendStatus(constants.StatusUnauthorized)
 	}
 
+	var team database.Team
+
 	if teamID := c.FormValue("team_code"); teamID != "" {
-		db.UpdateUserTeam(userID, teamID)
+		team = *db.UpdateUserTeam(userID, teamID)
+	}
+
+	return c.JSON(map[string]interface{}{
+		"team":    team,
+		"members": db.GetTeamMembers(team.Code),
+	})
+}
+
+func UpdateTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) error {
+	userID, err := ts.AuthorizeUser(c.FormValue("token"))
+	if err != nil {
+		return c.SendStatus(constants.StatusUnauthorized)
+	}
+
+	if name := c.FormValue("team_name"); name != "" {
+		user := db.GetUser(userID)
+		db.UpdateTeam(user.TeamCode, name)
 	}
 
 	return c.SendStatus(constants.StatusOk)
+}
+
+func LeaveTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) error {
+	userID, err := ts.AuthorizeUser(c.FormValue("token"))
+	if err != nil {
+		return c.SendStatus(constants.StatusUnauthorized)
+	}
+
+	db.LeaveTeam(userID)
+
+	team, members := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+
+	return c.JSON(map[string]interface{}{
+		"team":    team,
+		"members": members,
+	})
 }

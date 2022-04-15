@@ -9,7 +9,6 @@ import (
 )
 
 type User struct {
-	gorm.Model
 	ID       int
 	Username string `json:"username"`
 	Email    string `json:"email"`
@@ -18,7 +17,6 @@ type User struct {
 }
 
 type Team struct {
-	gorm.Model
 	ID       int
 	Code     string `json:"code"`
 	Name     string `json:"name"`
@@ -26,7 +24,6 @@ type Team struct {
 }
 
 type Submission struct {
-	gorm.Model
 	ID           int
 	SubmissionID string `json:"submission_id"`
 	ProblemID    string `json:"problem_id"`
@@ -126,13 +123,28 @@ func (db *ContestDB) UpdateUserTeam(email string, teamCode string) *Team {
 	user := db.GetUser(email)
 
 	if db.HasTeam(teamCode) {
-		db.db.First(&team, "code = ?", teamCode)
+		// delete old team if no members left
+		members := db.GetTeamMembers(user.TeamCode)
+		if len(members) == 1 {
+			db.DeleteTeam(user.TeamCode)
+		}
 		db.db.Model(user).Update("team_code", teamCode)
+		db.db.First(&team, "code = ?", teamCode)
 	} else {
 		db.db.First(&team, "code = ?", user.TeamCode)
 	}
 
 	return &team
+}
+
+// leaves existing team (if more than 1 member) and forms new team
+func (db *ContestDB) LeaveTeam(email string) {
+	user := db.GetUser(email)
+	_, members := db.GetTeamByCode(user.TeamCode)
+	if len(members) > 1 {
+		newTeam := db.CreateTeam(user.Username, user.Division)
+		db.UpdateUserTeam(email, newTeam.Code)
+	}
 }
 
 // 1 team created with each user, users can then join other user teams
@@ -156,6 +168,10 @@ func (db *ContestDB) HasTeam(code string) bool {
 	var team []Team
 	db.db.Where("code = ?", code).Find(&team)
 	return len(team) > 0
+}
+
+func (db *ContestDB) DeleteTeam(code string) {
+	db.db.Where("code = ?", code).Delete(&Team{})
 }
 
 // for team members only

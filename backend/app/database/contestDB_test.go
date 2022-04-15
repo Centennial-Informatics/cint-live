@@ -100,6 +100,12 @@ func TestTeam(t *testing.T) {
 	if testTeam.Division != "Advanced" {
 		t.Fail()
 	}
+
+	db.DeleteTeam(testTeam.Code)
+	_, members := db.GetTeamByCode(testTeam.Code)
+	if members != nil {
+		t.Fail()
+	}
 }
 
 func TestUserTeamAssociation(t *testing.T) {
@@ -134,16 +140,25 @@ func TestUserTeamAssociation(t *testing.T) {
 		t.Fail()
 	}
 
+	// initial team is deleted
+	_, members := db.GetTeamByCode(initialTeam.Code)
+	if members != nil {
+		t.Fail()
+	}
+
+	diffTeam := db.CreateTeam("different team", "Standard")
+
 	// user is re-assigned to original team
-	newTeam = db.UpdateUserTeam(user.Email, initialTeam.Code)
+	newTeam = db.UpdateUserTeam(user.Email, diffTeam.Code)
 
 	_, users = db.GetTeamByCode(newTeam.Code)
 	if users[0].ID != user.ID {
 		t.Fail()
 	}
 
-	_, users = db.GetTeamByCode(newUserTeam.Code)
-	if !(len(users) == 0) {
+	// initial team is deleted
+	_, members = db.GetTeamByCode(newUserTeam.Code)
+	if members != nil {
 		t.Fail()
 	}
 
@@ -155,8 +170,29 @@ func TestUserTeamAssociation(t *testing.T) {
 		t.Fail()
 	}
 
-	_, users = db.GetTeamByCode(newUserTeam.Code)
-	if !(len(users) == 0) {
+	if newTeam.Code != diffTeam.Code {
+		t.Fail()
+	}
+
+	// leaving a team
+	user2 := db.CreateUser("user 2", "email 2", "Standard")
+	db.UpdateUserTeam(user2.Email, newTeam.Code)
+
+	db.LeaveTeam(user.Email)
+	_, users = db.GetTeamByCode(newTeam.Code)
+	if len(users) != 1 {
+		t.Fail()
+	}
+	if users[0].ID != user2.ID {
+		t.Fail()
+	}
+
+	user = db.GetUser(user.Email)
+	_, users = db.GetTeamByCode(user.TeamCode)
+	if len(users) != 1 {
+		t.Fail()
+	}
+	if users[0].ID != user.ID {
 		t.Fail()
 	}
 }
