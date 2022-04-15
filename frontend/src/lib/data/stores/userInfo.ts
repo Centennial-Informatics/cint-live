@@ -5,4 +5,6 @@ export const userInfo = writable<UserInfo>({} as UserInfo);
 
 export const IDToken = writable<string>('');
 
+export const TeamID = writable<string>('');
+
 // export const JWT = writable<string>('');

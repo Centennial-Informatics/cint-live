@@ -43,17 +43,19 @@ type Submission struct {
 }
 
 type QueuedSubmission struct {
-	UserID     string
-	Source     string
-	Language   string
-	ProblemID  string
-	File       *multipart.FileHeader
-	ContestURL string
+	UserID       string
+	SubmissionID int
+	Source       string
+	Language     string
+	ProblemID    string
+	File         *multipart.FileHeader
+	ContestURL   string
 }
 
 type Verdict struct {
 	Status, Verdict string
 	UserID          *string
+	SubmissionID    int
 	ProblemID       *string
 }
 
@@ -69,7 +71,7 @@ type StandingsEntity struct {
 }
 
 type Standings struct {
-	User map[string]*StandingsEntity
+	Team map[string]*StandingsEntity
 }
 
 type ProblemPage struct {

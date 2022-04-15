@@ -28,8 +28,8 @@
 
 	function onSubmissionDataUpdate() {
 		status = verdictStatus($submissionData[$page.params.slug]);
-		verdict = $submissionData[$page.params.slug].Verdict;
-		points = $submissionData[$page.params.slug].Points;
+		verdict = $submissionData[$page.params.slug].verdict;
+		points = $submissionData[$page.params.slug].points;
 		pointsPossible = $contestPoints[$page.params.slug];
 	}
 

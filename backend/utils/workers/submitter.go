@@ -1,4 +1,4 @@
-package middleware
+package workers
 
 import (
 	"log"
@@ -32,6 +32,7 @@ func (s *Submitter) ProcessNextSubmission(client *scraper.Client) {
 				sub.Source, sub.File, sub.Language)
 
 			client.Verdict[submissionID].UserID = &sub.UserID
+			client.Verdict[submissionID].SubmissionID = sub.SubmissionID
 
 			if err != nil {
 				log.Println(err)

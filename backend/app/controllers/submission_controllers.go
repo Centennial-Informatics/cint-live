@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"log"
+	"servermodule/app/database"
 	"servermodule/app/models"
 	"servermodule/app/scraper"
 	"servermodule/configs/constants"
 	"servermodule/utils"
-	"servermodule/utils/jobs"
-	"servermodule/utils/middleware"
+	"servermodule/utils/workers"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -28,8 +28,7 @@ import (
 // @Success 200 {object} models.Submission
 // @Failure 401
 // @Router /submit [post]
-func Submit(c *fiber.Ctx, ts *models.TokenService, config *models.Configuration, client *scraper.Client,
-	fc *models.FirebaseCache, s *middleware.Submitter, w *middleware.Writer) error {
+func Submit(c *fiber.Ctx, ts *models.TokenService, config *models.Configuration, client *scraper.Client, s *workers.Submitter, db *database.ContestDB) error {
 	userID, err := ts.AuthorizeUser(c.FormValue("token"))
 	if err != nil {
 		tokenInfo, err := utils.VerifyToken(c.FormValue("id_token"))
@@ -39,90 +38,99 @@ func Submit(c *fiber.Ctx, ts *models.TokenService, config *models.Configuration,
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
-		userID = tokenInfo.UserId
+		userID = tokenInfo.Email
 	}
 
-	if !fc.Users.Has(userID) {
+	if !db.HasUser(userID) {
 		log.Println("userID ", userID, "does not exist")
 		return c.SendStatus(constants.StatusUnauthorized)
 	}
 
+	team, _, _ := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+
 	file, err := c.FormFile("file")
 
+	sub := db.CreateSubmission("none", c.FormValue("problem"), team.Code, int64(time.Since(config.StartTime)/time.Second))
+
 	submission := models.QueuedSubmission{
-		UserID:     userID,
-		Source:     c.FormValue("submission"),
-		ProblemID:  c.FormValue("problem"),
-		Language:   c.FormValue("language"),
-		File:       file,
-		ContestURL: client.Cached.ContestURL,
+		UserID:       userID,
+		SubmissionID: sub.ID,
+		Source:       c.FormValue("submission"),
+		ProblemID:    c.FormValue("problem"),
+		Language:     c.FormValue("language"),
+		File:         file,
+		ContestURL:   client.Cached.ContestURL,
 	}
 
 	if err != nil {
 		submission.File = nil
 	}
 
-	sub := models.Submission{
-		Status:  "Pending",
-		Verdict: "Pending",
-		Time:    int64(time.Since(config.StartTime) / time.Second),
-	}
+	// sub := models.Submission{
+	// 	Status:  "Pending",
+	// 	Verdict: "Pending",
+	// 	Time:    int64(time.Since(config.StartTime) / time.Second),
+	// }
 
-	fc.Users.Get(userID).Submissions[c.FormValue("problem")] = &sub
+	// team := fc.GetUserTeam(userID)
 
-	w.AddJob(jobs.SubmissionJob{
-		UserID:     userID,
-		Submission: sub,
-		ProblemID:  c.FormValue("problem"),
-	})
+	// team.Submissions[c.FormValue("problem")] = &sub
+
+	// w.AddJob(jobs.SubmissionJob{
+	// 	TeamID:     fc.GetUser(userID).TeamID,
+	// 	Submission: sub,
+	// 	ProblemID:  c.FormValue("problem"),
+	// })
+
+	_, _, submissions := db.GetTeam(team.ID)
 
 	newConns := make([]*websocket.Conn, 0)
-	user := ts.GetUserFromID(userID)
+	teamConns := ts.GetTeamFromUser(userID)
 
-	conns := user.Conn
+	conns := teamConns.Conn
 	for _, conn := range conns {
 		if conn.Conn != nil {
 			newConns = append(newConns, conn)
 
-			err = conn.WriteJSON(fc.Users.Get(userID).Submissions)
+			err = conn.WriteJSON(submissions)
 			if err != nil {
 				return c.SendString("error")
 			}
 		}
 	}
 
-	user.Conn = newConns
+	teamConns.Conn = newConns
 
 	s.Submit(&submission)
 
 	return c.SendStatus(constants.StatusOk)
 }
 
-// Submissions godoc
-// @Summary Get submission verdicts for a user.
-// @Description Returns a JSON object with updated verdicts for user's most recent submission on each problem.
-// @Tags User Actions
-// @Produce  application/json
-// @Param token body string false "Authorization Token"
-// @Param id_token body string false "Google ID Token"
-// @Success 200 {array} models.Submission
-// @Failure 401
-// @Router /submissions [post]
-func Submissions(c *fiber.Ctx, ts *models.TokenService, fc *models.FirebaseCache) error {
-	userID, err := ts.AuthorizeUser(c.FormValue("token"))
-	if err != nil {
-		tokenInfo, err := utils.VerifyToken(c.FormValue("id_token"))
+// // Submissions godoc
+// // @Summary Get submission verdicts for a user.
+// // @Description Returns a JSON object with updated verdicts for user's most recent submission on each problem.
+// // @Tags User Actions
+// // @Produce  application/json
+// // @Param token body string false "Authorization Token"
+// // @Param id_token body string false "Google ID Token"
+// // @Success 200 {array} models.Submission
+// // @Failure 401
+// // @Router /submissions [post]
+// func Submissions(c *fiber.Ctx, ts *models.TokenService, fc *models.FirebaseCache) error {
+// 	userID, err := ts.AuthorizeUser(c.FormValue("token"))
+// 	if err != nil {
+// 		tokenInfo, err := utils.VerifyToken(c.FormValue("id_token"))
 
-		if err != nil {
-			return c.SendStatus(constants.StatusUnauthorized)
-		}
+// 		if err != nil {
+// 			return c.SendStatus(constants.StatusUnauthorized)
+// 		}
 
-		userID = tokenInfo.UserId
-	}
+// 		userID = tokenInfo.UserId
+// 	}
 
-	if !fc.Users.Has(userID) {
-		return c.SendStatus(constants.StatusUnauthorized)
-	}
+// 	if !fc.Users.Has(userID) {
+// 		return c.SendStatus(constants.StatusUnauthorized)
+// 	}
 
-	return c.JSON(fc.Users.Get(userID).Submissions)
-}
+// 	return c.JSON(fc.GetUserTeam(userID).Submissions)
+// }

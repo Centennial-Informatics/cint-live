@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"servermodule/app/database"
 	"servermodule/app/models"
 	"servermodule/app/routes"
 	"servermodule/app/scraper"
 	"servermodule/configs"
 	"servermodule/utils"
-	"servermodule/utils/jobs"
-	"servermodule/utils/middleware"
+	"servermodule/utils/workers"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -30,7 +30,7 @@ func LiveServer(config *models.Configuration) {
 		log.Fatal(err)
 	}
 	// scrape worker scrapes problem statements from codeforces
-	middleware.ScrapeWorker(appClient, config.ContestURL, config.ContestID, config.ScrapeIntervalAll)
+	workers.ScrapeWorker(appClient, config.ContestURL, config.ContestID, config.ScrapeIntervalAll)
 
 	clients := make([]*scraper.Client, 0)
 
@@ -45,68 +45,45 @@ func LiveServer(config *models.Configuration) {
 		c.CopyCache(appClient.Cached)
 		clients = append(clients, c)
 	}
-	// initialize the firebase connection if present
-	f, err := models.NewFirebaseService(config.FirebaseURL, appClient.Cached)
+
+	db, err := database.NewDB("data/contest_data.db")
 	if err != nil {
-		log.Println(err)
-		log.Println("Failed to establish firebase connection. Attempting to run without database.")
+		log.Fatal(err)
 	}
-	// write worker writes to firebase
-	writeWorker, _ := middleware.WriteWorker(f, config.WriteInterval)
 	ts := models.NewTokenService()
 	// submit worker submits to codeforces and checks for verdicts, callback runs when verdict status is updated
-	submitWorker, _ := middleware.SubmitWorker(clients, config.ScrapeIntervalVerdicts,
+	submitWorker, _ := workers.SubmitWorker(clients, config.ScrapeIntervalVerdicts,
 		func(submissionID string, verdict *models.Verdict) {
 			log.Println("Submission", submissionID, "by", *verdict.UserID, "is", verdict.Verdict)
-			f.Cache.Users.Get(*verdict.UserID).Submissions[*verdict.ProblemID].Status = verdict.Status
-			f.Cache.Users.Get(*verdict.UserID).Submissions[*verdict.ProblemID].Verdict = verdict.Verdict
+			teamCode := db.GetUser(*verdict.UserID).TeamCode
 
-			user := ts.GetUserFromID(*verdict.UserID)
+			team := ts.GetTeamFromUser(*verdict.UserID)
 
 			var points int
 
 			if verdict.Status == "Final" {
 				points = utils.GetPoints(*verdict.ProblemID, verdict.Verdict, &config.Points)
-				f.Cache.Users.Get(*verdict.UserID).Points[*verdict.ProblemID] = points
-				f.Cache.Users.Get(*verdict.UserID).Submissions[*verdict.ProblemID].Points = points
 			}
+			db.UpdateSubmissionByID(verdict.SubmissionID, submissionID, points, verdict.Verdict, verdict.Status)
 			/* if ws is open, live update submission status */
-			if user.Conn != nil {
-				conns := user.Conn
+			if team.Conn != nil {
+				conns := team.Conn
 				newConns := make([]*websocket.Conn, 0)
 				for _, conn := range conns {
 					if conn.Conn != nil {
 						newConns = append(newConns, conn)
-
-						err = conn.WriteJSON(f.Cache.Users.Get(user.ID).Submissions)
+						_, _, submissions := db.GetTeamByCode(teamCode)
+						err = conn.WriteJSON(submissions)
 						if err != nil {
 							log.Println(err)
 						}
 					}
 				}
 
-				user.Conn = newConns
+				team.Conn = newConns
 			}
 
 			if verdict.Status == "Final" {
-				writeWorker.AddJob(jobs.PointsJob{
-					UserID:    *verdict.UserID,
-					Points:    points,
-					ProblemID: *verdict.ProblemID,
-				})
-
-				writeWorker.AddJob(jobs.SubmissionJob{
-					UserID:    *verdict.UserID,
-					ProblemID: *verdict.ProblemID,
-					Submission: models.Submission{
-						ID:      submissionID,
-						Status:  verdict.Status,
-						Verdict: verdict.Verdict,
-						Time:    f.Cache.Users.Get(*verdict.UserID).Submissions[*verdict.ProblemID].Time,
-						Points:  points,
-					},
-				})
-
 				for _, client := range clients {
 					delete(client.Verdict, submissionID)
 				}
@@ -121,18 +98,19 @@ func LiveServer(config *models.Configuration) {
 	app.Use(logger.New())
 
 	routes.PublicRoutes(app)
-	routes.PublicAPIRoutes(v1, config, appClient, writeWorker.F)
-	routes.PublicTimeAPIRoutes(v1, config, appClient, writeWorker.F)
-	routes.PrivateAPIRoutes(v1, config, ts, appClient, writeWorker.F, writeWorker)
-	routes.PrivateTimeAPIRoutes(v1, config, ts, appClient, writeWorker.F, submitWorker, writeWorker)
-	routes.WsRoutes(app, config, ts, appClient, writeWorker.F, writeWorker)
+	routes.PublicAPIRoutes(v1, config, appClient)
+	routes.PublicTimeAPIRoutes(v1, config, appClient, db)
+	routes.PrivateAPIRoutes(v1, config, ts, appClient, db)
+	routes.PrivateTimeAPIRoutes(v1, config, ts, appClient, submitWorker, db)
+	routes.WsRoutes(app, config, ts, db)
+	routes.AdminAPIRoutes(v1, config, db)
 
 	port := os.Getenv("PORT")
 	if len(port) == 0 {
 		port = "8000"
 	}
 
-	middleware.MemLogger(config.LogInterval)
+	workers.MemLogger(config.LogInterval)
 
 	log.Fatal(app.Listen(":" + port))
 }

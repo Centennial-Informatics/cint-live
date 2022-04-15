@@ -2,13 +2,13 @@ package controllers
 
 import (
 	"log"
+	"servermodule/app/database"
 	"servermodule/app/models"
-	"time"
 
 	"github.com/gofiber/websocket/v2"
 )
 
-func WsController(c *websocket.Conn, f *models.FirebaseService, ts *models.TokenService) {
+func WsController(c *websocket.Conn, db *database.ContestDB, ts *models.TokenService) {
 	auth := false
 	userID := ""
 
@@ -34,7 +34,8 @@ func WsController(c *websocket.Conn, f *models.FirebaseService, ts *models.Token
 				//log.Println(*ts.GetUser(token))
 				auth = true
 				userID = ts.GetUserFromToken(token).ID
-				err = c.WriteJSON(f.Cache.Users.Get(userID).Submissions)
+				_, _, submissions := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+				err = c.WriteJSON(submissions)
 
 				if err != nil {
 					c.Close()
@@ -42,9 +43,8 @@ func WsController(c *websocket.Conn, f *models.FirebaseService, ts *models.Token
 				}
 			}
 		} else {
-			temp := f.Cache.Users.Get(userID).Submissions
-			temp["A"].Time = time.Now().Unix()
-			err = c.WriteJSON(temp)
+			_, _, submissions := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+			err = c.WriteJSON(submissions)
 			if err != nil {
 				c.Close()
 				break

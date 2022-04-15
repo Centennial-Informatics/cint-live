@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"servermodule/app/models"
+	"servermodule/app/database"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -13,14 +13,8 @@ import (
 // @Produce  application/json
 // @Success 200 {object} map[string]models.UserEntity
 // @Router /standings [get]
-func Standings(c *fiber.Ctx, fc *models.FirebaseCache) error {
-	users := map[string]*models.UserEntity{}
+func Standings(c *fiber.Ctx, db *database.ContestDB) error {
+	standings := database.AggStandings(db)
 
-	fc.Users.Range(func(key, value interface{}) bool {
-		users[key.(string)] = value.(*models.UserEntity)
-
-		return true
-	})
-
-	return c.JSON(users)
+	return c.JSON(standings)
 }

@@ -20,7 +20,7 @@
 		{/if}
 	</StandingsCell>
 	<StandingsCell className="pl-10 w-72 flex-grow" left>
-		{standingsEntry.Username}
+		{standingsEntry.Name}
 	</StandingsCell>
 	<div class="float-right">
 		<div class="hidden lg:inline-block">

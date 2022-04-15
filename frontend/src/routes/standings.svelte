@@ -5,10 +5,10 @@
 	export async function load() {
 		const res = browser
 			? await Standings()
-			: ((await axios.get('http://localhost:8000/api/v1/standings')).data as StandingsData);
+			: ((await axios.get('http://localhost:8000/api/v1/standings')).data as StandingsData[]);
 		return {
 			props: {
-				standingsDataObj: res
+				standingsData: res
 			}
 		};
 	}
@@ -23,29 +23,58 @@
 	import StandingsTable from '$lib/components/page/standings/standingsTable.svelte';
 	import StandingsHead from '$lib/components/page/standings/standingsHead.svelte';
 	import StandingsCell from '$lib/components/page/standings/standingsCell.svelte';
-	import { problemNames } from '$lib/data/stores/contestData';
+	import { problemNames, problemPages } from '$lib/data/stores/contestData';
 	import Page from '$lib/components/templates/page/page.svelte';
 	import StandingsRowEntry from '$lib/components/page/standings/standingsRowEntry.svelte';
 	import { userInfo } from '$lib/data/stores/userInfo';
 	import StandingsPagination from '$lib/components/page/standings/standingsPagination.svelte';
+	import { fillEmptyVerdicts } from '$lib/utils/verdictStatus';
 
-	export let standingsDataObj: StandingsData;
+	export let standingsData: StandingsData[];
 
 	onMount(() => {
 		if (!$currentPage) currentPage.set('standings');
 	});
 
-	function cleanData(standingsData: StandingsData): StandingsEntry[] {
-		let entries: StandingsEntry[] = [];
-		/* Sum up points */
-		Object.keys(standingsData).forEach((userID) => {
-			const entry = standingsData[userID];
-			entry.TotalPoints = 0;
-			entry.ID = userID;
-			Object.keys(standingsData[userID].Points).forEach((c: string) => {
-				entry.TotalPoints += entry.Points[c];
+	const temp = [
+		{
+			team_id: 1,
+			team_name: 'jeff',
+			verdicts: {
+				C: {
+					CreatedAt: '2022-04-14T19:24:28.016613-04:00',
+					UpdatedAt: '2022-04-14T19:24:30.804593-04:00',
+					DeletedAt: null,
+					ID: 1,
+					submission_id: '153680336',
+					problem_id: 'C',
+					team_code: 'REDACTED',
+					points: 0,
+					verdict: 'Compilation error',
+					status: 'Final',
+					time: 5941468
+				}
+			},
+			members: ['jeff'],
+			division: 'Standard'
+		}
+	];
+
+	function cleanData(standingsData: StandingsData[]): StandingsEntry[] {
+		const entries = standingsData.map((entry) => {
+			let res: StandingsEntry = {
+				Name: entry.team_name,
+				Submissions: fillEmptyVerdicts(entry.verdicts, Object.keys($problemPages)),
+				TotalPoints: 0,
+				Points: {},
+				ID: entry.team_id
+			};
+			Object.keys(res.Submissions).forEach((problemID) => {
+				res.Points[problemID] = res.Submissions[problemID].points;
+				res.TotalPoints += res.Points[problemID];
 			});
-			entries.push(entry);
+			console.log(res);
+			return res;
 		});
 
 		/* Sort by total points and most recent submission */
@@ -54,8 +83,8 @@
 				let aMostRecent = 0;
 				let bMostRecent = 0;
 				Object.keys(a.Submissions).forEach((probID) => {
-					aMostRecent = Math.max(aMostRecent, a.Submissions[probID].Time);
-					bMostRecent = Math.max(bMostRecent, b.Submissions[probID].Time);
+					aMostRecent = Math.max(aMostRecent, a.Submissions[probID].time);
+					bMostRecent = Math.max(bMostRecent, b.Submissions[probID].time);
 				});
 				return aMostRecent < bMostRecent ? -1 : 1;
 			} else {
@@ -67,7 +96,7 @@
 	}
 
 	let standingsEntries: StandingsEntry[];
-	$: standingsEntries = cleanData(standingsDataObj);
+	$: standingsEntries = cleanData(standingsData);
 
 	/* Table pagination */
 

@@ -1,7 +1,7 @@
 servermodule
 *.DS_Store
 *.vscode
-firebase_service.json
+*.http
 env.sh
 
 node_modules
@@ -11,3 +11,5 @@ node_modules
 .env
 .env.*
 !.env.example
+
+*.db

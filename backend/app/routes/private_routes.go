@@ -2,10 +2,11 @@ package routes
 
 import (
 	"servermodule/app/controllers"
+	"servermodule/app/database"
 	"servermodule/app/models"
 	"servermodule/app/scraper"
 	"servermodule/configs/constants"
-	"servermodule/utils/middleware"
+	"servermodule/utils/workers"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,42 +14,37 @@ import (
 
 /* PrivateAPIRoutes - Private login-restricted api endpoints. */
 func PrivateAPIRoutes(router fiber.Router, config *models.Configuration,
-	ts *models.TokenService, client *scraper.Client,
-	f *models.FirebaseService, w *middleware.Writer) {
+	ts *models.TokenService, client *scraper.Client, db *database.ContestDB) {
 	router.Get("/languages", func(c *fiber.Ctx) error {
 		return controllers.Languages(c, client)
 	})
 
 	router.Post("/login", func(c *fiber.Ctx) error {
-		return controllers.Login(c, config, ts, client, f, w)
+		return controllers.Login(c, config, ts, client, db)
 	})
 
 	router.Post("/profile", func(c *fiber.Ctx) error {
-		return controllers.GetProfile(c, ts, f)
+		return controllers.GetProfile(c, ts, db)
+	})
+
+	router.Post("/team", func(c *fiber.Ctx) error {
+		return controllers.GetTeam(c, ts, db)
 	})
 
 	router.Post("/update", func(c *fiber.Ctx) error {
-		return controllers.UpdateProfile(c, ts, f, w)
+		return controllers.UpdateUserTeam(c, ts, db)
 	})
 }
 
 /* PrivateTimeAPIRoutes - Private login-restricted and time-restricted api endpoints. */
 func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 	ts *models.TokenService, client *scraper.Client,
-	f *models.FirebaseService, s *middleware.Submitter, w *middleware.Writer) {
+	s *workers.Submitter, db *database.ContestDB) {
 	router.Post("/submit", func(c *fiber.Ctx) error {
 		if time.Since(config.StartTime) < 0 || time.Until(config.StopTime) < 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
-		return controllers.Submit(c, ts, config, client, f.Cache, s, w)
-	})
-
-	router.Post("/submissions", func(c *fiber.Ctx) error {
-		if time.Since(config.StartTime) < 0 {
-			return c.SendStatus(constants.StatusUnauthorized)
-		}
-
-		return controllers.Submissions(c, ts, f.Cache)
+		return controllers.Submit(c, ts, config, client, s, db)
 	})
 }

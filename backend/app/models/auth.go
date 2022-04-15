@@ -8,18 +8,24 @@ import (
 )
 
 type AuthUser struct {
-	ID   string
+	ID     string
+	TeamID string
+}
+
+type AuthTeam struct {
 	Conn []*websocket.Conn
 }
 
 type TokenService struct {
 	user  map[string]*AuthUser
+	team  map[string]*AuthTeam
 	token map[string]string
 }
 
 func NewTokenService() *TokenService {
 	return &TokenService{
 		user:  map[string]*AuthUser{},
+		team:  map[string]*AuthTeam{},
 		token: map[string]string{},
 	}
 }
@@ -34,7 +40,7 @@ func (ts *TokenService) AuthorizeUser(token string) (string, error) {
 	return user.ID, nil
 }
 
-func (ts *TokenService) UpdateToken(userID string, length int) string {
+func (ts *TokenService) UpdateToken(userID string, teamID string, length int) string {
 	if _, ok := ts.token[userID]; ok {
 		return ts.token[userID]
 	}
@@ -42,7 +48,13 @@ func (ts *TokenService) UpdateToken(userID string, length int) string {
 	ts.token[userID] = utils.GenerateSecureToken(length)
 	if _, ok := ts.user[ts.token[userID]]; !ok {
 		ts.user[ts.token[userID]] = &AuthUser{
-			ID:   userID,
+			ID:     userID,
+			TeamID: teamID,
+		}
+	}
+
+	if _, ok := ts.team[teamID]; !ok {
+		ts.team[teamID] = &AuthTeam{
 			Conn: make([]*websocket.Conn, 0),
 		}
 	}
@@ -54,8 +66,7 @@ func (ts *TokenService) SetConnection(token string, c interface{}) error {
 	if _, ok := ts.user[token]; !ok {
 		return errors.New("user does not exist")
 	}
-
-	ts.user[token].Conn = append(ts.user[token].Conn, c.(*websocket.Conn))
+	ts.team[ts.user[token].TeamID].Conn = append(ts.team[ts.user[token].TeamID].Conn, c.(*websocket.Conn))
 
 	return nil
 }
@@ -66,4 +77,8 @@ func (ts *TokenService) GetUserFromToken(token string) *AuthUser {
 
 func (ts *TokenService) GetUserFromID(userID string) *AuthUser {
 	return ts.user[ts.token[userID]]
+}
+
+func (ts *TokenService) GetTeamFromUser(userID string) *AuthTeam {
+	return ts.team[ts.GetUserFromID(userID).TeamID]
 }

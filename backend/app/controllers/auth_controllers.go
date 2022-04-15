@@ -1,14 +1,14 @@
 package controllers
 
 import (
+	"servermodule/app/database"
 	"servermodule/app/models"
 	"servermodule/app/scraper"
 	"servermodule/configs/constants"
 	"servermodule/utils"
-	"servermodule/utils/jobs"
-	"servermodule/utils/middleware"
 
 	"github.com/gofiber/fiber/v2"
+	"google.golang.org/api/oauth2/v2"
 )
 
 // Login godoc
@@ -22,29 +22,29 @@ import (
 // @Success 200 {string} string abcdefg123456789
 // @Failure 401
 // @Router /login [post]
-func Login(c *fiber.Ctx, config *models.Configuration, ts *models.TokenService, client *scraper.Client,
-	f *models.FirebaseService, w *middleware.Writer) error {
+func Login(c *fiber.Ctx, config *models.Configuration, ts *models.TokenService, client *scraper.Client, db *database.ContestDB) error {
 	userID, err := ts.AuthorizeUser(c.FormValue("token"))
+	var tokenInfo *oauth2.Tokeninfo
 	if err != nil {
-		tokenInfo, err := utils.VerifyToken(c.FormValue("id_token"))
+		tokenInfo, err = utils.VerifyToken(c.FormValue("id_token"))
 
 		if err != nil {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
-		if !f.Cache.Users.Has(tokenInfo.UserId) {
-			f.Cache.Users.Store(tokenInfo.UserId, f.NewUserEntity(c.FormValue("username"), tokenInfo.Email))
-
-			w.AddJob(jobs.UserJob{
-				UserID:   tokenInfo.UserId,
-				Username: tokenInfo.Email,
-			})
+		if !db.HasUser(tokenInfo.Email) {
+			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
-		userID = tokenInfo.UserId
+		userID = tokenInfo.Email
 	}
 
-	return c.SendString(ts.UpdateToken(userID, config.AuthTokenLength))
+	team, _, _ := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+
+	return c.JSON(map[string]string{
+		"token":   ts.UpdateToken(userID, team.Code, config.AuthTokenLength),
+		"team_id": team.Code,
+	})
 }
 
 // GetProfile godoc
@@ -57,13 +57,28 @@ func Login(c *fiber.Ctx, config *models.Configuration, ts *models.TokenService, 
 // @Success 200 {object} models.UserEntity
 // @Failure 401
 // @Router /profile [post]
-func GetProfile(c *fiber.Ctx, ts *models.TokenService, f *models.FirebaseService) error {
+func GetProfile(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) error {
 	userID, err := ts.AuthorizeUser(c.FormValue("token"))
 	if err != nil {
 		return c.SendStatus(constants.StatusUnauthorized)
 	}
 
-	return c.JSON(f.Cache.Users.Get(userID))
+	return c.JSON(db.GetUser(userID))
+}
+
+func GetTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) error {
+	userID, err := ts.AuthorizeUser(c.FormValue("token"))
+	if err != nil {
+		return c.SendStatus(constants.StatusUnauthorized)
+	}
+
+	team, members, submissions := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+
+	return c.JSON(map[string]interface{}{
+		"team":        team,
+		"members":     members,
+		"submissions": submissions,
+	})
 }
 
 // UpdateProfile godoc
@@ -78,30 +93,14 @@ func GetProfile(c *fiber.Ctx, ts *models.TokenService, f *models.FirebaseService
 // @Success 200
 // @Failure 401
 // @Router /update [post]
-func UpdateProfile(c *fiber.Ctx, ts *models.TokenService, f *models.FirebaseService, w *middleware.Writer) error {
+func UpdateUserTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) error {
 	userID, err := ts.AuthorizeUser(c.FormValue("token"))
 	if err != nil {
 		return c.SendStatus(constants.StatusUnauthorized)
 	}
 
-	user := f.Cache.Users.Get(userID)
-
-	if username := c.FormValue("username"); username != "" {
-		user.Username = username
-	}
-
-	if email := c.FormValue("email"); email != "" {
-		user.Email = email
-	}
-
-	if f.Cache.Users.Has(userID) {
-		f.Cache.Users.Store(userID, user)
-
-		w.AddJob(jobs.UpdateUserJob{
-			UserID:   userID,
-			Username: user.Username,
-			Email:    user.Email,
-		})
+	if teamID := c.FormValue("team_code"); teamID != "" {
+		db.UpdateUserTeam(userID, teamID)
 	}
 
 	return c.SendStatus(constants.StatusOk)

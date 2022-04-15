@@ -54,25 +54,29 @@ export interface Problem {
 
 export interface SubmissionVerdict {
 	ID: string;
-	Verdict: string;
-	Status: 'Pending' | 'Final';
-	Time: number;
-	Points: number;
+	problem_id: string;
+	verdict: string;
+	status: 'Pending' | 'Final';
+	time: number;
+	points: number;
 }
 
 export interface SubmissionVerdictUpdate {
 	[key: string]: SubmissionVerdict;
 }
 
+export interface StandingsData {
+	team_id: string;
+	team_name: string;
+	verdicts: SubmissionVerdictUpdate;
+	members: string[];
+	division: string;
+}
+
 export interface StandingsEntry {
-	Username: string;
-	Email: string; //TODO: hide this
+	Name: string;
 	Submissions: SubmissionVerdictUpdate;
 	Points: { [key: string]: number };
 	TotalPoints: number;
 	ID: string;
-}
-
-export interface StandingsData {
-	[key: string]: StandingsEntry;
 }

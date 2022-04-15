@@ -1,6 +1,6 @@
 <script>
 	// @ts-nocheck
-	import { IDToken, userInfo } from '$lib/data/stores/userInfo';
+	import { IDToken, TeamID, userInfo } from '$lib/data/stores/userInfo';
 	import { onMount } from 'svelte';
 	import jwt_decode from 'jwt-decode';
 	import Login from '$lib/utils/networking/login';
@@ -10,7 +10,9 @@
 			client_id: '151372106954-hqa4baeucq2n1pajodj31h9e5r141mur.apps.googleusercontent.com',
 			callback: async (res) => {
 				const decoded = jwt_decode(res.credential);
-				IDToken.set(await Login(res.credential));
+				const loginInfo = await Login(res.credential);
+				IDToken.set(loginInfo.token);
+				TeamID.set(loginInfo.team_id);
 				userInfo.set({
 					ID: decoded.sub,
 					name: decoded.name,

@@ -1,14 +1,14 @@
 import { BAD, ERROR, GOOD, PENDING, UNSUBMITTED } from '$lib/data/constants/status';
-import type { SubmissionVerdict } from 'src/types/contestData';
+import type { SubmissionVerdict, SubmissionVerdictUpdate } from 'src/types/contestData';
 import type { VerdictStatus } from 'src/types/submission';
 
 /* Convert something like "wrong answer on test 7" to BAD */
 export default function verdictStatus(verdict: SubmissionVerdict): VerdictStatus {
 	let status: VerdictStatus = UNSUBMITTED;
-	if (verdict.Verdict === 'Accepted') status = GOOD;
-	else if (verdict.Status === 'Pending') status = PENDING;
-	else if (verdict.Verdict.length >= 5 && verdict.Verdict.substring(0, 5) === 'Wrong') status = BAD;
-	else if (verdict.Verdict !== 'Unsubmitted') status = ERROR;
+	if (verdict.verdict === 'Accepted') status = GOOD;
+	else if (verdict.status === 'Pending') status = PENDING;
+	else if (verdict.verdict.length >= 5 && verdict.verdict.substring(0, 5) === 'Wrong') status = BAD;
+	else if (verdict.verdict !== 'Unsubmitted') status = ERROR;
 	return status;
 }
 
@@ -40,4 +40,44 @@ export function verdictStatusColor(status: VerdictStatus): string {
 		default:
 			return 'text-gray-300';
 	}
+}
+
+export function convertVerdictsToMap(data: SubmissionVerdict[], problemIDs: string[]) {
+	const res: SubmissionVerdictUpdate = {};
+	data.forEach((s) => {
+		if (!(s.problem_id in res) || s.time > res[s.problem_id].time) {
+			res[s.problem_id] = s;
+		}
+	});
+	problemIDs.forEach((problemID) => {
+		if (!(problemID in res)) {
+			res[problemID] = {
+				ID: '',
+				problem_id: problemID,
+				verdict: 'Unsubmitted',
+				status: 'Final',
+				time: 0,
+				points: 0
+			};
+		}
+	});
+
+	return res;
+}
+
+export function fillEmptyVerdicts(data: SubmissionVerdictUpdate, problemIDs: string[]) {
+	problemIDs.forEach((problemID) => {
+		if (!(problemID in data)) {
+			data[problemID] = {
+				ID: '',
+				problem_id: problemID,
+				verdict: 'Unsubmitted',
+				status: 'Final',
+				time: 0,
+				points: 0
+			};
+		}
+	});
+
+	return data;
 }

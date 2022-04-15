@@ -2,6 +2,7 @@ package routes
 
 import (
 	"servermodule/app/controllers"
+	"servermodule/app/database"
 	"servermodule/app/models"
 	"servermodule/app/scraper"
 	"servermodule/configs/constants"
@@ -19,8 +20,7 @@ func PublicRoutes(app *fiber.App) {
 }
 
 /* PublicAPIRoutes - Public api routes. */
-func PublicAPIRoutes(router fiber.Router, config *models.Configuration, client *scraper.Client,
-	f *models.FirebaseService) {
+func PublicAPIRoutes(router fiber.Router, config *models.Configuration, client *scraper.Client) {
 	router.Post("/collect", func(c *fiber.Ctx) error {
 		if time.Since(config.StartTime) < 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
@@ -39,13 +39,13 @@ func PublicAPIRoutes(router fiber.Router, config *models.Configuration, client *
 
 /* PublicTimeAPIRoutes - Public time-restricted api routes. */
 func PublicTimeAPIRoutes(router fiber.Router, config *models.Configuration, client *scraper.Client,
-	f *models.FirebaseService) {
+	db *database.ContestDB) {
 	router.Get("/standings", func(c *fiber.Ctx) error {
 		if time.Since(config.StartTime) < 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
-		return controllers.Standings(c, f.Cache)
+		return controllers.Standings(c, db)
 	})
 
 	router.Get("/problems", func(c *fiber.Ctx) error {
