@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Wrapper from '$lib/components/templates/page/wrapper.svelte';
 	import Subtitle from '$lib/components/templates/typography/subtitle.svelte';
-	import { brand, IDToken, TeamInfoData } from '$lib/data/stores/userInfo';
+	import { IDToken, TeamInfoData } from '$lib/data/stores/userInfo';
 	import LeaveTeam from '$lib/utils/networking/leaveTeam';
 	import type { TeamInfo, TeammateInfo } from 'src/types/teamInfo';
 	import Button from '../problem/submit/button.svelte';

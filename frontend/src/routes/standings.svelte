@@ -36,30 +36,6 @@
 		if (!$currentPage) currentPage.set('standings');
 	});
 
-	const temp = [
-		{
-			team_id: 1,
-			team_name: 'jeff',
-			verdicts: {
-				C: {
-					CreatedAt: '2022-04-14T19:24:28.016613-04:00',
-					UpdatedAt: '2022-04-14T19:24:30.804593-04:00',
-					DeletedAt: null,
-					ID: 1,
-					submission_id: '153680336',
-					problem_id: 'C',
-					team_code: 'REDACTED',
-					points: 0,
-					verdict: 'Compilation error',
-					status: 'Final',
-					time: 5941468
-				}
-			},
-			members: ['jeff'],
-			division: 'Standard'
-		}
-	];
-
 	function cleanData(standingsData: StandingsData[]): StandingsEntry[] {
 		const entries = standingsData.map((entry) => {
 			let res: StandingsEntry = {
@@ -73,7 +49,6 @@
 				res.Points[problemID] = res.Submissions[problemID].points;
 				res.TotalPoints += res.Points[problemID];
 			});
-			console.log(res);
 			return res;
 		});
 

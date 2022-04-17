@@ -15,18 +15,18 @@
 	export let visible = false;
 	onMount(() => {
 		if (visible) {
-			// @ts-expect-error Cannot find name 'MathJax'.
-			if (typeof MathJax !== 'undefined' && MathJax.typeset) {
-				// @ts-expect-error Cannot find name 'MathJax'.
-				MathJax.typeset();
+			// @ts-ignore mathjax is loaded from cdn
+			if (typeof window.MathJax !== 'undefined' && window.MathJax.typeset) {
+				// @ts-ignore mathjax is loaded from cdn
+				window.MathJax.typeset();
 			}
 		}
 	});
 	$: if (visible) {
-		// @ts-expect-error Cannot find name 'MathJax'.
-		if (typeof MathJax !== 'undefined' && MathJax.typeset) {
-			// @ts-expect-error Cannot find name 'MathJax'.
-			MathJax.typeset();
+		// @ts-ignore mathjax is loaded from cdn
+		if (typeof window.MathJax !== 'undefined' && window.MathJax.typeset) {
+			// @ts-ignore mathjax is loaded from cdn
+			window.MathJax.typeset();
 		}
 	}
 </script>

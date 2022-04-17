@@ -3,7 +3,7 @@
 
 	export let small = false;
 	export let disabled = false;
-	export let onClick: () => void = () => {};
+	export let onClick: (e: Event) => void;
 	export let className = '';
 	export let outlined = false;
 </script>

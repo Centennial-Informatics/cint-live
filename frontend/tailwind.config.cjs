@@ -5,10 +5,12 @@ module.exports = {
 		'bg-brand-light',
 		'text-brand',
 		'text-brand-light',
+		'text-brand-lightest',
 		'bg-alt',
 		'bg-alt-light',
 		'text-alt',
-		'text-alt-light'
+		'text-alt-light',
+		'text-alt-lightest'
 	],
 	darkMode: 'class', // or 'media' or 'class'
 	theme: {
@@ -29,14 +31,14 @@ module.exports = {
 					darkest: '#271190'
 				},
 				alt: {
-					lightest: '#fcd34d',
+					lightest: '#fde68a',
 					light: '#f59e0b',
 					DEFAULT: '#d97706',
 					dark: '#b45309',
 					darkest: '#78350f'
 				},
 				gray: {
-					50: '#f8fafc',
+					50: '#ffffff',
 					100: '#f1f5f9',
 					200: '#e2e8f0',
 					300: '#cbd5e1',
@@ -48,12 +50,12 @@ module.exports = {
 					900: '#0f172a'
 				},
 				good: {
-					0: '#86efac',
+					0: '#bbf7d0',
 					50: '#4ade80',
-					100: '#166534'
+					100: '#15803d'
 				},
 				bad: {
-					0: '#fca5a5',
+					0: '#fecaca',
 					50: '#f87171',
 					100: '#991b1b'
 				},

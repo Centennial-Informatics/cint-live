@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ChevronLeft from 'svelte-material-icons/ChevronLeft.svelte';
 	import ChevronRight from 'svelte-material-icons/ChevronRight.svelte';
-	export let onClick: (e: Event) => void = () => {};
+	export let onClick: (e: Event) => void;
 	export let disabled = false;
 	export let direction = 'L';
 	export let size = '20';
