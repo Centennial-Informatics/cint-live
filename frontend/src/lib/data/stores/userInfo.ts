@@ -11,7 +11,11 @@ export const TeamID = writable<string>('');
 export const TeamInfoData = writable<TeamData>({} as TeamData);
 
 export const brand = derived(TeamInfoData, ($TeamInfoData) => {
-	return ($TeamInfoData.team.division === 'Advanced' ? 'alt' : 'brand') || 'brand';
+	return $TeamInfoData.team
+		? $TeamInfoData.team.division === 'Advanced'
+			? 'alt'
+			: 'brand'
+		: 'brand';
 });
 
 // export const JWT = writable<string>('');

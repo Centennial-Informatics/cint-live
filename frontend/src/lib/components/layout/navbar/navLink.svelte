@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { currentPage } from '$lib/data/stores/currentPage';
+	import { brand } from '$lib/data/stores/userInfo';
 	import Home from 'svelte-material-icons/Home.svelte';
 	import Poll from 'svelte-material-icons/Poll.svelte';
 
@@ -12,7 +13,7 @@
 
 <a href={to} on:click={() => currentPage.set(tabId)} class="group">
 	<div
-		class="flex items-center no-underline text-gray-300 bg-brand bg-opacity-0 px-2 py-1 max-w-full rounded-md text-base font-medium font-body transition-colors {!selected &&
+		class="flex items-center no-underline text-gray-300 bg-{$brand} bg-opacity-0 px-2 py-1 max-w-full rounded-md text-base font-medium font-body transition-colors {!selected &&
 			'hover'} {selected && 'bg-opacity-0'}"
 	>
 		{#if tabId === 'home'}
@@ -25,7 +26,7 @@
 		</span>
 	</div>
 	<div
-		class="h-2 bg-brand {selected
+		class="h-2 bg-{$brand} {selected
 			? 'w-full'
 			: 'w-0'} group-hover:w-full rounded-full transition-width"
 	/>

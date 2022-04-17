@@ -5,6 +5,7 @@
 	import VerdictIcon from '$lib/components/templates/icon/verdictIcon.svelte';
 	import type { VerdictStatus } from 'src/types/submission';
 	import { UNSUBMITTED } from '$lib/data/constants/status';
+	import { brand } from '$lib/data/stores/userInfo';
 
 	export let to = '/';
 	export let tabId = '';
@@ -16,9 +17,9 @@
 
 <a href={to} on:click={() => currentPage.set(tabId)}>
 	<div
-		class="flex items-center no-underline text-gray-300 bg-brand bg-opacity-0 p-2 pl-5 max-w-full rounded-r-full text-base font-medium font-body transition-colors {!selected
+		class="flex items-center no-underline text-gray-300 bg-{$brand} bg-opacity-0 p-2 pl-5 max-w-full rounded-r-full text-base font-medium font-body transition-colors {!selected
 			? 'hover:bg-opacity-40'
-			: 'bg-opacity-70 text-brand-lightest'}"
+			: `bg-opacity-70 text-${$brand}-lightest`}"
 	>
 		{#if tabId === 'home'}
 			<span class="mr-2"><Home width="20" height="20" /></span>

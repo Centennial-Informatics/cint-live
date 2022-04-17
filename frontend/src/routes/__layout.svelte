@@ -27,10 +27,11 @@
 		submissionWS
 	} from '$lib/data/stores/contestData';
 	import { DefaultConfig } from '$lib/data/configs/default';
-	import { IDToken } from '$lib/data/stores/userInfo';
+	import { IDToken, TeamInfoData } from '$lib/data/stores/userInfo';
 	import NewWebSocket from '$lib/utils/networking/ws';
 	import type { SubmissionVerdict } from 'src/types/contestData';
 	import { convertVerdictsToMap } from '$lib/utils/verdictStatus';
+	import GetTeam from '$lib/utils/networking/team';
 
 	export let contestDataObj: ContestData;
 
@@ -46,6 +47,12 @@
 				);
 			})
 		);
+	}
+
+	$: if ($IDToken && !$TeamInfoData.members) {
+		(async () => {
+			TeamInfoData.set(await GetTeam($IDToken));
+		})();
 	}
 </script>
 

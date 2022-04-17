@@ -28,9 +28,9 @@
 				Join a different team
 			{/if}
 		</Subtitle>
-		<div class="flex flex-row space-x-2">
+		<div class="flex flex-row space-x-3">
 			<input
-				class="outline-none bg-gray-800 p-2 rounded-lg w-full text-gray-50 font-bold"
+				class="outline-none bg-gray-800 p-3 rounded-lg w-full text-gray-50 font-bold"
 				placeholder="Enter code"
 				bind:value={teamCode}
 				on:keydown={(e) => {
@@ -41,13 +41,13 @@
 				}}
 			/>
 			<div
-				class="flex justify-center items-center bg-{$brand} h-full rounded-lg hover:bg-{$brand}-light cursor-pointer"
+				class="flex justify-center items-center bg-{$brand} h-full rounded-lg hover:bg-opacity-70 cursor-pointer"
 				on:click={() => {
 					joinTeam(teamCode);
 					teamCode = '';
 				}}
 			>
-				<ChevronRight width="40" height="40" color="#ffffff" />
+				<ChevronRight width="50" height="50" color="#ffffff" />
 			</div>
 		</div>
 	</div>

@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class="bg-{$brand} w-full p-6 rounded-xl flex flex-row text-md text-gray-50 items-center hover:bg-{$brand}-light cursor-pointer"
+	class="bg-{$brand} w-full p-6 rounded-xl flex flex-row text-md text-gray-50 items-center hover:bg-opacity-70 cursor-pointer"
 >
 	Your Team Code
 	<div class="flex-grow" />

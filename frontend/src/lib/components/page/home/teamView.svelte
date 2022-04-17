@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Wrapper from '$lib/components/templates/page/wrapper.svelte';
 	import Subtitle from '$lib/components/templates/typography/subtitle.svelte';
-	import { STANDARD } from '$lib/data/constants/division';
 	import { brand, IDToken, TeamInfoData } from '$lib/data/stores/userInfo';
 	import LeaveTeam from '$lib/utils/networking/leaveTeam';
 	import type { TeamInfo, TeammateInfo } from 'src/types/teamInfo';
@@ -22,12 +21,6 @@
 		<div class="w-full space-y-2">
 			<Subtitle>Team Name</Subtitle>
 			<div class="bg-gray-800 text-gray-50 rounded-lg p-4">{teamInfo.name}</div>
-		</div>
-		<div class="w-full">
-			<Subtitle>Division</Subtitle>
-			<div class="font-bold text-3xl text-{$brand}-light">
-				{teamInfo.division}
-			</div>
 		</div>
 		<div class="w-full space-y-2">
 			<Subtitle>Members</Subtitle>

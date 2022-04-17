@@ -1,5 +1,15 @@
 module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
+	safelist: [
+		'bg-brand',
+		'bg-brand-light',
+		'text-brand',
+		'text-brand-light',
+		'bg-alt',
+		'bg-alt-light',
+		'text-alt',
+		'text-alt-light'
+	],
 	darkMode: 'class', // or 'media' or 'class'
 	theme: {
 		extend: {
@@ -19,11 +29,11 @@ module.exports = {
 					darkest: '#271190'
 				},
 				alt: {
-					lightest: '#FFD156',
-					light: '#F5A727',
-					DEFAULT: '#ED8B3B',
-					dark: '#C5591C',
-					darkest: '#8F371B'
+					lightest: '#fcd34d',
+					light: '#f59e0b',
+					DEFAULT: '#d97706',
+					dark: '#b45309',
+					darkest: '#78350f'
 				},
 				gray: {
 					50: '#f8fafc',
