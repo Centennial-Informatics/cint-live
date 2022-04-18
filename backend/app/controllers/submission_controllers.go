@@ -47,22 +47,6 @@ func Submit(c *fiber.Ctx, userID string, ts *models.TokenService, config *models
 		submission.File = nil
 	}
 
-	// sub := models.Submission{
-	// 	Status:  "Pending",
-	// 	Verdict: "Pending",
-	// 	Time:    int64(time.Since(config.StartTime) / time.Second),
-	// }
-
-	// team := fc.GetUserTeam(userID)
-
-	// team.Submissions[c.FormValue("problem")] = &sub
-
-	// w.AddJob(jobs.SubmissionJob{
-	// 	TeamID:     fc.GetUser(userID).TeamID,
-	// 	Submission: sub,
-	// 	ProblemID:  c.FormValue("problem"),
-	// })
-
 	submissions := db.GetTeamSubmissions(team.Code)
 
 	newConns := make([]*websocket.Conn, 0)

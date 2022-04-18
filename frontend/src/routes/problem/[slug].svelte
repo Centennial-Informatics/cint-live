@@ -55,6 +55,7 @@
 				title={$problemPages[$page.params.slug].Header.Title}
 				ID={$page.params.slug}
 				submissionStatus={st}
+				{status}
 			/>
 		{/if}
 	</Wrapper>

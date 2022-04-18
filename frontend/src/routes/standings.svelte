@@ -26,9 +26,10 @@
 	import { problemNames, problemPages } from '$lib/data/stores/contestData';
 	import Page from '$lib/components/templates/page/page.svelte';
 	import StandingsRowEntry from '$lib/components/page/standings/standingsRowEntry.svelte';
-	import { userInfo } from '$lib/data/stores/userInfo';
+	import { TeamInfoData, userInfo } from '$lib/data/stores/userInfo';
 	import StandingsPagination from '$lib/components/page/standings/standingsPagination.svelte';
 	import { fillEmptyVerdicts } from '$lib/utils/verdictStatus';
+	import { STANDARD } from '$lib/data/constants/division';
 
 	export let standingsData: StandingsData[];
 
@@ -37,6 +38,10 @@
 	});
 
 	function cleanData(standingsData: StandingsData[]): StandingsEntry[] {
+		standingsData = standingsData.filter((entry) => {
+			if ($TeamInfoData.team) return entry.division === $TeamInfoData.team.division;
+			else return entry.division === STANDARD;
+		});
 		const entries = standingsData.map((entry) => {
 			let res: StandingsEntry = {
 				Name: entry.team_name,
@@ -71,7 +76,14 @@
 	}
 
 	let standingsEntries: StandingsEntry[];
-	$: standingsEntries = cleanData(standingsData);
+
+	// run it once per page but re-run after login/logout
+	$: if ($TeamInfoData.team) {
+		standingsEntries = cleanData(standingsData);
+	}
+	$: if (!$TeamInfoData.team) {
+		standingsEntries = cleanData(standingsData);
+	}
 
 	/* Table pagination */
 

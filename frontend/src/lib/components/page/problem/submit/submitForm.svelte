@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Page from '$lib/components/templates/page/page.svelte';
+	import { PENDING } from '$lib/data/constants/status';
 	import { contestLanguages } from '$lib/data/stores/contestData';
 	import { IDToken } from '$lib/data/stores/userInfo';
 	import Submit from '$lib/utils/networking/submit';
@@ -10,9 +11,10 @@
 	export let title = 'A. Problem';
 	export let ID = 'A';
 	export let submissionStatus: Element;
+	export let status = 'Final';
+
 	let langs = $contestLanguages;
 	let selectedLanguage = langs[0].ID;
-	let clicked = false;
 	let submissionText = '';
 
 	async function handleSubmit(submission: string, file?: File) {
@@ -25,14 +27,13 @@
 			}
 		} else if (submission.length > 0) {
 			submissionStatus.scrollIntoView({ behavior: 'smooth' });
-			clicked = true;
+			status = PENDING;
 			await Submit($IDToken, {
 				file: file,
 				submission: submission,
 				problem: ID,
 				language: selectedLanguage
 			});
-			clicked = false;
 			submissionText = '';
 		}
 	}
@@ -57,7 +58,12 @@
 			</div>
 		</div>
 		{#if $IDToken}
-			<Button disabled={clicked || !$IDToken}>Submit</Button>
+			<Button
+				disabled={status === PENDING || !$IDToken}
+				onClick={() => {
+					console.log('Submitting');
+				}}>Submit</Button
+			>
 			<div class="text-gray-400 mt-4 text-sm text-center">
 				Only the most recent submission will be counted. There are no penalties for wrong answers.
 			</div>

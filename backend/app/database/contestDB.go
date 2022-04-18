@@ -129,7 +129,7 @@ func (db *ContestDB) UpdateUserTeam(email string, teamCode string) *Team {
 			db.DeleteTeam(user.TeamCode)
 		}
 		db.db.Model(user).Update("team_code", teamCode)
-		team, _= db.GetTeamByCode(teamCode)
+		team, _ = db.GetTeamByCode(teamCode)
 	} else {
 		db.db.First(&team, "code = ?", user.TeamCode)
 	}
@@ -187,10 +187,11 @@ func (db *ContestDB) GetTeamByCode(code string) (Team, []User) {
 	team.Division = "Standard"
 	for _, member := range members {
 		if member.Division != "Standard" {
-			db.db.Model(&Team{}).Where("code = ?", code).Update("division", "Advanced")
 			team.Division = "Advanced"
 		}
 	}
+
+	db.db.Model(&Team{}).Where("code = ?", code).Update("division", team.Division)
 
 	return team, members
 }
@@ -204,10 +205,11 @@ func (db *ContestDB) GetTeam(ID int) (Team, []User) {
 	team.Division = "Standard"
 	for _, member := range members {
 		if member.Division != "Standard" {
-			db.db.First(&team, ID).Update("division", "Advanced")
 			team.Division = "Advanced"
 		}
 	}
+
+	db.db.First(&team, ID).Update("division", team.Division)
 
 	return team, members
 }
@@ -251,9 +253,9 @@ func (db *ContestDB) UpdateSubmission(submissionID string, points int, verdict s
 func (db *ContestDB) UpdateSubmissionByID(ID int, submissionID string, points int, verdict string, status string) {
 	db.db.Model(&Submission{}).Where(ID).Updates(Submission{
 		SubmissionID: submissionID,
-		Points:  points,
-		Verdict: verdict,
-		Status:  status,
+		Points:       points,
+		Verdict:      verdict,
+		Status:       status,
 	})
 }
 

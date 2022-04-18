@@ -22,22 +22,27 @@ func (s *Submitter) Submit(submission *models.QueuedSubmission) {
 
 func (s *Submitter) ProcessNextSubmission(client *scraper.Client) {
 	if len(s.SubmissionQueue) > 0 {
-		log.Println("Processing submission")
-
 		sub := s.SubmissionQueue[0]
-		s.SubmissionQueue = s.SubmissionQueue[1:]
 
-		go func() {
-			submissionID, err := client.Submit(sub.ContestURL, sub.ProblemID,
-				sub.Source, sub.File, sub.Language)
+		// check if submission is on the correct contest scraper
+		if sub.ContestURL == client.Cached.ContestURL {
+			log.Println("Processing submission")
+			s.SubmissionQueue = s.SubmissionQueue[1:]
 
-			client.Verdict[submissionID].UserID = &sub.UserID
-			client.Verdict[submissionID].SubmissionID = sub.SubmissionID
+			go func() {
+				submissionID, err := client.Submit(sub.ContestURL, sub.ProblemID,
+					sub.Source, sub.File, sub.Language)
 
-			if err != nil {
-				log.Println(err)
-			}
-		}()
+				client.Verdict[submissionID].UserID = &sub.UserID
+				client.Verdict[submissionID].SubmissionID = sub.SubmissionID
+
+				if err != nil {
+					log.Println(err)
+				}
+			}()
+		} else {
+			log.Println("Wrong client, deferring submission ", sub.SubmissionID)
+		}
 	}
 }
 

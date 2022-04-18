@@ -14,7 +14,7 @@
 	$: $submissionData, showAlert(); // run showAlert() when submissionData updates
 	function showAlert() {
 		status = problemID in $submissionData ? verdictStatus($submissionData[problemID]) : UNSUBMITTED;
-		verdict = problemID in $submissionData ? $submissionData[problemID].Verdict : '';
+		verdict = problemID in $submissionData ? $submissionData[problemID].verdict : '';
 
 		if (status === PENDING) finished = false; // once submitted, show alert when done
 
