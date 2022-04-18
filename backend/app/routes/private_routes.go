@@ -34,15 +34,25 @@ func PrivateAPIRoutes(router fiber.Router, config *models.Configuration,
 
 /* PrivateTimeAPIRoutes - Private login-restricted and time-restricted api endpoints. */
 func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
-	ts *models.TokenService, client *scraper.Client,
+	ts *models.TokenService, standardClient *scraper.Client, advancedClient *scraper.Client,
 	s *workers.Submitter, db *database.ContestDB) {
+	divisionClient := map[string]*scraper.Client{
+		"Standard": standardClient,
+		"Advanced": advancedClient,
+	}
 	// during contest
 	router.Post("/submit", func(c *fiber.Ctx) error {
 		if time.Since(config.StartTime) < 0 || time.Until(config.StopTime) < 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
+		userID, err := ts.AuthorizeUser(c.FormValue("token"))
+		if err != nil {
+			return c.SendStatus(constants.StatusUnauthorized)
+		}
 
-		return controllers.Submit(c, ts, config, client, s, db)
+		team, _ := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+
+		return controllers.Submit(c, userID, ts, config, divisionClient[team.Division], s, db)
 	})
 
 	// before contest
@@ -51,20 +61,33 @@ func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 		if time.Since(config.StartTime) < 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
-		return controllers.UpdateUserTeam(c, ts, db, config)
+		userID, err := ts.AuthorizeUser(c.FormValue("token"))
+		if err != nil {
+			return c.SendStatus(constants.StatusUnauthorized)
+		}
+
+		return controllers.UpdateUserTeam(c, userID, db, config)
 	})
 
 	router.Post("/update", func(c *fiber.Ctx) error {
 		if time.Since(config.StartTime) < 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
-		return controllers.UpdateTeam(c, ts, db)
+		userID, err := ts.AuthorizeUser(c.FormValue("token"))
+		if err != nil {
+			return c.SendStatus(constants.StatusUnauthorized)
+		}
+		return controllers.UpdateTeam(c, userID, db)
 	})
 
 	router.Post("/leave", func(c *fiber.Ctx) error {
 		if time.Since(config.StartTime) < 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
-		return controllers.LeaveTeam(c, ts, db)
+		userID, err := ts.AuthorizeUser(c.FormValue("token"))
+		if err != nil {
+			return c.SendStatus(constants.StatusUnauthorized)
+		}
+		return controllers.LeaveTeam(c, userID, db)
 	})
 }

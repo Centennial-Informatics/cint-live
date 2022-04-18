@@ -29,8 +29,19 @@ func LiveServer(config *models.Configuration) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	config2, err := configs.QuHacks()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	appClient2, err := scraper.NewClient(accounts[0].User, accounts[0].User, accounts[0].Pass)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// scrape worker scrapes problem statements from codeforces
 	workers.ScrapeWorker(appClient, config.ContestURL, config.ContestID, config.ScrapeIntervalAll)
+	workers.ScrapeWorker(appClient2, config2.ContestURL, config2.ContestID, config2.ScrapeIntervalAll)
 
 	clients := make([]*scraper.Client, 0)
 
@@ -98,10 +109,10 @@ func LiveServer(config *models.Configuration) {
 	app.Use(logger.New())
 
 	routes.PublicRoutes(app)
-	routes.PublicAPIRoutes(v1, config, appClient)
+	routes.PublicAPIRoutes(v1, config, appClient, appClient2)
 	routes.PublicTimeAPIRoutes(v1, config, appClient, db)
 	routes.PrivateAPIRoutes(v1, config, ts, appClient, db)
-	routes.PrivateTimeAPIRoutes(v1, config, ts, appClient, submitWorker, db)
+	routes.PrivateTimeAPIRoutes(v1, config, ts, appClient, appClient2, submitWorker, db)
 	routes.WsRoutes(app, config, ts, db)
 	routes.AdminAPIRoutes(v1, config, db)
 

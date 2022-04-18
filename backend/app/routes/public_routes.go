@@ -20,20 +20,28 @@ func PublicRoutes(app *fiber.App) {
 }
 
 /* PublicAPIRoutes - Public api routes. */
-func PublicAPIRoutes(router fiber.Router, config *models.Configuration, client *scraper.Client) {
-	router.Post("/collect", func(c *fiber.Ctx) error {
+func PublicAPIRoutes(router fiber.Router, config *models.Configuration, standardClient *scraper.Client, advancedClient *scraper.Client) {
+	router.Post("/collect/standard", func(c *fiber.Ctx) error {
 		if time.Since(config.StartTime) < 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
-		return controllers.Collect(c, config, client)
+		return controllers.Collect(c, config, standardClient)
+	})
+
+	router.Post("/collect/advanced", func(c *fiber.Ctx) error {
+		if time.Since(config.StartTime) < 0 {
+			return c.SendStatus(constants.StatusUnauthorized)
+		}
+
+		return controllers.Collect(c, config, advancedClient)
 	})
 
 	router.Get("/schedule", func(c *fiber.Ctx) error {
 		return controllers.Schedule(c, config)
 	})
 	router.Get("/about", func(c *fiber.Ctx) error {
-		return controllers.About(c, client)
+		return controllers.About(c, standardClient)
 	})
 }
 

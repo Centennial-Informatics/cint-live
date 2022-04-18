@@ -1,12 +1,12 @@
 <script lang="ts" context="module">
 	import axios from 'axios';
 	import type { ContestData } from 'src/types';
-	import Collect from '$lib/utils/networking/collect';
+	import CollectStandard from '$lib/utils/networking/collectStandard';
 	import { browser } from '$app/env';
 	export async function load() {
 		const res = browser
-			? await Collect()
-			: ((await axios.post('http://localhost:8000/api/v1/collect')).data as ContestData);
+			? await CollectStandard()
+			: ((await axios.post('http://localhost:8000/api/v1/collect/standard')).data as ContestData);
 		return {
 			props: {
 				contestDataObj: res
@@ -32,6 +32,8 @@
 	import type { SubmissionVerdict } from 'src/types/contestData';
 	import { convertVerdictsToMap } from '$lib/utils/verdictStatus';
 	import GetTeam from '$lib/utils/networking/team';
+	import CollectAdvanced from '$lib/utils/networking/collectAdvanced';
+	import { ADVANCED } from '$lib/data/constants/division';
 
 	export let contestDataObj: ContestData;
 
@@ -53,6 +55,14 @@
 		(async () => {
 			TeamInfoData.set(await GetTeam($IDToken));
 		})();
+	}
+
+	$: if ($TeamInfoData.team) {
+		if ($TeamInfoData.team.division === ADVANCED) {
+			(async () => {
+				contestData.set(await CollectAdvanced());
+			})();
+		}
 	}
 </script>
 

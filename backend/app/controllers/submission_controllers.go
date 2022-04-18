@@ -1,12 +1,10 @@
 package controllers
 
 import (
-	"log"
 	"servermodule/app/database"
 	"servermodule/app/models"
 	"servermodule/app/scraper"
 	"servermodule/configs/constants"
-	"servermodule/utils"
 	"servermodule/utils/workers"
 	"time"
 
@@ -28,24 +26,7 @@ import (
 // @Success 200 {object} models.Submission
 // @Failure 401
 // @Router /submit [post]
-func Submit(c *fiber.Ctx, ts *models.TokenService, config *models.Configuration, client *scraper.Client, s *workers.Submitter, db *database.ContestDB) error {
-	userID, err := ts.AuthorizeUser(c.FormValue("token"))
-	if err != nil {
-		tokenInfo, err := utils.VerifyToken(c.FormValue("id_token"))
-
-		if err != nil {
-			log.Println("Unauthorized submission by userID", userID)
-			return c.SendStatus(constants.StatusUnauthorized)
-		}
-
-		userID = tokenInfo.Email
-	}
-
-	if !db.HasUser(userID) {
-		log.Println("userID ", userID, "does not exist")
-		return c.SendStatus(constants.StatusUnauthorized)
-	}
-
+func Submit(c *fiber.Ctx, userID string, ts *models.TokenService, config *models.Configuration, client *scraper.Client, s *workers.Submitter, db *database.ContestDB) error {
 	team, _ := db.GetTeamByCode(db.GetUser(userID).TeamCode)
 
 	file, err := c.FormFile("file")

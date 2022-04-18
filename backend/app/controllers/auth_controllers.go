@@ -95,12 +95,7 @@ func GetTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) erro
 // @Success 200
 // @Failure 401
 // @Router /update [post]
-func UpdateUserTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB, config *models.Configuration) error {
-	userID, err := ts.AuthorizeUser(c.FormValue("token"))
-	if err != nil {
-		return c.SendStatus(constants.StatusUnauthorized)
-	}
-
+func UpdateUserTeam(c *fiber.Ctx, userID string, db *database.ContestDB, config *models.Configuration) error {
 	var team database.Team
 
 	userTeamCode := db.GetUser(userID).TeamCode
@@ -134,12 +129,7 @@ func UpdateUserTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestD
 	})
 }
 
-func UpdateTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) error {
-	userID, err := ts.AuthorizeUser(c.FormValue("token"))
-	if err != nil {
-		return c.SendStatus(constants.StatusUnauthorized)
-	}
-
+func UpdateTeam(c *fiber.Ctx, userID string, db *database.ContestDB) error {
 	name := c.FormValue("team_name")
 
 	if name == "" {
@@ -154,12 +144,7 @@ func UpdateTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) e
 	return c.SendString("")
 }
 
-func LeaveTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) error {
-	userID, err := ts.AuthorizeUser(c.FormValue("token"))
-	if err != nil {
-		return c.SendStatus(constants.StatusUnauthorized)
-	}
-
+func LeaveTeam(c *fiber.Ctx, userID string, db *database.ContestDB) error {
 	db.LeaveTeam(userID)
 
 	team, members := db.GetTeamByCode(db.GetUser(userID).TeamCode)
