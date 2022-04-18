@@ -16,7 +16,7 @@
 	onMount(() => {
 		if (visible) {
 			// @ts-ignore mathjax is loaded from cdn
-			if (typeof window.MathJax !== 'undefined' && window.MathJax.typeset) {
+			if (typeof window !== 'undefined' && window.MathJax.typeset) {
 				// @ts-ignore mathjax is loaded from cdn
 				window.MathJax.typeset();
 			}
@@ -24,7 +24,7 @@
 	});
 	$: if (visible) {
 		// @ts-ignore mathjax is loaded from cdn
-		if (typeof window.MathJax !== 'undefined' && window.MathJax.typeset) {
+		if (typeof window !== 'undefined' && window.MathJax.typeset) {
 			// @ts-ignore mathjax is loaded from cdn
 			window.MathJax.typeset();
 		}

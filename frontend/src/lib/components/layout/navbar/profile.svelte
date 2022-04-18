@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { IDToken, TeamID, userInfo } from '$lib/data/stores/userInfo';
+	import { IDToken, TeamID, TeamInfoData, userInfo } from '$lib/data/stores/userInfo';
 	import { onMount } from 'svelte';
 	import jwt_decode from 'jwt-decode';
 	import Login from '$lib/utils/networking/login';
@@ -55,7 +55,11 @@
 						<div class="font-medium tracking-normal h-5 text-md text-gray-300">
 							{$userInfo.name}
 						</div>
-						<div class="font-medium text-gray-400 tracking-normal text-sm">Team Name</div>
+						{#if $TeamInfoData.team}
+							<div class="font-medium text-gray-400 tracking-normal text-sm">
+								{$TeamInfoData.team.name}
+							</div>
+						{/if}
 					</div>
 				</a>
 			</div>

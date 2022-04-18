@@ -7,7 +7,11 @@
 
 <div class="py-10">
 	{#if $TeamInfoData.team}
-		<TeamView teamInfo={$TeamInfoData.team} teamMembers={$TeamInfoData.members} />
+		<TeamView
+			teamInfo={$TeamInfoData.team}
+			teamMembers={$TeamInfoData.members}
+			teamName={$TeamInfoData.team.name}
+		/>
 		<JoinTeam />
 	{:else}
 		<Register />

@@ -140,12 +140,18 @@ func UpdateTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) e
 		return c.SendStatus(constants.StatusUnauthorized)
 	}
 
-	if name := c.FormValue("team_name"); name != "" {
+	name := c.FormValue("team_name")
+
+	if name == "" {
+		return c.SendString("Name is too short.")
+	} else if len(name) > 30 {
+		return c.SendString("Name can be at most 30 characters.")
+	} else {
 		user := db.GetUser(userID)
 		db.UpdateTeam(user.TeamCode, name)
 	}
 
-	return c.SendStatus(constants.StatusOk)
+	return c.SendString("")
 }
 
 func LeaveTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) error {

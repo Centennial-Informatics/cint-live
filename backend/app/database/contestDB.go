@@ -129,7 +129,7 @@ func (db *ContestDB) UpdateUserTeam(email string, teamCode string) *Team {
 			db.DeleteTeam(user.TeamCode)
 		}
 		db.db.Model(user).Update("team_code", teamCode)
-		db.db.First(&team, "code = ?", teamCode)
+		team, _= db.GetTeamByCode(teamCode)
 	} else {
 		db.db.First(&team, "code = ?", user.TeamCode)
 	}

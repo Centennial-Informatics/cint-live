@@ -56,6 +56,8 @@
 			entire team. Enter a team code down below to join a team, or share your code to invite others
 			to your team. Team names and members will be locked at the start of the competition.
 		</Paragraph>
-		<TeamEditor />
+		<div id="register">
+			<TeamEditor />
+		</div>
 	</Page>
 </Wrapper>
