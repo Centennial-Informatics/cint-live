@@ -1,3 +1,10 @@
+# Live Server Frontend
+
+Frontend for Live Server
+
+### Frontend Development setup
+The frontend can be run detached from the backend as an SSR app and only relies on api endpoints. Documentation for those endpoints coming soon.
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).

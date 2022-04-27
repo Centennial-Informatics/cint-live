@@ -1,10 +1,10 @@
-## CCC Live Server Backend
+## Live Server Backend
 
-Backend server/api for CCC Live Server.
+Backend server/api for Live Server.
 
 ### Backend Development setup
 
-App runs as a standard REST api. Everything is saved in memory, but a Firebase DB can be connected to backup and persist data between builds.
+App runs as a standard REST api. A SQLite database is used to store user, team, and submission information. Contest information pulled from Codeforces is kept in memory.
 
 #### Using Go (Dev build)
 1. **Dependencies**  
@@ -17,7 +17,7 @@ App runs as a standard REST api. Everything is saved in memory, but a Firebase D
    ```
    It is recommended not to use a personal account.
 3. **Configuration**  
-   Inside [backend/configs/config.go](./configs/config.go), set config.ContestId to a Codeforces gym contest that you have access to. The contest id can be found in the url of the contest page. Set config.FirebaseURL to the Firebase database url (if applicable).
+   Inside [backend/configs/config.go](./configs/config.go), set config.ContestId to a Codeforces gym contest that you have access to. The contest id can be found in the url of the contest page.
 4. **Build**  
    Run `make build` inside the **backend** directory to install all dependencies and compile the project.
 5. **Run**  
@@ -27,7 +27,7 @@ App runs as a standard REST api. Everything is saved in memory, but a Firebase D
 1. **Dependencies**  
   Make sure you have [Docker](https://www.docker.com/get-started) installed and running on your system.
 2. **Environment**  
-   Set the `CF_USER`, `CF_PASS` environment variables to a valid Codeforces login. The `FIREBASE_SERVICE` variable may optionally be set to a Firebase service account.
+   Set the `CF_USER`, `CF_PASS` environment variables to a valid Codeforces login.
    ```
    $ export CF_USER=username
    $ export CF_PASS=password
