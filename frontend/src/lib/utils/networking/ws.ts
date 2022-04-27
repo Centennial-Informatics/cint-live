@@ -1,7 +1,7 @@
 function NewWebSocketConnection() {
-	// let wsEndpoint = 'ws://localhost:8000/ws';
-	let wsEndpoint = 'wss://live-judge.herokuapp.com/ws';
-	if (process.env.NODE_ENV === 'production') wsEndpoint = 'wss://' + process.env.HOST_NAME + '/ws';
+	let wsEndpoint = 'ws://localhost:8000/ws';
+	// let wsEndpoint = 'wss://live-judge.herokuapp.com/ws';
+	if (process.env.NODE_ENV === 'production') wsEndpoint = 'wss://live-judge.herokuapp.com/ws';
 	return new WebSocket(wsEndpoint);
 }
 
