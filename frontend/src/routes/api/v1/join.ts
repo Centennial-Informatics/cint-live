@@ -8,7 +8,7 @@ export async function post({ request }) {
 	return {
 		body: (
 			await axios.post(
-				'http://localhost:8000/api/v1/join',
+				process.env.HOST + '/api/v1/join',
 				formUrlEncoded({
 					token: form.get('token'),
 					team_code: form.get('team_code')

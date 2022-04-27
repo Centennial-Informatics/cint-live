@@ -6,7 +6,7 @@
 	export async function load() {
 		const res = browser
 			? await CollectStandard()
-			: ((await axios.post('http://localhost:8000/api/v1/collect/standard')).data as ContestData);
+			: ((await axios.post(process.env.HOST + '/api/v1/collect/standard')).data as ContestData);
 		return {
 			props: {
 				contestDataObj: res

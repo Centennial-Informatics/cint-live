@@ -5,7 +5,7 @@
 	export async function load() {
 		const res = browser
 			? await Standings()
-			: ((await axios.get('http://localhost:8000/api/v1/standings')).data as StandingsData[]);
+			: ((await axios.get(process.env.HOST + '/api/v1/standings')).data as StandingsData[]);
 		return {
 			props: {
 				standingsData: res

@@ -8,7 +8,7 @@ export async function post({ request }) {
 	return {
 		body: (
 			await axios.post(
-				'http://localhost:8000/api/v1/submit',
+				process.env.HOST + '/api/v1/submit',
 				formUrlEncoded({
 					token: form.get('token'),
 					problem: form.get('problem'),
