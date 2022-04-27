@@ -4,6 +4,7 @@ import (
 	"servermodule/app/models"
 	"servermodule/utils"
 
+	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -50,6 +51,18 @@ type ContestDB struct {
 
 func NewDB(path string) (*ContestDB, error) {
 	db, err := gorm.Open(sqlite.Open(path), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
+
+	// migrate schema
+	db.AutoMigrate(&User{}, &Team{}, &Submission{})
+
+	return &ContestDB{db: db}, err
+}
+
+func NewPostgresDB(dsn string) (*ContestDB, error) {
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}

@@ -53,8 +53,7 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 		clients = append(clients, c)
 	}
 
-	// db, err := database.NewDB("data/contest_data.db")
-	db, err := database.NewDB("file::memory:?cache=shared")
+	db, err := database.NewPostgresDB(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal(err)
 	}
