@@ -53,7 +53,8 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 		clients = append(clients, c)
 	}
 
-	db, err := database.NewDB("data/contest_data.db")
+	// db, err := database.NewDB("data/contest_data.db")
+	db, err := database.NewDB("file::memory:?cache=shared")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -101,7 +102,7 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 	api := app.Group("/api") // baseurl/api
 	v1 := api.Group("/v1")   // baseurl/api/v1
 
-	app.Static("/", "./docs")
+	// app.Static("/", "../frontend/build")
 	app.Use(logger.New())
 
 	routes.PublicRoutes(app)
