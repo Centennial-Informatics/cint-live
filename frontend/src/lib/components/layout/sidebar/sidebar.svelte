@@ -11,7 +11,7 @@
 	let config: ContestConfig = getContext('contestConfig');
 </script>
 
-<div class="md:h-screen bg-gray-800 flex flex-col md:flex-shrink-0 md:w-60">
+<div class="md:h-screen bg-gray-800 flex flex-col md:flex-shrink-0 md:w-60 min-h-screen">
 	<Logo imgUrl={config.infoUrl || '/'} imgSrc={config.logoUrl} />
 	<div class="flex flex-col h-0 flex-grow pt-5 md:space-y-10">
 		<div class="px-5">
