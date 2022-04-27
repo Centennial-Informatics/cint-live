@@ -121,7 +121,7 @@
 				{#each displayedEntries as entry, i (entry.ID)}
 					<StandingsRowEntry
 						standingsEntry={entry}
-						active={entry.ID === $userInfo.ID}
+						active={entry.ID === ($TeamInfoData.team ? $TeamInfoData.team.ID : 0)}
 						rank={i + 1 + page}
 					/>
 				{/each}

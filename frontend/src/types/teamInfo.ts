@@ -2,6 +2,7 @@ export interface TeamInfo {
 	name: string;
 	code: string;
 	division: string;
+	ID: string;
 }
 
 export interface TeamData {
