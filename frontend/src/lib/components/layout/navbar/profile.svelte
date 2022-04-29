@@ -33,19 +33,27 @@
 					});
 				}
 			},
+			itp_support: true,
+			cancel_on_tap_outside: false,
 			auto_select: true
 		});
-		if (!$IDToken) window.google.accounts.id.prompt();
+		if (!$IDToken) {
+			window.google.accounts.id.prompt();
+		}
 	});
 </script>
 
-<svelte:head>
-	<script src="https://accounts.google.com/gsi/client" async defer></script>
-</svelte:head>
-
 <div>
 	{#if !$IDToken}
-		<div class="g_id_signin" data-type="standard" />
+		<div
+			class="g_id_signin"
+			data-type="standard"
+			data-shape="rectangular"
+			data-theme="outline"
+			data-text="signin_with"
+			data-size="large"
+			data-logo_alignment="left"
+		/>
 	{:else}
 		<div class="hover:cursor-pointer">
 			<div class="flex flex-row items-center">
