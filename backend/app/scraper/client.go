@@ -1,7 +1,12 @@
 package scraper
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
+	"encoding/hex"
 	"log"
+	"net/http"
+	"regexp"
 	"servermodule/app/models"
 
 	"github.com/gocolly/colly"
@@ -47,10 +52,15 @@ func (client *Client) Login() error {
 	form := map[string]string{}
 	loginURL := "https://codeforces.com/enter"
 
-	client.C.OnHTML("input", func(e *colly.HTMLElement) {
-		form[e.Attr("name")] = e.Attr("value")
-		form["handleOrEmail"] = client.User
-		form["password"] = client.Pass
+	client.C.OnHTML("body", func(e *colly.HTMLElement) {
+		link := client.SetRCPC(e)
+		client.C.OnHTMLDetach("body")
+		client.C.OnHTML("input", func(e *colly.HTMLElement) {
+			form[e.Attr("name")] = e.Attr("value")
+			form["handleOrEmail"] = client.User
+			form["password"] = client.Pass
+		})
+		client.C.Visit(link)
 	})
 
 	err := client.C.Visit(loginURL)
@@ -58,9 +68,50 @@ func (client *Client) Login() error {
 		return err
 	}
 
-	client.C.OnHTMLDetach(("input"))
+	client.C.OnHTMLDetach("input")
 
 	return client.C.Post(loginURL, form)
+}
+
+/*
+
+thanks to
+https://codeforces.com/blog/entry/80151
+https://github.com/xalanq/cf-tool/pull/151/files
+
+*/
+func (client *Client) SetRCPC(e *colly.HTMLElement) string {
+	link := "https://codeforces.com"
+	reg := regexp.MustCompile(`Redirecting...`)
+	is_redirected := (len(reg.FindStringSubmatch(e.Text)) > 0)
+	if is_redirected {
+		reg := regexp.MustCompile(`toNumbers\("(.+?)"\)`)
+		res := reg.FindAllStringSubmatch(e.Text, -1)
+		text, _ := hex.DecodeString(res[2][1])
+		key, _ := hex.DecodeString(res[0][1])
+		iv, _ := hex.DecodeString(res[1][1])
+
+		block, _ := aes.NewCipher(key)
+		mode := cipher.NewCBCDecrypter(block, iv)
+
+		mode.CryptBlocks([]byte(text), []byte(text))
+
+		var cookies []*http.Cookie
+		cookie := &http.Cookie{
+			Name:   "RCPC",
+			Value:  hex.EncodeToString(text),
+			Path:   "/",
+			Domain: ".codeforces.com",
+		}
+		cookies = append(cookies, cookie)
+		client.C.SetCookies(link, cookies)
+
+		// get the redirect link
+		reg = regexp.MustCompile(`href="(.+?)"`)
+		link = reg.FindStringSubmatch(e.Text)[1]
+	}
+
+	return link
 }
 
 func (client *Client) CopyCache(cache *models.ContestData) {

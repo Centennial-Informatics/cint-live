@@ -3,5 +3,6 @@ servermodule
 *.vscode
 *.http
 env.sh
+*.env
 
 *.db
