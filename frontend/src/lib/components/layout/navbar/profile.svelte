@@ -10,6 +10,7 @@
 		email: string;
 		picture: string;
 	}
+	let ref: HTMLElement;
 
 	onMount(() => {
 		window.google.accounts.id.initialize({
@@ -37,6 +38,9 @@
 			cancel_on_tap_outside: false,
 			auto_select: true
 		});
+		window.google.accounts.id.renderButton(ref, {
+			type: 'standard'
+		});
 		if (!$IDToken) {
 			window.google.accounts.id.prompt();
 		}
@@ -45,15 +49,7 @@
 
 <div>
 	{#if !$IDToken}
-		<div
-			class="g_id_signin"
-			data-type="standard"
-			data-shape="rectangular"
-			data-theme="outline"
-			data-text="signin_with"
-			data-size="large"
-			data-logo_alignment="left"
-		/>
+		<div bind:this={ref} />
 	{:else}
 		<div class="hover:cursor-pointer">
 			<div class="flex flex-row items-center">
