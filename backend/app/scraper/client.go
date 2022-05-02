@@ -81,7 +81,7 @@ https://github.com/xalanq/cf-tool/pull/151/files
 
 */
 func (client *Client) SetRCPC(e *colly.HTMLElement) string {
-	link := "https://codeforces.com"
+	link := "https://codeforces.com/enter"
 	reg := regexp.MustCompile(`Redirecting...`)
 	is_redirected := (len(reg.FindStringSubmatch(e.Text)) > 0)
 	if is_redirected {
