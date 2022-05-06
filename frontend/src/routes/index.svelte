@@ -50,6 +50,12 @@
 			<Subtitle>{startTimeString} – {stopTimeString}</Subtitle>
 			<Subtitle>{location}</Subtitle>
 		</Header>
+		<Paragraph
+			>Note all website issues here <a
+				href="https://docs.google.com/document/d/1JTN0ENdYsaMEsUhO96iPPwOQWm6ZQQ6IsmW4sdvperM/edit"
+				>https://docs.google.com/document/d/1JTN0ENdYsaMEsUhO96iPPwOQWm6ZQQ6IsmW4sdvperM/edit</a
+			></Paragraph
+		>
 		<Paragraph>{$contestInfo.Description}</Paragraph>
 		<Paragraph>
 			Teams may have up to four participants. Each team member’s submission will score for the
