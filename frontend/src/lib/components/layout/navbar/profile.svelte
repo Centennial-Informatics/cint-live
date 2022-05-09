@@ -36,7 +36,7 @@
 			},
 			itp_support: true,
 			cancel_on_tap_outside: false,
-			auto_select: true
+			auto_select: false
 		});
 		window.google.accounts.id.renderButton(ref, {
 			type: 'standard'
