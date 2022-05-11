@@ -20,7 +20,8 @@ func (s *Submitter) Submit(submission *models.QueuedSubmission) {
 	s.SubmissionQueue = append(s.SubmissionQueue, submission)
 }
 
-func (s *Submitter) ProcessNextSubmission(client *scraper.Client) {
+/* Returns whether a submission was processed or not. */
+func (s *Submitter) ProcessNextSubmission(client *scraper.Client) bool {
 	if len(s.SubmissionQueue) > 0 {
 		sub := s.SubmissionQueue[0]
 
@@ -40,10 +41,14 @@ func (s *Submitter) ProcessNextSubmission(client *scraper.Client) {
 					log.Println(err)
 				}
 			}()
+
+			return true
 		} else {
 			log.Println("Wrong client, deferring submission ", sub.SubmissionID)
 		}
 	}
+
+	return false
 }
 
 /* UpdateVerdicts - Updates cached verdicts only. */
@@ -65,16 +70,23 @@ func SubmitWorker(clients []*scraper.Client, interval time.Duration,
 	}
 
 	go func() {
+		front := 0
 		for {
 			select {
 			case <-ticker.C:
-				for _, client := range submitter.Clients {
-					if client.Available {
-						submitter.ProcessNextSubmission(client)
+				submitted := false
+				// update all verdicts and submit on the first valid and available worker
+				for range clients {
+					client := submitter.Clients[front]
+					if !submitted && client.Available {
+						submitted = submitter.ProcessNextSubmission(client)
 					}
 
 					go submitter.UpdateVerdicts(client, cbs...)
+
+					front = (front + 1) % len(submitter.Clients)
 				}
+
 			case <-quit:
 				ticker.Stop()
 				return

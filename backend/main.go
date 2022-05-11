@@ -26,17 +26,17 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 		log.Fatal(err)
 	}
 
-	appClient, err := scraper.NewClient(accounts[0].User, accounts[0].User, accounts[0].Pass)
+	appClient, err := scraper.NewClient(accounts[0].User+" standard", accounts[0].User, accounts[0].Pass)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	appClient2, err := scraper.NewClient(accounts[0].User, accounts[0].User, accounts[0].Pass)
+	appClient2, err := scraper.NewClient(accounts[0].User+" advanced", accounts[0].User, accounts[0].Pass)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	appClient3, err := scraper.NewClient(accounts[0].User, accounts[0].User, accounts[0].Pass)
+	appClient3, err := scraper.NewClient(accounts[0].User+" practice", accounts[0].User, accounts[0].Pass)
 	if err != nil {
 		log.Fatal(err)
 	}
