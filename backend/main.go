@@ -13,11 +13,12 @@ import (
 	"servermodule/utils/workers"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/websocket/v2"
 )
 
-func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Configuration) {
+func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Configuration, practiceConfig *models.Configuration) {
 	var accounts []*models.CFAccount
 	// initialize the service accounts
 	err := json.Unmarshal([]byte(os.Getenv("CF_ACCOUNTS")), &accounts)
@@ -34,14 +35,21 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	appClient3, err := scraper.NewClient(accounts[0].User, accounts[0].User, accounts[0].Pass)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// scrape worker scrapes problem statements from codeforces
 	workers.ScrapeWorker(appClient, standardConfig.ContestURL, standardConfig.ContestID, standardConfig.ScrapeIntervalAll)
 	workers.ScrapeWorker(appClient2, advancedConfig.ContestURL, advancedConfig.ContestID, advancedConfig.ScrapeIntervalAll)
+	workers.ScrapeWorker(appClient3, practiceConfig.ContestURL, practiceConfig.ContestID, practiceConfig.ScrapeIntervalAll)
 
 	clients := make([]*scraper.Client, 0)
 
 	clients = append(clients, appClient)
 	clients = append(clients, appClient2)
+	clients = append(clients, appClient3)
 
 	for _, acc := range accounts[1:] {
 		c, err := scraper.NewClient(acc.User, acc.User, acc.Pass)
@@ -101,14 +109,19 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 	api := app.Group("/api") // baseurl/api
 	v1 := api.Group("/v1")   // baseurl/api/v1
 
-	// app.Static("/", "../frontend/build")
+	app.Static("/", "../frontend/build")
 	app.Use(logger.New())
+	app.Use(cors.New(
+		cors.Config{
+			AllowOrigins: "http://localhost:3000",
+		},
+	))
 
 	routes.PublicRoutes(app)
-	routes.PublicAPIRoutes(v1, standardConfig, appClient, appClient2)
-	routes.PublicTimeAPIRoutes(v1, standardConfig, appClient, db)
+	routes.PublicAPIRoutes(v1, standardConfig, appClient)
+	routes.PublicTimeAPIRoutes(v1, standardConfig, appClient, appClient2, appClient3, db)
 	routes.PrivateAPIRoutes(v1, standardConfig, ts, appClient, db)
-	routes.PrivateTimeAPIRoutes(v1, standardConfig, ts, appClient, appClient2, submitWorker, db)
+	routes.PrivateTimeAPIRoutes(v1, standardConfig, ts, appClient, appClient2, appClient3, submitWorker, db)
 	routes.WsRoutes(app, standardConfig, ts, db)
 	routes.AdminAPIRoutes(v1, standardConfig, db)
 
@@ -142,5 +155,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	LiveServer(standardConfig, advancedConfig)
+	practiceConfig, err := configs.Practice()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	LiveServer(standardConfig, advancedConfig, practiceConfig)
 }

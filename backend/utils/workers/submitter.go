@@ -26,7 +26,7 @@ func (s *Submitter) ProcessNextSubmission(client *scraper.Client) {
 
 		// check if submission is on the correct contest scraper
 		if sub.ContestURL == client.Cached.ContestURL {
-			log.Println("Processing submission")
+			log.Println("Processing submission", client.Name, sub.SubmissionID, client.Cached.ContestURL)
 			s.SubmissionQueue = s.SubmissionQueue[1:]
 
 			go func() {

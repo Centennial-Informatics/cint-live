@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"servermodule/app/database"
 	"servermodule/app/models"
 	"servermodule/app/scraper"
@@ -42,6 +43,8 @@ func Submit(c *fiber.Ctx, userID string, ts *models.TokenService, config *models
 		File:         file,
 		ContestURL:   client.Cached.ContestURL,
 	}
+
+	log.Println("New Submission: ", submission.SubmissionID, submission.ContestURL)
 
 	if err != nil {
 		submission.File = nil

@@ -34,7 +34,7 @@ func PrivateAPIRoutes(router fiber.Router, config *models.Configuration,
 
 /* PrivateTimeAPIRoutes - Private login-restricted and time-restricted api endpoints. */
 func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
-	ts *models.TokenService, standardClient *scraper.Client, advancedClient *scraper.Client,
+	ts *models.TokenService, standardClient *scraper.Client, advancedClient *scraper.Client, practiceClient *scraper.Client,
 	s *workers.Submitter, db *database.ContestDB) {
 	divisionClient := map[string]*scraper.Client{
 		"Standard": standardClient,
@@ -42,12 +42,13 @@ func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 	}
 	// during contest
 	router.Post("/submit", func(c *fiber.Ctx) error {
-		if time.Since(config.StartTime) < 0 || time.Until(config.StopTime) < 0 {
-			return c.SendStatus(constants.StatusUnauthorized)
-		}
 		userID, err := ts.AuthorizeUser(c.FormValue("token"))
 		if err != nil {
 			return c.SendStatus(constants.StatusUnauthorized)
+		}
+
+		if time.Since(config.StartTime) < 0 || time.Until(config.StopTime) < 0 {
+			return controllers.Submit(c, userID, ts, config, practiceClient, s, db)
 		}
 
 		team, _ := db.GetTeamByCode(db.GetUser(userID).TeamCode)
