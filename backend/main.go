@@ -65,6 +65,9 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	workers.StandingsWorker(db, standardConfig.ScrapeIntervalVerdicts)
+
 	ts := models.NewTokenService()
 	// submit worker submits to codeforces and checks for verdicts, callback runs when verdict status is updated
 	submitWorker, _ := workers.SubmitWorker(clients, standardConfig.ScrapeIntervalVerdicts,

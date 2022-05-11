@@ -14,7 +14,7 @@ import (
 // @Success 200 {object} map[string]models.UserEntity
 // @Router /standings [get]
 func Standings(c *fiber.Ctx, db *database.ContestDB) error {
-	standings := database.AggStandings(db)
+	standings := db.GetStandings()
 
 	return c.JSON(standings)
 }

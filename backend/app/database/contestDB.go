@@ -45,8 +45,9 @@ type StandingsEntry struct {
 }
 
 type ContestDB struct {
-	db            *gorm.DB
-	ProblemsCache *models.ContestData
+	db             *gorm.DB
+	ProblemsCache  *models.ContestData
+	StandingsCache []StandingsEntry
 }
 
 func NewDB(path string) (*ContestDB, error) {
@@ -320,4 +321,13 @@ func AggStandings(db *ContestDB) []StandingsEntry {
 	}
 
 	return standings
+}
+
+/* Update StandingsCache */
+func (db *ContestDB) UpdateStandings() {
+	db.StandingsCache = AggStandings(db)
+}
+
+func (db *ContestDB) GetStandings() []StandingsEntry {
+	return db.StandingsCache
 }

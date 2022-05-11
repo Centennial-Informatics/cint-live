@@ -51,9 +51,9 @@ func PublicTimeAPIRoutes(router fiber.Router, config *models.Configuration, stan
 		return controllers.Collect(c, config, advancedClient)
 	})
 	router.Get("/standings", func(c *fiber.Ctx) error {
-		if time.Since(config.StartTime) < 0 {
-			return c.SendStatus(constants.StatusUnauthorized)
-		}
+		// if time.Since(config.StartTime) < 0 {
+		// 	return c.SendStatus(constants.StatusUnauthorized)
+		// }
 
 		return controllers.Standings(c, db)
 	})
