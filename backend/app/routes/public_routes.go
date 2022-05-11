@@ -17,11 +17,14 @@ func PublicRoutes(app *fiber.App) {
 	app.Get("/", controllers.ContestPage)
 	app.Get("/standings", controllers.ContestPage)
 	app.Get("/problem/*", controllers.ContestPage)
+	app.Get("/healthz", func(c *fiber.Ctx) error {
+		return c.SendStatus(constants.StatusOk)
+	})
 }
 
 /* PublicAPIRoutes - Public api routes. */
 func PublicAPIRoutes(router fiber.Router, config *models.Configuration, standardClient *scraper.Client, advancedClient *scraper.Client) {
-	router.Post("/collect/standard", func(c *fiber.Ctx) error {
+	router.Get("/collect/standard", func(c *fiber.Ctx) error {
 		if time.Since(config.StartTime) < 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
@@ -29,7 +32,7 @@ func PublicAPIRoutes(router fiber.Router, config *models.Configuration, standard
 		return controllers.Collect(c, config, standardClient)
 	})
 
-	router.Post("/collect/advanced", func(c *fiber.Ctx) error {
+	router.Get("/collect/advanced", func(c *fiber.Ctx) error {
 		if time.Since(config.StartTime) < 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
