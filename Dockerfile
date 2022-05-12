@@ -21,7 +21,7 @@ WORKDIR /app/frontend
 
 # load the .env file for Vite
 RUN touch .env
-RUN echo BACKEND_HOST="${BACKEND_HOST}" >> .env
+RUN echo VITE_BACKEND_HOST="${BACKEND_HOST}" >> .env
 
 RUN npm ci
 RUN npm run build
