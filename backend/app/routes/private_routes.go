@@ -59,7 +59,7 @@ func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 	// before contest
 	// TODO: change < 0 to >= 0
 	router.Post("/join", func(c *fiber.Ctx) error {
-		if time.Since(config.StartTime) < 0 {
+		if time.Since(config.StartTime) >= 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 		userID, err := ts.AuthorizeUser(c.FormValue("token"))
@@ -71,7 +71,7 @@ func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 	})
 
 	router.Post("/update", func(c *fiber.Ctx) error {
-		if time.Since(config.StartTime) < 0 {
+		if time.Since(config.StartTime) >= 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 		userID, err := ts.AuthorizeUser(c.FormValue("token"))
@@ -82,7 +82,7 @@ func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 	})
 
 	router.Post("/leave", func(c *fiber.Ctx) error {
-		if time.Since(config.StartTime) < 0 {
+		if time.Since(config.StartTime) >= 0 {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 		userID, err := ts.AuthorizeUser(c.FormValue("token"))
