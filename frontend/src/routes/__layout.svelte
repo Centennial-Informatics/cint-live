@@ -23,6 +23,7 @@
 	import { onMount, setContext } from 'svelte';
 	import {
 		contestData,
+		problemNames,
 		problemPages,
 		submissionData,
 		submissionWS
@@ -35,6 +36,7 @@
 	import GetTeam from '$lib/utils/networking/team';
 	import CollectAdvanced from '$lib/utils/networking/collectAdvanced';
 	import { ADVANCED } from '$lib/data/constants/division';
+	import Loading from '$lib/components/templates/loading.svelte';
 
 	// export let contestDataObj: ContestData;
 	// contestData.set(contestDataObj);
@@ -71,15 +73,21 @@
 </script>
 
 <div class="min-h-screen">
-	<div class="flex flex-col md:flex-row dark">
-		<div class="md:fixed">
-			<Sidebar />
-		</div>
-		<div class="flex flex-row w-full bg-gray-800">
-			<Navbar />
-			<div class="md:min-h-screen md:ml-60 w-full dark:bg-gray-800">
-				<slot />
+	{#if $contestData.Info}
+		<div class="flex flex-col md:flex-row dark">
+			<div class="md:fixed">
+				<Sidebar />
+			</div>
+			<div class="flex flex-row w-full bg-gray-800">
+				<Navbar />
+				<div class="md:min-h-screen md:ml-60 w-full dark:bg-gray-800">
+					<slot />
+				</div>
 			</div>
 		</div>
-	</div>
+	{:else}
+		<div class="flex justify-center items-center w-screen h-screen">
+			<Loading />
+		</div>
+	{/if}
 </div>

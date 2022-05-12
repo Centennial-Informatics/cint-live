@@ -1,6 +1,6 @@
 <!-- credit: https://github.com/Schum123/svelte-loading-spinners/blob/master/src/Circle.svelte -->
 <script lang="ts">
-	export let color = '#FF3E00';
+	export let color = '#4A5DFE';
 	export let unit = 'px';
 	export let duration = '0.75s';
 	export let size = '60';
