@@ -7,8 +7,7 @@
 	export async function load() {
 		const res = browser
 			? await CollectStandard()
-			: ((await axios.get('https://' + import.meta.env.BACKEND_HOST + '/api/v1/collect/standard'))
-					.data as ContestData);
+			: ((await axios.get(process.env.BASE_URL + '/api/v1/collect/standard')).data as ContestData);
 		return {
 			props: {
 				contestDataObj: res
