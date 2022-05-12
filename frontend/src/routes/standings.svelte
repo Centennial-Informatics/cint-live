@@ -1,22 +1,22 @@
-<!-- 
-	SSR Code
-	<script lang="ts" context="module">
+<script lang="ts" context="module">
 	import axios from 'axios';
 	import Standings from '$lib/utils/networking/standings';
 	import { browser } from '$app/env';
 	export async function load() {
 		const res = browser
 			? await Standings()
-			: ((await axios.get(process.env.HOST + '/api/v1/standings')).data as StandingsData[]);
+			: ((await axios.get('https://' + import.meta.env.BACKEND_HOST + '/api/v1/standings'))
+					.data as StandingsData[]);
 		return {
 			props: {
 				standingsDataObj: res
 			}
 		};
 	}
-</script> -->
+</script>
+
 <script lang="ts">
-	import Standings from '$lib/utils/networking/standings';
+	// import Standings from '$lib/utils/networking/standings';
 	import { currentPage } from '$lib/data/stores/currentPage';
 	import { onMount } from 'svelte';
 	import type { StandingsData, StandingsEntry } from 'src/types/contestData';
@@ -33,16 +33,16 @@
 	import { fillEmptyVerdicts } from '$lib/utils/verdictStatus';
 	import { STANDARD } from '$lib/data/constants/division';
 
-	// export let standingsDataObj: StandingsData[];
-	// standingsData.set(standingsDataObj)
+	export let standingsDataObj: StandingsData[];
+	standingsData.set(standingsDataObj);
 
-	async function fetchStandings() {
-		standingsData.set(await Standings());
-	}
+	// async function fetchStandings() {
+	// 	standingsData.set(await Standings());
+	// }
 
 	onMount(async () => {
 		if (!$currentPage) currentPage.set('standings');
-		fetchStandings();
+		// fetchStandings();
 	});
 
 	function cleanData(standingsData: StandingsData[], problems: string[]): StandingsEntry[] {
@@ -95,9 +95,9 @@
 	$: if ($standingsData.length) {
 		standingsEntries = cleanData($standingsData, Object.keys($problemPages));
 	}
-	$: if ($TeamInfoData.team && !$standingsData) {
-		fetchStandings();
-	}
+	// $: if ($TeamInfoData.team && !$standingsData) {
+	// 	fetchStandings();
+	// }
 
 	/* Table pagination */
 
@@ -119,6 +119,7 @@
 	}
 </script>
 
+SSR Code
 <Wrapper transparent>
 	<Page>
 		<StandingsHeader />
