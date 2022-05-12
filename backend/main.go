@@ -115,9 +115,7 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 	app.Static("/", "../frontend/build")
 	app.Use(logger.New())
 	app.Use(cors.New(
-		cors.Config{
-			AllowOrigins: "http://localhost:3000",
-		},
+		cors.Config{},
 	))
 
 	routes.PublicRoutes(app)
@@ -153,7 +151,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	advancedConfig, err := configs.QuHacks()
+	advancedConfig, err := configs.Cint()
 	if err != nil {
 		log.Fatal(err)
 	}
