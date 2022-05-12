@@ -14,7 +14,7 @@
 
 	onMount(() => {
 		window.google.accounts.id.initialize({
-			client_id: '151372106954-hqa4baeucq2n1pajodj31h9e5r141mur.apps.googleusercontent.com',
+			client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
 			callback: async (res) => {
 				const decoded: DecodedCredential = jwt_decode(res.credential);
 				const loginInfo = await Login(res.credential);

@@ -15,13 +15,8 @@ FROM node:18-alpine3.14 as frontend_build
 COPY frontend /app/frontend
 
 ENV PATH /app/node_modules/.bin:$PATH
-ENV BACKEND_HOST localhost:8000
 
 WORKDIR /app/frontend
-
-# load the .env file for Vite
-RUN touch .env
-RUN echo VITE_BACKEND_HOST="${BACKEND_HOST}" >> .env
 
 RUN npm ci
 RUN npm run build
