@@ -251,6 +251,8 @@ func (db *ContestDB) CreateSubmission(submissionID string, problemID string, tea
 		Time:         timestamp,
 	}
 
+	// for database row restriction, replace old submissions
+	db.db.Where("team_code = ? AND problem_id = ?", teamCode, problemID).Unscoped().Delete(&Submission{})
 	db.db.Create(&submission)
 
 	return &submission

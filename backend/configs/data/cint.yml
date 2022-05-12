@@ -1,7 +1,7 @@
 contestid: 365919
 contesturl: https://codeforces.com/gym/365919
-starttime: "2022-05-11T21:00:00-04:00" # required
-stoptime: "2022-05-11T22:00:00-04:00" # required
+starttime: "2022-05-12T07:30:00-04:00" # required
+stoptime: "2022-05-13T08:10:00-04:00" # required
 maxteamsize: 4
 points: # required
   a: 10
