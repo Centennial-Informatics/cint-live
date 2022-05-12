@@ -1,4 +1,6 @@
-<script lang="ts" context="module">
+<!-- 
+	SSR Code
+	<script lang="ts" context="module">
 	import axios from 'axios';
 	import Standings from '$lib/utils/networking/standings';
 	import { browser } from '$app/env';
@@ -8,13 +10,13 @@
 			: ((await axios.get(process.env.HOST + '/api/v1/standings')).data as StandingsData[]);
 		return {
 			props: {
-				standingsData: res
+				standingsDataObj: res
 			}
 		};
 	}
-</script>
-
+</script> -->
 <script lang="ts">
+	import Standings from '$lib/utils/networking/standings';
 	import { currentPage } from '$lib/data/stores/currentPage';
 	import { onMount } from 'svelte';
 	import type { StandingsData, StandingsEntry } from 'src/types/contestData';
@@ -23,36 +25,45 @@
 	import StandingsTable from '$lib/components/page/standings/standingsTable.svelte';
 	import StandingsHead from '$lib/components/page/standings/standingsHead.svelte';
 	import StandingsCell from '$lib/components/page/standings/standingsCell.svelte';
-	import { problemNames, problemPages } from '$lib/data/stores/contestData';
+	import { problemNames, problemPages, standingsData } from '$lib/data/stores/contestData';
 	import Page from '$lib/components/templates/page/page.svelte';
 	import StandingsRowEntry from '$lib/components/page/standings/standingsRowEntry.svelte';
-	import { TeamInfoData, userInfo } from '$lib/data/stores/userInfo';
+	import { TeamInfoData } from '$lib/data/stores/userInfo';
 	import StandingsPagination from '$lib/components/page/standings/standingsPagination.svelte';
 	import { fillEmptyVerdicts } from '$lib/utils/verdictStatus';
 	import { STANDARD } from '$lib/data/constants/division';
 
-	export let standingsData: StandingsData[];
+	// export let standingsDataObj: StandingsData[];
+	// standingsData.set(standingsDataObj)
 
-	onMount(() => {
+	async function fetchStandings() {
+		standingsData.set(await Standings());
+	}
+
+	onMount(async () => {
 		if (!$currentPage) currentPage.set('standings');
+		fetchStandings();
 	});
 
-	function cleanData(standingsData: StandingsData[]): StandingsEntry[] {
-		standingsData = standingsData.filter((entry) => {
+	function cleanData(standingsData: StandingsData[], problems: string[]): StandingsEntry[] {
+		const newData = standingsData.filter((entry) => {
 			if ($TeamInfoData.team) return entry.division === $TeamInfoData.team.division;
 			else return entry.division === STANDARD;
 		});
-		const entries = standingsData.map((entry) => {
+		const entries = newData.map((entry) => {
 			let res: StandingsEntry = {
 				Name: entry.team_name,
-				Submissions: fillEmptyVerdicts(entry.verdicts, Object.keys($problemPages)),
+				Submissions: fillEmptyVerdicts(entry.verdicts, problems),
 				TotalPoints: 0,
 				Points: {},
 				ID: entry.team_id
 			};
 			Object.keys(res.Submissions).forEach((problemID) => {
-				res.Points[problemID] = res.Submissions[problemID].points;
-				res.TotalPoints += res.Points[problemID];
+				// filter out sample problems
+				if (problemID in $problemPages) {
+					res.Points[problemID] = res.Submissions[problemID].points;
+					res.TotalPoints += res.Points[problemID];
+				}
 			});
 			return res;
 		});
@@ -75,14 +86,17 @@
 		return entries;
 	}
 
-	let standingsEntries: StandingsEntry[];
+	let standingsEntries: StandingsEntry[] = [];
 
 	// run it once per page but re-run after login/logout
-	$: if ($TeamInfoData.team) {
-		standingsEntries = cleanData(standingsData);
+	$: if ($TeamInfoData.team && $standingsData) {
+		standingsEntries = cleanData($standingsData, Object.keys($problemPages));
 	}
-	$: if (!$TeamInfoData.team) {
-		standingsEntries = cleanData(standingsData);
+	$: if ($standingsData.length) {
+		standingsEntries = cleanData($standingsData, Object.keys($problemPages));
+	}
+	$: if ($TeamInfoData.team && !$standingsData) {
+		fetchStandings();
 	}
 
 	/* Table pagination */
@@ -91,6 +105,10 @@
 	let page = 0;
 
 	let displayedEntries: StandingsEntry[] = [];
+
+	$: if (standingsEntries) {
+		displayPage(page, page + entriesPerPage);
+	}
 
 	function displayPage(pageStart: number, pageEnd: number) {
 		page = pageStart;

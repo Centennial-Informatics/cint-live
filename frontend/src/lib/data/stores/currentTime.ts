@@ -1,4 +1,5 @@
-import { readable } from 'svelte/store';
+import { derived, readable } from 'svelte/store';
+import { startTime } from './contestData';
 
 export const currentTime = readable(Date.now(), function start(set) {
 	const interval = setInterval(() => {
@@ -8,4 +9,8 @@ export const currentTime = readable(Date.now(), function start(set) {
 	return function stop() {
 		clearInterval(interval);
 	};
+});
+
+export const contestStarted = derived([currentTime, startTime], ([$currentTime, $startTime]) => {
+	return Math.floor($currentTime / 1000) >= $startTime.valueOf() / 1000;
 });

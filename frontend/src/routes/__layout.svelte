@@ -1,7 +1,8 @@
-<script lang="ts" context="module">
+<!-- 
+	SSR Code
+	<script lang="ts" context="module">
 	import axios from 'axios';
 	import type { ContestData } from 'src/types';
-	import CollectStandard from '$lib/utils/networking/collectStandard';
 	import { browser } from '$app/env';
 	export async function load() {
 		const res = browser
@@ -13,13 +14,13 @@
 			}
 		};
 	}
-</script>
-
+</script> -->
 <script lang="ts">
+	import CollectStandard from '$lib/utils/networking/collectStandard';
 	import '../app.css';
 	import Sidebar from '$lib/components/layout/sidebar/sidebar.svelte';
 	import Navbar from '$lib/components/layout/navbar/navbar.svelte';
-	import { setContext } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 	import {
 		contestData,
 		problemPages,
@@ -35,11 +36,14 @@
 	import CollectAdvanced from '$lib/utils/networking/collectAdvanced';
 	import { ADVANCED } from '$lib/data/constants/division';
 
-	export let contestDataObj: ContestData;
+	// export let contestDataObj: ContestData;
+	// contestData.set(contestDataObj);
 
 	setContext('contestConfig', DefaultConfig);
-	// setContext('contestData', contestDataObj);
-	contestData.set(contestDataObj);
+
+	onMount(async () => {
+		contestData.set(await CollectStandard());
+	});
 
 	$: if ($IDToken && !$submissionWS) {
 		submissionWS.set(

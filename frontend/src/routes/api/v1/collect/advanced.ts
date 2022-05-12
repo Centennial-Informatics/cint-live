@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export async function post() {
+export async function get() {
 	return {
-		body: (await axios.post(process.env.HOST + '/api/v1/collect/advanced')).data
+		body: (await axios.get(process.env.HOST + '/api/v1/collect/advanced')).data
 	};
 }

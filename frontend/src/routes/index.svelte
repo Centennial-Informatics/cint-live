@@ -14,9 +14,6 @@
 		if (!$currentPage) currentPage.set('home');
 	});
 
-	const startDate = new Date($contestData.StartTime);
-	const stopDate = new Date($contestData.StopTime);
-
 	function formatDate(date: Date) {
 		return date.toLocaleDateString('en-US', {
 			weekday: 'long',
@@ -33,37 +30,52 @@
 		});
 	}
 
-	let dateString =
-		formatDate(startDate) +
-		(stopDate.toDateString() !== startDate.toDateString() ? ' – ' + formatDate(stopDate) : '');
-	let startTimeString = formatTime(startDate);
-	let stopTimeString = formatTime(stopDate);
+	function formatStrings(startTime: string, stopTime: string) {
+		const startDate = new Date(startTime);
+		const stopDate = new Date(stopTime);
+		const dateString =
+			formatDate(startDate) +
+			(stopDate.toDateString() !== startDate.toDateString() ? ' – ' + formatDate(stopDate) : '');
+		const startTimeString = formatTime(startDate);
+		const stopTimeString = formatTime(stopDate);
+		return [dateString, startTimeString, stopTimeString];
+	}
 
+	let dateString: string, startTimeString: string, stopTimeString: string;
+
+	contestData.subscribe((val) => {
+		const [dateStr, startTimeStr, stopTimeStr] = formatStrings(val.StartTime, val.StopTime);
+		dateString = dateStr;
+		startTimeString = startTimeStr;
+		stopTimeString = stopTimeStr;
+	});
 	let location = 'Centennial High School Cafeteria';
 </script>
 
 <Wrapper transparent>
 	<Page>
-		<Header>
-			<Title>{$contestInfo.Name}</Title>
-			<Subtitle>{dateString}</Subtitle>
-			<Subtitle>{startTimeString} – {stopTimeString}</Subtitle>
-			<Subtitle>{location}</Subtitle>
-		</Header>
-		<Paragraph
-			>Note all website issues here <a
-				href="https://docs.google.com/document/d/1JTN0ENdYsaMEsUhO96iPPwOQWm6ZQQ6IsmW4sdvperM/edit"
-				>https://docs.google.com/document/d/1JTN0ENdYsaMEsUhO96iPPwOQWm6ZQQ6IsmW4sdvperM/edit</a
-			></Paragraph
-		>
-		<Paragraph>{$contestInfo.Description}</Paragraph>
-		<Paragraph>
-			Teams may have up to four participants. Each team member’s submission will score for the
-			entire team. Enter a team code down below to join a team, or share your code to invite others
-			to your team. Team names and members will be locked at the start of the competition.
-		</Paragraph>
-		<div id="register">
-			<TeamEditor />
-		</div>
+		{#if $contestData.Info}
+			<Header>
+				<Title>{$contestInfo.Name}</Title>
+				<Subtitle>{dateString}</Subtitle>
+				<Subtitle>{startTimeString} – {stopTimeString}</Subtitle>
+				<Subtitle>{location}</Subtitle>
+			</Header>
+			<Paragraph
+				>Note all website issues here <a
+					href="https://docs.google.com/document/d/1JTN0ENdYsaMEsUhO96iPPwOQWm6ZQQ6IsmW4sdvperM/edit"
+					>https://docs.google.com/document/d/1JTN0ENdYsaMEsUhO96iPPwOQWm6ZQQ6IsmW4sdvperM/edit</a
+				></Paragraph
+			>
+			<Paragraph>{$contestInfo.Description}</Paragraph>
+			<Paragraph>
+				Teams may have up to four participants. Each team member’s submission will score for the
+				entire team. Enter a team code down below to join a team, or share your code to invite
+				others to your team. Team names and members will be locked at the start of the competition.
+			</Paragraph>
+			<div id="register">
+				<TeamEditor />
+			</div>
+		{/if}
 	</Page>
 </Wrapper>

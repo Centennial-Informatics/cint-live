@@ -15,10 +15,16 @@ FROM node:18-alpine3.14 as frontend_build
 COPY frontend /app/frontend
 
 ENV PATH /app/node_modules/.bin:$PATH
+ENV BACKEND_HOST localhost:8000
 
 WORKDIR /app/frontend
-# RUN npm install
-# RUN npm run build
+
+# load the .env file for Vite
+RUN touch .env
+RUN echo BACKEND_HOST="${BACKEND_HOST}" >> .env
+
+RUN npm ci
+RUN npm run build
 
 # Slim production container with go binary and static files
 FROM alpine
@@ -32,7 +38,7 @@ ENV PORT 8000
 
 EXPOSE ${PORT}
 
-# COPY --from=frontend_build /app/frontend/build /app/frontend/build
+COPY --from=frontend_build /app/frontend/build /app/frontend/build
 COPY --from=backend_build /go/src/app/backend/servermodule /app/backend/servermodule
 COPY --from=backend_build /go/src/app/backend/configs/data /app/backend/configs/data
 

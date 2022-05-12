@@ -1,7 +1,10 @@
 import type { SubmissionVerdictUpdate, ContestData } from 'src/types';
+import type { StandingsData } from 'src/types/contestData';
 import { writable, derived } from 'svelte/store';
 
 export const contestData = writable<ContestData>({} as ContestData);
+
+export const standingsData = writable<StandingsData[]>([] as StandingsData[]);
 
 export const problemNames = derived(contestData, ($contestData) => {
 	return $contestData.Problems || [];

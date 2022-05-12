@@ -1,7 +1,7 @@
+import { WS_URL } from '$lib/data/constants/url';
+
 function NewWebSocketConnection() {
-	let wsEndpoint = 'ws://localhost:8000/ws';
-	// let wsEndpoint = 'wss://live-judge.herokuapp.com/ws';
-	if (process.env.NODE_ENV === 'production') wsEndpoint = 'wss://live-judge.herokuapp.com/ws';
+	const wsEndpoint = WS_URL[process.env.NODE_ENV];
 	return new WebSocket(wsEndpoint);
 }
 

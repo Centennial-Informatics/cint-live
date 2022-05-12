@@ -10,6 +10,16 @@
 
 	$: label = fmtLabel($startTime.valueOf(), $stopTime.valueOf(), $currentTime);
 	$: time = fmtTime($startTime.valueOf(), $stopTime.valueOf(), $currentTime);
+
+	function alertStart() {
+		if (confirm('CInT has begun! Reload the page.')) {
+			window.location.reload();
+		}
+	}
+
+	$: if (Math.floor($currentTime / 1000) == $startTime.valueOf() / 1000) {
+		alertStart();
+	}
 </script>
 
 <div class="mt-1 mb-5">

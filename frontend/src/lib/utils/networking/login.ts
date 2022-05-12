@@ -1,4 +1,4 @@
-import axios from 'axios';
+import CLIENT from './client';
 
 interface LoginInfo {
 	error?: string;
@@ -9,5 +9,5 @@ interface LoginInfo {
 export default async function Login(googleIdToken: string) {
 	const formData = new FormData();
 	formData.append('id_token', googleIdToken);
-	return (await axios.post('/api/v1/login', formData)).data as LoginInfo;
+	return (await CLIENT.post('/api/v1/login', formData)).data as LoginInfo;
 }

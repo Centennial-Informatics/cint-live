@@ -1,4 +1,5 @@
 <script>
+	import { contestStarted } from '$lib/data/stores/currentTime';
 	import { TeamInfoData } from '$lib/data/stores/userInfo';
 	import JoinTeam from './joinTeam.svelte';
 	import Register from './register.svelte';
@@ -11,8 +12,11 @@
 			teamInfo={$TeamInfoData.team}
 			teamMembers={$TeamInfoData.members}
 			teamName={$TeamInfoData.team.name}
+			editable={!$contestStarted}
 		/>
-		<JoinTeam />
+		{#if !$contestStarted}
+			<JoinTeam />
+		{/if}
 	{:else}
 		<Register />
 	{/if}

@@ -13,6 +13,7 @@
 	export let teamMembers: TeammateInfo[];
 	export let teamName = $TeamInfoData.team.name;
 	export let editing = false;
+	export let editable = true;
 	let error = '';
 
 	// $: if ($TeamInfoData.team) {
@@ -38,6 +39,11 @@
 	<div class="py-8 flex flex-col w-full px-8 items-center space-y-6">
 		<TeamCode teamCode={teamInfo.code} />
 		<div class="w-full space-y-2">
+			<span class="text-{$brand}-light font-bold text-2xl"
+				>{$TeamInfoData.team.division} Division</span
+			>
+		</div>
+		<div class="w-full space-y-2">
 			<Subtitle>
 				{#if error === ''}
 					Team Name
@@ -45,27 +51,34 @@
 					<span class="text-bad-50">{error}</span>
 				{/if}
 			</Subtitle>
+
 			<div class="flex flex-row space-x-3 transition-all">
-				<input
-					class="outline-none bg-gray-800 p-3 rounded-lg w-full text-gray-50 font-bold"
-					bind:value={teamName}
-					on:keydown={(e) => {
-						if (e.key === 'Enter') {
-							updateTeamName(teamName);
-						}
-					}}
-					on:focus={() => {
-						editing = true;
-					}}
-				/>
-				{#if editing}
-					<div
-						class="flex justify-center items-center bg-{$brand} m-auto p-1 rounded-lg hover:bg-opacity-70 cursor-pointer"
-						on:click={() => {
-							updateTeamName(teamName);
+				{#if editable}
+					<input
+						class="outline-none bg-gray-800 p-3 rounded-lg w-full text-gray-50 font-bold"
+						bind:value={teamName}
+						on:keydown={(e) => {
+							if (e.key === 'Enter') {
+								updateTeamName(teamName);
+							}
 						}}
-					>
-						<Check width="40" height="40" color="#ffffff" />
+						on:focus={() => {
+							editing = true;
+						}}
+					/>
+					{#if editing}
+						<div
+							class="flex justify-center items-center bg-{$brand} m-auto p-1 rounded-lg hover:bg-opacity-70 cursor-pointer"
+							on:click={() => {
+								updateTeamName(teamName);
+							}}
+						>
+							<Check width="40" height="40" color="#ffffff" />
+						</div>
+					{/if}
+				{:else}
+					<div class="w-full text-gray-50 font-bold text-2xl">
+						{teamName}
 					</div>
 				{/if}
 			</div>
