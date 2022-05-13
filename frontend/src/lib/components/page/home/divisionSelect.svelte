@@ -16,7 +16,7 @@
 </script>
 
 <div class="flex flex-row justify-between space-x-4 mt-2 mb-6">
-	{#if !contestStarted || $TeamInfoData.team.division === STANDARD}
+	{#if !$contestStarted || $TeamInfoData.team.division === STANDARD}
 		<div
 			class="w-full space-y-2 {$TeamInfoData.team.division === STANDARD
 				? 'bg-brand'
@@ -30,7 +30,7 @@
 			>
 		</div>
 	{/if}
-	{#if !contestStarted || $TeamInfoData.team.division === ADVANCED}
+	{#if !$contestStarted || $TeamInfoData.team.division === ADVANCED}
 		<div
 			class="w-full space-y-2 {$TeamInfoData.team.division === ADVANCED
 				? 'bg-alt-dark'
