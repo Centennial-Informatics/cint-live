@@ -80,7 +80,7 @@ func TestTeam(t *testing.T) {
 
 	const newTestName = "new team name"
 
-	db.UpdateTeam(team.Code, newTestName)
+	db.UpdateTeamName(team.Code, newTestName)
 
 	testTeam, users = db.GetTeamByCode(team.Code)
 	if testTeam.Name != newTestName {

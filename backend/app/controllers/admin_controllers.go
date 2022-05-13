@@ -37,20 +37,33 @@ import (
 // }
 
 func CreateUser(c *fiber.Ctx, db *database.ContestDB) error {
-		email := c.FormValue("Email")
-		if email == "" {
-			return c.SendStatus(constants.StatusUnauthorized)
-		}
+	email := c.FormValue("Email")
+	if email == "" {
+		return c.SendStatus(constants.StatusUnauthorized)
+	}
 
-		division := c.FormValue("Division")
-		if division == "" {
-			return c.SendStatus(constants.StatusUnauthorized)
-		}
+	division := c.FormValue("Division")
+	if division == "" {
+		return c.SendStatus(constants.StatusUnauthorized)
+	}
 
-		name := c.FormValue("Name")
-		if name == "" {
-			return c.SendStatus(constants.StatusUnauthorized)
-		}
-		db.CreateUser(name, email, division)
+	name := c.FormValue("Name")
+	if name == "" {
+		return c.SendStatus(constants.StatusUnauthorized)
+	}
+	db.CreateUser(name, email, division)
+	return c.SendStatus(constants.StatusOk)
+}
+
+/* Clear all submissions from the submissions table. For testing purposes. */
+func ClearSubmissions(c *fiber.Ctx, db *database.ContestDB) error {
+	db.ClearSubmissions()
+
+	return c.SendStatus(constants.StatusOk)
+}
+
+func DeleteUser(c *fiber.Ctx, db *database.ContestDB) error {
+	db.DeleteUser(c.FormValue("email"))
+
 	return c.SendStatus(constants.StatusOk)
 }

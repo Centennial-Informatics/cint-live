@@ -118,13 +118,20 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 		cors.Config{},
 	))
 
+	var ADMIN_ACCOUNTS []string
+
+	err = json.Unmarshal([]byte(os.Getenv("ADMIN_ACCOUNTS")), &ADMIN_ACCOUNTS)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	routes.PublicRoutes(app)
 	routes.PublicAPIRoutes(v1, standardConfig, appClient)
 	routes.PublicTimeAPIRoutes(v1, standardConfig, appClient, appClient2, appClient3, db)
 	routes.PrivateAPIRoutes(v1, standardConfig, ts, appClient, db)
 	routes.PrivateTimeAPIRoutes(v1, standardConfig, ts, appClient, appClient2, appClient3, submitWorker, db)
 	routes.WsRoutes(app, standardConfig, ts, db)
-	routes.AdminAPIRoutes(v1, standardConfig, db)
+	routes.AdminAPIRoutes(v1, ADMIN_ACCOUNTS, standardConfig, ts, db)
 
 	port := os.Getenv("PORT")
 	if len(port) == 0 {

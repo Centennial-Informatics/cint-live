@@ -34,9 +34,7 @@ func Login(c *fiber.Ctx, config *models.Configuration, ts *models.TokenService, 
 		}
 
 		if !db.HasUser(tokenInfo.Email) {
-			return c.JSON(map[string]string{
-				"error": "You are not registered for this competition.",
-			})
+			db.CreateUser(c.FormValue("name"), tokenInfo.Email, "Standard")
 		}
 
 		userID = tokenInfo.Email
@@ -138,7 +136,7 @@ func UpdateTeam(c *fiber.Ctx, userID string, db *database.ContestDB) error {
 		return c.SendString("Name can be at most 30 characters.")
 	} else {
 		user := db.GetUser(userID)
-		db.UpdateTeam(user.TeamCode, name)
+		db.UpdateTeamName(user.TeamCode, name)
 	}
 
 	return c.SendString("")
@@ -146,6 +144,24 @@ func UpdateTeam(c *fiber.Ctx, userID string, db *database.ContestDB) error {
 
 func LeaveTeam(c *fiber.Ctx, userID string, db *database.ContestDB) error {
 	db.LeaveTeam(userID)
+
+	team, members := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+
+	return c.JSON(map[string]interface{}{
+		"team":    team,
+		"members": members,
+	})
+}
+
+func UpdateTeamDivision(c *fiber.Ctx, userID string, db *database.ContestDB) error {
+	code := db.GetUser(userID).TeamCode
+	team, _ := db.GetTeamByCode(code)
+
+	if division := c.FormValue("division"); division != "" {
+		if division == "Standard" || division == "Advanced" {
+			db.UpdateTeamDivision(code, division)
+		}
+	}
 
 	team, members := db.GetTeamByCode(db.GetUser(userID).TeamCode)
 

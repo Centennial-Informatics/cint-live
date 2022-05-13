@@ -81,6 +81,17 @@ func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 		return controllers.UpdateTeam(c, userID, db)
 	})
 
+	router.Post("/division", func(c *fiber.Ctx) error {
+		if time.Since(config.StartTime) >= 0 {
+			return c.SendStatus(constants.StatusUnauthorized)
+		}
+		userID, err := ts.AuthorizeUser(c.FormValue("token"))
+		if err != nil {
+			return c.SendStatus(constants.StatusUnauthorized)
+		}
+		return controllers.UpdateTeamDivision(c, userID, db)
+	})
+
 	router.Post("/leave", func(c *fiber.Ctx) error {
 		if time.Since(config.StartTime) >= 0 {
 			return c.SendStatus(constants.StatusUnauthorized)

@@ -17,7 +17,7 @@
 			client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
 			callback: async (res) => {
 				const decoded: DecodedCredential = jwt_decode(res.credential);
-				const loginInfo = await Login(res.credential);
+				const loginInfo = await Login(res.credential, decoded.name);
 				if (loginInfo.error) {
 					alert(
 						'Please register for the competition first through the Google Form linked on the home page.'

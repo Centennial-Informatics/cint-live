@@ -18,8 +18,8 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 WORKDIR /app/frontend
 
-RUN npm ci
-RUN npm run build
+# RUN npm ci
+# RUN npm run build
 
 # Slim production container with go binary and static files
 FROM alpine
@@ -29,11 +29,12 @@ ENV BUILD ${BUILD_ENV}
 ENV CF_ACCOUNTS cf_accounts
 ENV ADMIN_TOKEN admin_token
 ENV DATABASE_URL localhost
+ENV ADMIN_ACCOUNTS []
 ENV PORT 8000
 
 EXPOSE ${PORT}
 
-COPY --from=frontend_build /app/frontend/build /app/frontend/build
+# COPY --from=frontend_build /app/frontend/build /app/frontend/build
 COPY --from=backend_build /go/src/app/backend/servermodule /app/backend/servermodule
 COPY --from=backend_build /go/src/app/backend/configs/data /app/backend/configs/data
 

@@ -174,8 +174,12 @@ func (db *ContestDB) CreateTeam(name string, division string) *Team {
 	return &team
 }
 
-func (db *ContestDB) UpdateTeam(code string, name string) {
+func (db *ContestDB) UpdateTeamName(code string, name string) {
 	db.db.Model(&Team{}).Where("code = ?", code).Update("name", name)
+}
+
+func (db *ContestDB) UpdateTeamDivision(code string, division string) {
+	db.db.Model(&Team{}).Where("code = ?", code).Update("division", division)
 }
 
 func (db *ContestDB) HasTeam(code string) bool {
@@ -198,12 +202,12 @@ func (db *ContestDB) GetTeamByCode(code string) (Team, []User) {
 
 	members := db.GetTeamMembers(code)
 
-	team.Division = "Standard"
-	for _, member := range members {
-		if member.Division != "Standard" {
-			team.Division = "Advanced"
-		}
-	}
+	// team.Division = "Standard"
+	// for _, member := range members {
+	// 	if member.Division != "Standard" {
+	// 		team.Division = "Advanced"
+	// 	}
+	// }
 
 	db.db.Model(&Team{}).Where("code = ?", code).Update("division", team.Division)
 
@@ -216,12 +220,12 @@ func (db *ContestDB) GetTeam(ID int) (Team, []User) {
 
 	members := db.GetTeamMembers(team.Code)
 
-	team.Division = "Standard"
-	for _, member := range members {
-		if member.Division != "Standard" {
-			team.Division = "Advanced"
-		}
-	}
+	// team.Division = "Standard"
+	// for _, member := range members {
+	// 	if member.Division != "Standard" {
+	// 		team.Division = "Advanced"
+	// 	}
+	// }
 
 	db.db.First(&team, ID).Update("division", team.Division)
 
@@ -332,4 +336,17 @@ func (db *ContestDB) UpdateStandings() {
 
 func (db *ContestDB) GetStandings() []StandingsEntry {
 	return db.StandingsCache
+}
+
+func (db *ContestDB) ClearSubmissions() {
+	db.db.Where("1 = 1").Delete(&Submission{})
+}
+
+func (db *ContestDB) DeleteUser(email string) {
+	user := db.GetUser(email)
+	members := db.GetTeamMembers(user.TeamCode)
+	if len(members) == 1 {
+		db.DeleteTeam(user.TeamCode)
+	}
+	db.db.Where("email = ?", email).Delete(&User{})
 }

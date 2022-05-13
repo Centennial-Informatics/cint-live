@@ -8,6 +8,12 @@
 	import Button from '../problem/submit/button.svelte';
 	import TeamCode from './teamCode.svelte';
 	import Check from 'svelte-material-icons/Check.svelte';
+	import UpdateTeamDivision from '$lib/utils/networking/updateDivision';
+	import { contestData } from '$lib/data/stores/contestData';
+	import CollectAdvanced from '$lib/utils/networking/collectAdvanced';
+	import { ADVANCED, STANDARD } from '$lib/data/constants/division';
+	import CollectStandard from '$lib/utils/networking/collectStandard';
+	import DivisionSelect from './divisionSelect.svelte';
 
 	export let teamInfo: TeamInfo;
 	export let teamMembers: TeammateInfo[];
@@ -33,17 +39,31 @@
 			editing = false;
 		}
 	}
+	async function updateTeamDivision(division: string) {
+		await UpdateTeamDivision($IDToken, division);
+		const data = $TeamInfoData;
+		data.team.division = division;
+		TeamInfoData.set(data);
+		if (division === ADVANCED) {
+			(async () => {
+				contestData.set(await CollectAdvanced());
+			})();
+		} else if (division === STANDARD) {
+			(async () => {
+				contestData.set(await CollectStandard());
+			})();
+		}
+	}
 </script>
 
 <Wrapper margin={false} padding={false}>
 	<div class="py-8 flex flex-col w-full px-8 items-center space-y-6">
 		<TeamCode teamCode={teamInfo.code} />
 		<div class="w-full space-y-2">
-			<span class="text-{$brand}-light font-bold text-2xl"
-				>{$TeamInfoData.team.division} Division</span
-			>
-		</div>
-		<div class="w-full space-y-2">
+			<div>
+				<Subtitle>Division Selection</Subtitle>
+				<DivisionSelect {updateTeamDivision} />
+			</div>
 			<Subtitle>
 				{#if error === ''}
 					Team Name

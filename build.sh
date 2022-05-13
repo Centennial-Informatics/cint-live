@@ -8,6 +8,7 @@ docker run \
   -e DATABASE_URL="$DATABASE_URL" \
   -e BACKEND_HOST="$BACKEND_HOST" \
   -e OAUTH_CLIENT_ID="$OAUTH_CLIENT_ID" \
+  -e ADMIN_ACCOUNTS="$ADMIN_ACCOUNTS" \
   --name live-judge \
   -p 8000:8000 \
   -it \
