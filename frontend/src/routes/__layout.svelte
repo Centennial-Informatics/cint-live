@@ -1,4 +1,4 @@
-<!-- SSR Code
+<!-- SSR Code -->
 <script lang="ts" context="module">
 	import CollectStandard from '$lib/utils/networking/collectStandard';
 	import axios from 'axios';
@@ -14,9 +14,9 @@
 			}
 		};
 	}
-</script> -->
+</script>
+
 <script lang="ts">
-	import CollectStandard from '$lib/utils/networking/collectStandard';
 	import '../app.css';
 	import Sidebar from '$lib/components/layout/sidebar/sidebar.svelte';
 	import Navbar from '$lib/components/layout/navbar/navbar.svelte';
@@ -38,14 +38,14 @@
 	import { ADVANCED } from '$lib/data/constants/division';
 	import Loading from '$lib/components/templates/loading.svelte';
 
-	// export let contestDataObj: ContestData;
-	// contestData.set(contestDataObj);
+	export let contestDataObj: ContestData;
+	contestData.set(contestDataObj);
 
 	setContext('contestConfig', DefaultConfig);
 
-	onMount(async () => {
-		contestData.set(await CollectStandard());
-	});
+	// onMount(async () => {
+	// 	contestData.set(await CollectStandard());
+	// });
 
 	$: if ($IDToken && !$submissionWS) {
 		submissionWS.set(

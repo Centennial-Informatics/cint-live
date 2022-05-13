@@ -1,4 +1,4 @@
-<!-- <script lang="ts" context="module">
+<script lang="ts" context="module">
 	import axios from 'axios';
 	import Standings from '$lib/utils/networking/standings';
 	import { browser } from '$app/env';
@@ -13,9 +13,10 @@
 			}
 		};
 	}
-</script> -->
+</script>
+
 <script lang="ts">
-	import Standings from '$lib/utils/networking/standings';
+	// import Standings from '$lib/utils/networking/standings';
 	import { currentPage } from '$lib/data/stores/currentPage';
 	import { onMount } from 'svelte';
 	import type { StandingsData, StandingsEntry } from 'src/types/contestData';
@@ -35,13 +36,13 @@
 	export let standingsDataObj: StandingsData[];
 	standingsData.set(standingsDataObj);
 
-	async function fetchStandings() {
-		standingsData.set(await Standings());
-	}
+	// async function fetchStandings() {
+	// 	standingsData.set(await Standings());
+	// }
 
 	onMount(async () => {
 		if (!$currentPage) currentPage.set('standings');
-		fetchStandings();
+		// fetchStandings();
 	});
 
 	function cleanData(standingsData: StandingsData[], problems: string[]): StandingsEntry[] {
