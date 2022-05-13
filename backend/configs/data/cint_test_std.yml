@@ -1,0 +1,30 @@
+contestid: 381918
+contesturl: https://codeforces.com/gym/381918
+starttime: "2022-05-13T14:30:00-04:00" # required
+stoptime: "2022-05-13T23:00:00-04:00" # required
+maxteamsize: 4
+points: # required
+  s1: 10
+  s2: 20
+  a: 10
+  b: 20
+  c: 20
+  d: 30
+  e: 30
+  f: 40
+  g: 40
+  h: 50
+  i: 50
+  j: 60
+  k: 60
+  l: 60
+  m: 60
+  n: 60
+  o: 60
+  p: 60
+  q: 60
+  r: 60
+  s: 60
+  t: 60
+  u: 60
+  v: 60

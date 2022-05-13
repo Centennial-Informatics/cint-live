@@ -153,12 +153,12 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 // @BasePath /api/v1
 
 func main() {
-	standardConfig, err := configs.Cint()
+	standardConfig, err := configs.CintTestStd()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	advancedConfig, err := configs.Cint()
+	advancedConfig, err := configs.CintTestAdv()
 	if err != nil {
 		log.Fatal(err)
 	}
