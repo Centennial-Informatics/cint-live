@@ -65,10 +65,12 @@ export function convertVerdictsToMap(data: SubmissionVerdict[], problemIDs: stri
 	return res;
 }
 
+/* Replace missing verdicts and delete excess verdicts (deleted problems). */
 export function fillEmptyVerdicts(data: SubmissionVerdictUpdate, problemIDs: string[]) {
+	const newData: SubmissionVerdictUpdate = {};
 	problemIDs.forEach((problemID) => {
 		if (!(problemID in data)) {
-			data[problemID] = {
+			newData[problemID] = {
 				ID: '',
 				problem_id: problemID,
 				verdict: 'Unsubmitted',
@@ -76,8 +78,10 @@ export function fillEmptyVerdicts(data: SubmissionVerdictUpdate, problemIDs: str
 				time: 0,
 				points: 0
 			};
+		} else {
+			newData[problemID] = data[problemID];
 		}
 	});
 
-	return data;
+	return newData;
 }

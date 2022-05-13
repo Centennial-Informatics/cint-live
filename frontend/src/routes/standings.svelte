@@ -5,8 +5,7 @@
 	export async function load() {
 		const res = browser
 			? await Standings()
-			: ((await axios.get(process.env.BASE_URL + '/api/v1/standings'))
-					.data as StandingsData[]);
+			: ((await axios.get(process.env.BASE_URL + '/api/v1/standings')).data as StandingsData[]);
 		return {
 			props: {
 				standingsDataObj: res
@@ -86,18 +85,15 @@
 		return entries;
 	}
 
-	let standingsEntries: StandingsEntry[] = [];
+	let standingsEntries: StandingsEntry[] = cleanData($standingsData, Object.keys($problemPages));
 
 	// run it once per page but re-run after login/logout
 	$: if ($TeamInfoData.team && $standingsData) {
 		standingsEntries = cleanData($standingsData, Object.keys($problemPages));
 	}
-	$: if ($standingsData.length) {
+	$: if ($TeamInfoData.team && !$standingsData) {
 		standingsEntries = cleanData($standingsData, Object.keys($problemPages));
 	}
-	// $: if ($TeamInfoData.team && !$standingsData) {
-	// 	fetchStandings();
-	// }
 
 	/* Table pagination */
 
@@ -119,7 +115,6 @@
 	}
 </script>
 
-SSR Code
 <Wrapper transparent>
 	<Page>
 		<StandingsHeader />
