@@ -117,34 +117,36 @@
 
 <Wrapper transparent>
 	<Page>
-		<StandingsHeader />
-		<div class="overflow-x-auto">
-			<StandingsTable>
-				<StandingsHead>
-					<StandingsCell>Rank</StandingsCell>
-					<StandingsCell className="pl-10 w-72 flex-grow" left>Name</StandingsCell>
-					<div class="float-right whitespace-nowrap">
-						<div class="hidden lg:inline-block">
-							{#each $problemNames as problem (problem.ID)}
-								<StandingsCell>{problem.ID}</StandingsCell>
-							{/each}
-						</div>
-						<StandingsCell>Total</StandingsCell>
-					</div>
-				</StandingsHead>
-				{#each displayedEntries as entry, i (entry.ID)}
-					<StandingsRowEntry
-						standingsEntry={entry}
-						active={entry.ID === ($TeamInfoData.team ? $TeamInfoData.team.ID : 0)}
-						rank={i + 1 + page}
-					/>
-				{/each}
-			</StandingsTable>
+		<div class="relative">
+			<StandingsHeader />
+			<div class="absolute left-0 right-0">
+				<div class="overflow-x-scroll">
+					<StandingsTable>
+						<StandingsHead>
+							<StandingsCell>Rank</StandingsCell>
+							<StandingsCell left className="flex-grow">Name</StandingsCell>
+							<div class="hidden lg:inline-block float-right">
+								{#each $problemNames as problem (problem.ID)}
+									<StandingsCell>{problem.ID}</StandingsCell>
+								{/each}
+							</div>
+							<StandingsCell>Total</StandingsCell>
+						</StandingsHead>
+						{#each displayedEntries as entry, i (entry.ID)}
+							<StandingsRowEntry
+								standingsEntry={entry}
+								active={entry.ID === ($TeamInfoData.team ? $TeamInfoData.team.ID : 0)}
+								rank={i + 1 + page}
+							/>
+						{/each}
+					</StandingsTable>
+				</div>
+				<StandingsPagination
+					itemsPerPage={entriesPerPage}
+					totalItems={standingsEntries.length}
+					{displayPage}
+				/>
+			</div>
 		</div>
-		<StandingsPagination
-			itemsPerPage={entriesPerPage}
-			totalItems={standingsEntries.length}
-			{displayPage}
-		/>
 	</Page>
 </Wrapper>
