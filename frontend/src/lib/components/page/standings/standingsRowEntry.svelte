@@ -10,7 +10,6 @@
 	export let rank = 0;
 	export let standingsEntry: StandingsEntry;
 	export let active = false;
-	console.log(standingsEntry);
 </script>
 
 <StandingsRow {active}>
