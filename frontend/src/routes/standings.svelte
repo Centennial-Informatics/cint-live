@@ -1,12 +1,11 @@
 <script lang="ts" context="module">
-	import axios from 'axios';
+	// import axios from 'axios';
 	import Standings from '$lib/utils/networking/standings';
 	import { browser, mode } from '$app/env';
 	export async function load() {
 		const res = browser
 			? await Standings()
-			: ((await axios.get(BASE_URL[mode as 'production' | 'development'] + '/api/v1/standings'))
-					.data as StandingsData[]);
+			: await fetchType(BASE_URL[mode as 'production' | 'development'] + '/api/v1/standings');
 		return {
 			props: {
 				standingsDataObj: res
@@ -33,6 +32,7 @@
 	import { fillEmptyVerdicts } from '$lib/utils/verdictStatus';
 	import { STANDARD } from '$lib/data/constants/division';
 	import { BASE_URL } from '$lib/data/constants/url';
+	import fetchType from '$lib/utils/networking/serverFetch';
 
 	export let standingsDataObj: StandingsData[];
 	standingsData.set(standingsDataObj);

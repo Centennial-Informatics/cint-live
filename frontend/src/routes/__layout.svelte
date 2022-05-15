@@ -1,17 +1,15 @@
 <!-- SSR Code -->
 <script lang="ts" context="module">
 	import CollectStandard from '$lib/utils/networking/collectStandard';
-	import axios from 'axios';
+	// import axios from 'axios';
 	import type { ContestData } from 'src/types';
 	import { browser, mode } from '$app/env';
 	export async function load() {
 		const res = browser
 			? await CollectStandard()
-			: ((
-					await axios.get(
-						BASE_URL[mode as 'production' | 'development'] + '/api/v1/collect/standard'
-					)
-			  ).data as ContestData);
+			: await fetchType<ContestData>(
+					BASE_URL[mode as 'production' | 'development'] + '/api/v1/collect/standard'
+			  );
 		return {
 			props: {
 				contestDataObj: res
@@ -42,6 +40,7 @@
 	import { ADVANCED } from '$lib/data/constants/division';
 	import Loading from '$lib/components/templates/loading.svelte';
 	import { BASE_URL } from '$lib/data/constants/url';
+	import fetchType from '$lib/utils/networking/serverFetch';
 
 	export let contestDataObj: ContestData;
 	contestData.set(contestDataObj);
