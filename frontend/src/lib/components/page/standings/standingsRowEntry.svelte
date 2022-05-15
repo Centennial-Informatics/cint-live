@@ -23,20 +23,17 @@
 	<StandingsCell className="flex-grow" left>
 		{standingsEntry.Name}
 	</StandingsCell>
-	<div class="float-right">
+	<div class="float-right relative">
 		<div class="hidden lg:inline-block">
 			{#each $problemNames as problem (problem.ID)}
 				{#if problem.ID in standingsEntry.Submissions}
 					<StandingsCell>
-						<div class="relative">
-							{#if standingsEntry.Points[problem.ID]}
+						<div class="flex flex-col items-center">
+							{#if standingsEntry.Points[problem.ID] > 0}
 								<span class={standingsEntry.Points[problem.ID] > 0 ? 'text-good-50 font-bold' : ''}
 									>{standingsEntry.Points[problem.ID]}</span
 								>
-								<span
-									class="absolute top-5 left-0 right-0 text-xs {active
-										? 'text-gray-300'
-										: 'text-gray-400'}"
+								<span class="text-xs {active ? 'text-gray-300' : 'text-gray-400'}"
 									>{fmtTimeHS(standingsEntry.Submissions[problem.ID].time)}</span
 								>
 							{/if}
@@ -45,8 +42,12 @@
 				{/if}
 			{/each}
 		</div>
-		<StandingsCell>
-			{standingsEntry.TotalPoints}
-		</StandingsCell>
+		<div class="inline-block w-12 ml-2 h-full">
+			<div class="absolute right-0 {standingsEntry.TotalPoints > 0 ? 'top-2' : 'top-0'}">
+				<StandingsCell className="">
+					{standingsEntry.TotalPoints}
+				</StandingsCell>
+			</div>
+		</div>
 	</div>
 </StandingsRow>
