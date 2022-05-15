@@ -20,10 +20,10 @@
 			{rank}
 		{/if}
 	</StandingsCell>
-	<StandingsCell className="flex-grow" left>
+	<StandingsCell left className="flex-grow whitespace-normal overflow-hidden w-36 text-ellipsis">
 		{standingsEntry.Name}
 	</StandingsCell>
-	<div class="float-right relative">
+	<div class="float-right lg:relative">
 		<div class="hidden lg:inline-block">
 			{#each $problemNames as problem (problem.ID)}
 				{#if problem.ID in standingsEntry.Submissions}
@@ -42,8 +42,10 @@
 				{/if}
 			{/each}
 		</div>
-		<div class="inline-block w-12 ml-2 h-full">
-			<div class="absolute right-0 {standingsEntry.TotalPoints > 0 ? 'top-2' : 'top-0'}">
+		<div class="lg:inline-block lg:w-12 lg:ml-2 lg:h-full">
+			<div
+				class="lg:absolute lg:right-0 {standingsEntry.TotalPoints > 0 ? 'lg:top-2' : 'lg:top-0'}"
+			>
 				<StandingsCell className="">
 					{standingsEntry.TotalPoints}
 				</StandingsCell>
