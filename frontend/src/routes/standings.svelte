@@ -5,7 +5,9 @@
 	export async function load() {
 		const res = browser
 			? await Standings()
-			: await fetchType(BASE_URL[mode as 'production' | 'development'] + '/api/v1/standings');
+			: await fetchType<StandingsData[]>(
+					BASE_URL[mode as 'production' | 'development'] + '/api/v1/standings'
+			  );
 		return {
 			props: {
 				standingsDataObj: res

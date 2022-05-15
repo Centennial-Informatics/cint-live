@@ -14,6 +14,7 @@
 	import { ADVANCED, STANDARD } from '$lib/data/constants/division';
 	import CollectStandard from '$lib/utils/networking/collectStandard';
 	import DivisionSelect from './divisionSelect.svelte';
+	import { contestStarted } from '$lib/data/stores/currentTime';
 
 	export let teamInfo: TeamInfo;
 	export let teamMembers: TeammateInfo[];
@@ -111,7 +112,7 @@
 				</div>
 			{/each}
 		</div>
-		{#if teamMembers.length > 1}
+		{#if teamMembers.length > 1 && !$contestStarted}
 			<Button onClick={leaveTeam} small className="px-16">Leave Team</Button>
 		{/if}
 	</div>

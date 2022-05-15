@@ -1,7 +1,8 @@
 <script lang="ts">
 	import Page from '$lib/components/templates/page/page.svelte';
 	import { PENDING } from '$lib/data/constants/status';
-	import { contestLanguages } from '$lib/data/stores/contestData';
+	import { contestData, contestInfo, contestLanguages } from '$lib/data/stores/contestData';
+	import { contestEnded } from '$lib/data/stores/currentTime';
 	import { IDToken } from '$lib/data/stores/userInfo';
 	import Submit from '$lib/utils/networking/submit';
 	import Button from './button.svelte';
@@ -57,7 +58,7 @@
 				</div>
 			</div>
 		</div>
-		{#if $IDToken}
+		{#if $IDToken && !$contestEnded}
 			<Button
 				disabled={status === PENDING || !$IDToken}
 				onClick={() => {
@@ -68,7 +69,9 @@
 				Only the most recent submission will be counted. There are no penalties for wrong answers.
 			</div>
 		{:else}
-			<div class="text-gray-400 mt-4 text-xl text-center">Sign in to submit.</div>
+			<div class="text-gray-400 mt-4 text-xl text-center">
+				{$contestEnded ? 'Contest is over.' : 'Sign in to submit.'}
+			</div>
 		{/if}
 	</form>
 </Page>

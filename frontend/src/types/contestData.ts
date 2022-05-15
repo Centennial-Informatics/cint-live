@@ -10,6 +10,7 @@ export interface ContestData {
 
 export interface ContestInfo {
 	Description: string;
+	InviteLink?: string;
 	Logo: string;
 	Name: string;
 	Website: string;
