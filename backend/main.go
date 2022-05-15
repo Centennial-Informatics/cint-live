@@ -66,7 +66,7 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 		log.Fatal(err)
 	}
 
-	workers.StandingsWorker(db, standardConfig.ScrapeIntervalVerdicts)
+	workers.StandingsWorker(db, standardConfig.ScrapeIntervalVerdicts, standardConfig)
 
 	ts := models.NewTokenService()
 	// submit worker submits to codeforces and checks for verdicts, callback runs when verdict status is updated
@@ -153,12 +153,12 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 // @BasePath /api/v1
 
 func main() {
-	standardConfig, err := configs.Cint()
+	standardConfig, err := configs.CintTestStd()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	advancedConfig, err := configs.Cint()
+	advancedConfig, err := configs.CintTestAdv()
 	if err != nil {
 		log.Fatal(err)
 	}

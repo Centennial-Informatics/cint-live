@@ -26,22 +26,50 @@
 	import StandingsTable from '$lib/components/page/standings/standingsTable.svelte';
 	import StandingsHead from '$lib/components/page/standings/standingsHead.svelte';
 	import StandingsCell from '$lib/components/page/standings/standingsCell.svelte';
-	import { problemNames, problemPages, standingsData } from '$lib/data/stores/contestData';
+	import {
+		problemNames,
+		problemPages,
+		standingsData,
+		stopTime,
+		submissionData
+	} from '$lib/data/stores/contestData';
 	import Page from '$lib/components/templates/page/page.svelte';
 	import StandingsRowEntry from '$lib/components/page/standings/standingsRowEntry.svelte';
-	import { TeamInfoData } from '$lib/data/stores/userInfo';
+	import { TeamID, TeamInfoData } from '$lib/data/stores/userInfo';
 	import StandingsPagination from '$lib/components/page/standings/standingsPagination.svelte';
 	import { fillEmptyVerdicts } from '$lib/utils/verdictStatus';
 	import { STANDARD } from '$lib/data/constants/division';
 	import { BASE_URL } from '$lib/data/constants/url';
 	import fetchType from '$lib/utils/networking/serverFetch';
+	import { contestEnded, currentTime } from '$lib/data/stores/currentTime';
 
 	export let standingsDataObj: StandingsData[];
 	standingsData.set(standingsDataObj);
 
+	let frozen = false;
+
 	// async function fetchStandings() {
 	// 	standingsData.set(await Standings());
 	// }
+
+	function updateFrozen(currentTime: number) {
+		const sinceEnd = Math.abs($stopTime.valueOf() / 1000 - Math.floor(currentTime / 1000));
+		if ($contestEnded && sinceEnd < 1800) {
+			frozen = true;
+		} else if (!$contestEnded && sinceEnd <= 1200) {
+			frozen = true;
+		} else {
+			frozen = false;
+		}
+
+		if (!$contestEnded && sinceEnd == 1200) {
+			alert('Scoreboard is now frozen. Results will not update during the final 20 minutes.');
+		} else if ($contestEnded && sinceEnd == 1800) {
+			alert('Final results are now available.');
+		}
+	}
+
+	$: updateFrozen($currentTime);
 
 	onMount(async () => {
 		if (!$currentPage) currentPage.set('standings');
@@ -61,6 +89,10 @@
 				Points: {},
 				ID: entry.team_id
 			};
+			// only update the user's submissions when standings are frozen
+			if ($TeamInfoData.team && res.ID === $TeamInfoData.team.ID) {
+				res.Submissions = $submissionData;
+			}
 			Object.keys(res.Submissions).forEach((problemID) => {
 				// filter out sample problems
 				if (problemID in $problemPages) {
@@ -122,7 +154,7 @@
 <Wrapper transparent>
 	<Page>
 		<div class="relative">
-			<StandingsHeader />
+			<StandingsHeader {frozen} />
 			<div class="absolute left-0 right-0">
 				<div class="overflow-x-scroll">
 					<StandingsTable>
@@ -141,6 +173,7 @@
 								standingsEntry={entry}
 								active={entry.ID === ($TeamInfoData.team ? $TeamInfoData.team.ID : 0)}
 								rank={i + 1 + page}
+								{frozen}
 							/>
 						{/each}
 					</StandingsTable>

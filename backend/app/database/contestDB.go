@@ -45,9 +45,10 @@ type StandingsEntry struct {
 }
 
 type ContestDB struct {
-	db             *gorm.DB
-	ProblemsCache  *models.ContestData
-	StandingsCache []StandingsEntry
+	db                   *gorm.DB
+	ProblemsCache        *models.ContestData
+	StandingsCache       []StandingsEntry
+	SecretStandingsCache []StandingsEntry
 }
 
 func NewDB(path string) (*ContestDB, error) {

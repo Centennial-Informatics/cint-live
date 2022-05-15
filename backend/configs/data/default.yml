@@ -1,7 +1,7 @@
 contestid: 328477 # required — arbitrary, not required to be the codeforces contest id
 contesturl: https://codeforces.com/gym/328477 # required
-starttime: '2022-02-05T00:00:00-05:00' # required
-stoptime: '2022-02-06T00:00:00-05:00' # required
+starttime: "2022-02-05T00:00:00-05:00" # required
+stoptime: "2022-02-06T00:00:00-05:00" # required
 maxteamsize: 2
 pointspolicy: full # full: only award points on full AC, partial: award partial credit TODO: implement partial
 points: # required
@@ -12,16 +12,19 @@ points: # required
   e: 30
   f: 40
 standard: # required
-- a
-- b
-- c
-- d
+  - a
+  - b
+  - c
+  - d
 advanced: # required
-- e
-- f
-firebaseurl: https://rosy-zoo-315017-default-rtdb.firebaseio.com/ # optional but recommended
+  - e
+  - f
 scrapeintervalall: 1800000
 scrapeintervalverdicts: 2000
 writeinterval: 500
 loginterval: 600000
 authtokenlength: 16
+submissiongrace: 600 # seconds after competition where on-time submissions will continue to be graded
+scoreboardfreeze: 1200 # seconds until contest end when scoreboard is initially frozen
+scoreboardunfreeze: 1800 # seconds after contest end when final scoreboard revealed
+invitelink: "none" # invite link to codeforces gym for post-contest practice

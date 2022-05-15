@@ -62,6 +62,10 @@ func Config(file string, test bool) (*models.Configuration, error) {
 	config.ScrapeIntervalVerdicts *= constants.NsInMs
 	config.WriteInterval *= constants.NsInMs
 
+	config.ScoreboardFreeze *= constants.NsInS
+	config.ScoreboardUnfreeze *= constants.NsInS
+	config.SubmissionGrace *= constants.NsInS
+
 	/* yaml is lowercase, but our problem IDs should be uppercase */
 	for k, v := range config.Points {
 		delete(config.Points, k)

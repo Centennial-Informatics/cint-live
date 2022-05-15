@@ -6,6 +6,7 @@ import (
 	"servermodule/app/models"
 	"servermodule/app/scraper"
 	"servermodule/configs/constants"
+	"servermodule/utils"
 	"servermodule/utils/workers"
 	"time"
 
@@ -43,11 +44,11 @@ func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 	// during contest
 	router.Post("/submit", func(c *fiber.Ctx) error {
 		userID, err := ts.AuthorizeUser(c.FormValue("token"))
-		if err != nil {
+		if err != nil || utils.IsAfter(config.StopTime) { // no new submissions after contest ends
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
-		if time.Since(config.StartTime) < 0 || time.Until(config.StopTime) < 0 {
+		if utils.IsBefore(config.StartTime) {
 			return controllers.Submit(c, userID, ts, config, practiceClient, s, db)
 		}
 

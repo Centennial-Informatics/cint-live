@@ -3,6 +3,8 @@
 	import Subtitle from '$lib/components/templates/typography/subtitle.svelte';
 	import Title from '$lib/components/templates/typography/title.svelte';
 	import { brand, TeamInfoData } from '$lib/data/stores/userInfo';
+
+	export let frozen = false;
 </script>
 
 <Header>
@@ -14,5 +16,12 @@
 		<div class="text-lg"><span class="text-brand-light">Standard Division</span></div>
 	{/if}
 	<Title>Scoreboard</Title>
-	<Subtitle>Refresh page to update.</Subtitle>
+	<Subtitle>
+		{#if frozen}
+			Scoreboard is frozen. Final results will be revealed at the closing ceremony in the
+			Auditorium.
+		{:else}
+			Refresh page to update.
+		{/if}
+	</Subtitle>
 </Header>

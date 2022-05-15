@@ -55,4 +55,10 @@ func AdminAPIRoutes(router fiber.Router, ADMIN_ACCOUNTS []string, config *models
 		}
 		return c.SendStatus(constants.StatusUnauthorized)
 	})
+	router.Post("/admin/standings", func(c *fiber.Ctx) error {
+		if c.FormValue("ADMIN_TOKEN") == os.Getenv("ADMIN_TOKEN") {
+			return controllers.SecretStandings(c, db)
+		}
+		return c.SendStatus(constants.StatusUnauthorized)
+	})
 }

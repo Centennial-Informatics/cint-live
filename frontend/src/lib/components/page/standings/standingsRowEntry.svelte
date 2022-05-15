@@ -10,11 +10,14 @@
 	export let rank = 0;
 	export let standingsEntry: StandingsEntry;
 	export let active = false;
+	export let frozen = false;
 </script>
 
 <StandingsRow {active}>
 	<StandingsCell>
-		{#if rank <= 3}
+		{#if frozen}
+			?
+		{:else if rank <= 3}
 			<Trophy width={'32'} height={'32'} color={RankColors[rank]} />
 		{:else}
 			{rank}
@@ -29,7 +32,9 @@
 				{#if problem.ID in standingsEntry.Submissions}
 					<StandingsCell>
 						<div class="flex flex-col items-center">
-							{#if standingsEntry.Points[problem.ID] > 0}
+							{#if frozen && !active}
+								?
+							{:else if standingsEntry.Points[problem.ID] > 0}
 								<span class={standingsEntry.Points[problem.ID] > 0 ? 'text-good-50 font-bold' : ''}
 									>{standingsEntry.Points[problem.ID]}</span
 								>
@@ -44,10 +49,12 @@
 		</div>
 		<div class="lg:inline-block lg:w-12 lg:ml-2 lg:h-full">
 			<div
-				class="lg:absolute lg:right-0 {standingsEntry.TotalPoints > 0 ? 'lg:top-2' : 'lg:top-0'}"
+				class="lg:absolute lg:right-0 {(!frozen || active) && standingsEntry.TotalPoints > 0
+					? 'lg:top-2'
+					: 'lg:top-0'}"
 			>
-				<StandingsCell className="">
-					{standingsEntry.TotalPoints}
+				<StandingsCell>
+					{frozen && !active ? '?' : standingsEntry.TotalPoints}
 				</StandingsCell>
 			</div>
 		</div>

@@ -5,3 +5,4 @@ const StatusUnauthorized = 401
 const StatusOk = 200
 
 const NsInMs = 1000000
+const NsInS = NsInMs * 1000

@@ -18,3 +18,10 @@ func Standings(c *fiber.Ctx, db *database.ContestDB) error {
 
 	return c.JSON(standings)
 }
+
+/* ONLY FOR ADMIN ACCOUNTS */
+func SecretStandings(c *fiber.Ctx, db *database.ContestDB) error {
+	standings := db.SecretStandingsCache
+
+	return c.JSON(standings)
+}
