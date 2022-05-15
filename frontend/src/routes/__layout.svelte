@@ -3,11 +3,15 @@
 	import CollectStandard from '$lib/utils/networking/collectStandard';
 	import axios from 'axios';
 	import type { ContestData } from 'src/types';
-	import { browser } from '$app/env';
+	import { browser, mode } from '$app/env';
 	export async function load() {
 		const res = browser
 			? await CollectStandard()
-			: ((await axios.get(process.env.BASE_URL + '/api/v1/collect/standard')).data as ContestData);
+			: ((
+					await axios.get(
+						BASE_URL[mode as 'production' | 'development'] + '/api/v1/collect/standard'
+					)
+			  ).data as ContestData);
 		return {
 			props: {
 				contestDataObj: res
@@ -37,6 +41,7 @@
 	import CollectAdvanced from '$lib/utils/networking/collectAdvanced';
 	import { ADVANCED } from '$lib/data/constants/division';
 	import Loading from '$lib/components/templates/loading.svelte';
+	import { BASE_URL } from '$lib/data/constants/url';
 
 	export let contestDataObj: ContestData;
 	contestData.set(contestDataObj);

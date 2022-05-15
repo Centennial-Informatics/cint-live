@@ -1,11 +1,12 @@
 <script lang="ts" context="module">
 	import axios from 'axios';
 	import Standings from '$lib/utils/networking/standings';
-	import { browser } from '$app/env';
+	import { browser, mode } from '$app/env';
 	export async function load() {
 		const res = browser
 			? await Standings()
-			: ((await axios.get(process.env.BASE_URL + '/api/v1/standings')).data as StandingsData[]);
+			: ((await axios.get(BASE_URL[mode as 'production' | 'development'] + '/api/v1/standings'))
+					.data as StandingsData[]);
 		return {
 			props: {
 				standingsDataObj: res
@@ -31,6 +32,7 @@
 	import StandingsPagination from '$lib/components/page/standings/standingsPagination.svelte';
 	import { fillEmptyVerdicts } from '$lib/utils/verdictStatus';
 	import { STANDARD } from '$lib/data/constants/division';
+	import { BASE_URL } from '$lib/data/constants/url';
 
 	export let standingsDataObj: StandingsData[];
 	standingsData.set(standingsDataObj);
