@@ -38,16 +38,13 @@
 	import StandingsPagination from '$lib/components/page/standings/standingsPagination.svelte';
 	import { fillEmptyVerdicts } from '$lib/utils/verdictStatus';
 	import { ADVANCED, STANDARD } from '$lib/data/constants/division';
-	import { BASE_URL } from '$lib/data/constants/url';
-	import fetchType from '$lib/utils/networking/serverFetch';
 	import { contestEnded, currentTime } from '$lib/data/stores/currentTime';
-	import TeamCode from '$lib/components/page/home/teamCode.svelte';
 
 	export let standingsDataObj: StandingsData[];
 	export let frozenOverride = false;
 	export let divisionOverride = '';
 
-	if (standingsDataObj) standingsData.set(standingsDataObj);
+	$: if (standingsDataObj) standingsData.set(standingsDataObj);
 
 	let frozen = false;
 

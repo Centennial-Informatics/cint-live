@@ -38,17 +38,17 @@ import (
 // }
 
 func CreateUser(c *fiber.Ctx, db *database.ContestDB) error {
-	email := c.FormValue("Email")
+	email := c.FormValue("email")
 	if email == "" {
 		return c.SendStatus(constants.StatusUnauthorized)
 	}
 
-	division := c.FormValue("Division")
+	division := c.FormValue("division")
 	if division == "" {
 		return c.SendStatus(constants.StatusUnauthorized)
 	}
 
-	name := c.FormValue("Name")
+	name := c.FormValue("name")
 	if name == "" {
 		return c.SendStatus(constants.StatusUnauthorized)
 	}
@@ -63,8 +63,9 @@ func ClearSubmissions(c *fiber.Ctx, db *database.ContestDB) error {
 	return c.SendStatus(constants.StatusOk)
 }
 
-func DeleteUser(c *fiber.Ctx, db *database.ContestDB) error {
+func DeleteUser(c *fiber.Ctx, db *database.ContestDB, ts *models.TokenService) error {
 	db.DeleteUser(c.FormValue("email"))
+	ts.DeleteUser(c.FormValue("email"))
 
 	return c.SendStatus(constants.StatusOk)
 }

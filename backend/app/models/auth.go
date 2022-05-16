@@ -143,3 +143,11 @@ func (ts *TokenService) GetConnMetrics() map[string]int {
 
 	return metrics
 }
+
+// user will still receive ws updates if they remain connected, but cannot login again
+func (ts *TokenService) DeleteUser(userID string) {
+	if _, ok := ts.token[userID]; ok {
+		delete(ts.user, ts.token[userID])
+		delete(ts.token, userID)
+	}
+}
