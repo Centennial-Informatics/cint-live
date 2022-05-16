@@ -69,7 +69,10 @@ func Submit(c *fiber.Ctx, userID string, ts *models.TokenService, config *models
 
 	teamConns.Conn = newConns
 
-	s.Submit(&submission)
+	/* Don't crash when a sample is submitted after contest starts. */
+	if _, good := client.Cached.ProblemPages[c.FormValue("problem")]; good {
+		s.Submit(&submission)
+	}
 
 	return c.SendStatus(constants.StatusOk)
 }
