@@ -27,4 +27,3 @@ authtokenlength: 16
 submissiongrace: 600 # seconds after competition where on-time submissions will continue to be graded
 scoreboardfreeze: 1200 # seconds until contest end when scoreboard is initially frozen
 scoreboardunfreeze: 1800 # seconds after contest end when final scoreboard revealed
-invitelink: "none" # invite link to codeforces gym for post-contest practice
