@@ -37,34 +37,40 @@
 	import { TeamInfoData } from '$lib/data/stores/userInfo';
 	import StandingsPagination from '$lib/components/page/standings/standingsPagination.svelte';
 	import { fillEmptyVerdicts } from '$lib/utils/verdictStatus';
-	import { STANDARD } from '$lib/data/constants/division';
+	import { ADVANCED, STANDARD } from '$lib/data/constants/division';
 	import { BASE_URL } from '$lib/data/constants/url';
 	import fetchType from '$lib/utils/networking/serverFetch';
 	import { contestEnded, currentTime } from '$lib/data/stores/currentTime';
+	import TeamCode from '$lib/components/page/home/teamCode.svelte';
 
-	// export let standingsDataObj: StandingsData[];
-	// standingsData.set(standingsDataObj);
+	export let standingsDataObj: StandingsData[];
+	export let frozenOverride = false;
+	export let divisionOverride = '';
+
+	if (standingsDataObj) standingsData.set(standingsDataObj);
 
 	let frozen = false;
 
 	async function fetchStandings() {
-		standingsData.set(await Standings());
+		if (!standingsDataObj) standingsData.set(await Standings());
 	}
 
 	function updateFrozen(currentTime: number) {
-		const sinceEnd = Math.abs($stopTime.valueOf() / 1000 - Math.floor(currentTime / 1000));
-		if ($contestEnded && sinceEnd < 1800) {
-			frozen = true;
-		} else if (!$contestEnded && sinceEnd <= 1200) {
-			frozen = true;
-		} else {
-			frozen = false;
-		}
+		if (!frozenOverride) {
+			const sinceEnd = Math.abs($stopTime.valueOf() / 1000 - Math.floor(currentTime / 1000));
+			if ($contestEnded && sinceEnd < 1800) {
+				frozen = true;
+			} else if (!$contestEnded && sinceEnd <= 1200) {
+				frozen = true;
+			} else {
+				frozen = false;
+			}
 
-		if (!$contestEnded && sinceEnd == 1200) {
-			alert('Scoreboard is now frozen. Results will not update during the final 20 minutes.');
-		} else if ($contestEnded && sinceEnd == 1800) {
-			alert('Final results are now available.');
+			if (!$contestEnded && sinceEnd == 1200) {
+				alert('Scoreboard is now frozen. Results will not update during the final 20 minutes.');
+			} else if ($contestEnded && sinceEnd == 1800) {
+				alert('Final results are now available.');
+			}
 		}
 	}
 
@@ -77,7 +83,9 @@
 
 	function cleanData(standingsData: StandingsData[], problems: string[]): StandingsEntry[] {
 		const newData = standingsData.filter((entry) => {
-			if ($TeamInfoData.team) return entry.division === $TeamInfoData.team.division;
+			if (divisionOverride === STANDARD) return entry.division === divisionOverride;
+			else if (divisionOverride === ADVANCED) return entry.division === divisionOverride;
+			else if ($TeamInfoData.team) return entry.division === $TeamInfoData.team.division;
 			else return entry.division === STANDARD;
 		});
 		const entries = newData.map((entry) => {
@@ -161,11 +169,24 @@
 <Wrapper transparent>
 	<Page>
 		<div class="relative">
-			<StandingsHeader {frozen} />
+			<StandingsHeader
+				{frozen}
+				division={divisionOverride
+					? divisionOverride
+					: $TeamInfoData.team
+					? $TeamInfoData.team.division
+					: STANDARD}
+			/>
 			<div class="absolute left-0 right-0">
 				<div class="overflow-x-scroll">
 					<StandingsTable>
-						<StandingsHead>
+						<StandingsHead
+							division={divisionOverride
+								? divisionOverride
+								: $TeamInfoData.team
+								? $TeamInfoData.team.division
+								: STANDARD}
+						>
 							<StandingsCell>Rank</StandingsCell>
 							<StandingsCell left className="flex-grow">Name</StandingsCell>
 							<div class="hidden lg:inline-block float-right">

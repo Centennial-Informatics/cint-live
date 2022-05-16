@@ -1,20 +1,21 @@
-<script>
+<script lang="ts">
 	import Header from '$lib/components/templates/page/header.svelte';
 	import Subtitle from '$lib/components/templates/typography/subtitle.svelte';
 	import Title from '$lib/components/templates/typography/title.svelte';
-	import { brand, TeamInfoData } from '$lib/data/stores/userInfo';
+	import { STANDARD } from '$lib/data/constants/division';
 
 	export let frozen = false;
+	export let division: string;
 </script>
 
 <Header>
-	{#if $TeamInfoData.team}
-		<div class="text-lg">
-			<span class="text-{$brand}-light">{$TeamInfoData.team.division} Division</span>
-		</div>
-	{:else}
-		<div class="text-lg"><span class="text-brand-light">Standard Division</span></div>
-	{/if}
+	<div class="text-lg">
+		{#if division === STANDARD}
+			<span class="text-brand-light">{division} Division</span>
+		{:else}
+			<span class="text-alt-light">{division} Division</span>
+		{/if}
+	</div>
 	<Title>Scoreboard</Title>
 	<Subtitle>
 		{#if frozen}

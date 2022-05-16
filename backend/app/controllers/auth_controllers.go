@@ -33,8 +33,14 @@ func Login(c *fiber.Ctx, config *models.Configuration, ts *models.TokenService, 
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
-		if !db.HasUser(tokenInfo.Email) {
+		contestStarted := !utils.IsBefore(config.StartTime)
+		hasUser := db.HasUser(tokenInfo.Email)
+
+		/* Only new logins before contest begins. Mid-contest bans are permanent. */
+		if !contestStarted && !hasUser {
 			db.CreateUser(c.FormValue("name"), tokenInfo.Email, "Standard")
+		} else if !hasUser {
+			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
 		userID = tokenInfo.Email

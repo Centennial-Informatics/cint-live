@@ -21,7 +21,12 @@ func Standings(c *fiber.Ctx, db *database.ContestDB) error {
 
 /* ONLY FOR ADMIN ACCOUNTS */
 func SecretStandings(c *fiber.Ctx, db *database.ContestDB) error {
-	standings := db.SecretStandingsCache
+	var standings []database.StandingsEntry
+	if db.SecretStandingsCache != nil {
+		standings = db.SecretStandingsCache
+	} else {
+		standings = db.StandingsCache
+	}
 
 	return c.JSON(standings)
 }
