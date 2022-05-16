@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<!-- <script lang="ts" context="module">
 	// import axios from 'axios';
 	import Standings from '$lib/utils/networking/standings';
 	import { browser, mode } from '$app/env';
@@ -14,10 +14,9 @@
 			}
 		};
 	}
-</script>
-
+</script> -->
 <script lang="ts">
-	// import Standings from '$lib/utils/networking/standings';
+	import Standings from '$lib/utils/networking/standings';
 	import { currentPage } from '$lib/data/stores/currentPage';
 	import { onMount } from 'svelte';
 	import type { StandingsData, StandingsEntry } from 'src/types/contestData';
@@ -35,7 +34,7 @@
 	} from '$lib/data/stores/contestData';
 	import Page from '$lib/components/templates/page/page.svelte';
 	import StandingsRowEntry from '$lib/components/page/standings/standingsRowEntry.svelte';
-	import { TeamID, TeamInfoData } from '$lib/data/stores/userInfo';
+	import { TeamInfoData } from '$lib/data/stores/userInfo';
 	import StandingsPagination from '$lib/components/page/standings/standingsPagination.svelte';
 	import { fillEmptyVerdicts } from '$lib/utils/verdictStatus';
 	import { STANDARD } from '$lib/data/constants/division';
@@ -43,14 +42,14 @@
 	import fetchType from '$lib/utils/networking/serverFetch';
 	import { contestEnded, currentTime } from '$lib/data/stores/currentTime';
 
-	export let standingsDataObj: StandingsData[];
-	standingsData.set(standingsDataObj);
+	// export let standingsDataObj: StandingsData[];
+	// standingsData.set(standingsDataObj);
 
 	let frozen = false;
 
-	// async function fetchStandings() {
-	// 	standingsData.set(await Standings());
-	// }
+	async function fetchStandings() {
+		standingsData.set(await Standings());
+	}
 
 	function updateFrozen(currentTime: number) {
 		const sinceEnd = Math.abs($stopTime.valueOf() / 1000 - Math.floor(currentTime / 1000));
@@ -73,7 +72,7 @@
 
 	onMount(async () => {
 		if (!$currentPage) currentPage.set('standings');
-		// fetchStandings();
+		fetchStandings();
 	});
 
 	function cleanData(standingsData: StandingsData[], problems: string[]): StandingsEntry[] {
@@ -90,7 +89,11 @@
 				ID: entry.team_id
 			};
 			// only update the user's submissions when standings are frozen
-			if ($TeamInfoData.team && res.ID === $TeamInfoData.team.ID) {
+			if (
+				Object.keys($submissionData).length === problems.length &&
+				$TeamInfoData.team &&
+				res.ID === $TeamInfoData.team.ID
+			) {
 				res.Submissions = fillEmptyVerdicts($submissionData, problems);
 			}
 			Object.keys(res.Submissions).forEach((problemID) => {
@@ -128,6 +131,10 @@
 		standingsEntries = cleanData($standingsData, Object.keys($problemPages));
 	}
 	$: if ($TeamInfoData.team && !$standingsData) {
+		standingsEntries = cleanData($standingsData, Object.keys($problemPages));
+	}
+
+	$: if ($standingsData) {
 		standingsEntries = cleanData($standingsData, Object.keys($problemPages));
 	}
 

@@ -1,5 +1,4 @@
-<!-- SSR Code -->
-<script lang="ts" context="module">
+<!-- <script lang="ts" context="module">
 	import CollectStandard from '$lib/utils/networking/collectStandard';
 	// import axios from 'axios';
 	import type { ContestData } from 'src/types';
@@ -16,12 +15,12 @@
 			}
 		};
 	}
-</script>
-
+</script> -->
 <script lang="ts">
 	import '../app.css';
 	import Sidebar from '$lib/components/layout/sidebar/sidebar.svelte';
 	import Navbar from '$lib/components/layout/navbar/navbar.svelte';
+	import CollectStandard from '$lib/utils/networking/collectStandard';
 	import { onMount, setContext } from 'svelte';
 	import {
 		contestData,
@@ -42,14 +41,14 @@
 	import { BASE_URL } from '$lib/data/constants/url';
 	import fetchType from '$lib/utils/networking/serverFetch';
 
-	export let contestDataObj: ContestData;
-	contestData.set(contestDataObj);
+	// export let contestDataObj: ContestData;
+	// contestData.set(contestDataObj);
 
 	setContext('contestConfig', DefaultConfig);
 
-	// onMount(async () => {
-	// 	contestData.set(await CollectStandard());
-	// });
+	onMount(async () => {
+		contestData.set(await CollectStandard());
+	});
 
 	$: if ($IDToken && !$submissionWS) {
 		submissionWS.set(
@@ -75,6 +74,8 @@
 		}
 	}
 </script>
+
+<!-- SSR Code -->
 
 <div class="min-h-screen">
 	{#if $contestData.Info}
