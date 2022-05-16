@@ -93,7 +93,7 @@ func GetTeam(c *fiber.Ctx, ts *models.TokenService, db *database.ContestDB) erro
 // @Success 200
 // @Failure 401
 // @Router /update [post]
-func UpdateUserTeam(c *fiber.Ctx, userID string, db *database.ContestDB, config *models.Configuration) error {
+func UpdateUserTeam(c *fiber.Ctx, userID string, db *database.ContestDB, config *models.Configuration, ts *models.TokenService) error {
 	var team database.Team
 
 	userTeamCode := db.GetUser(userID).TeamCode
@@ -116,6 +116,7 @@ func UpdateUserTeam(c *fiber.Ctx, userID string, db *database.ContestDB, config 
 				"error": "Team is full.",
 			})
 		}
+		ts.ChangeConnections(userID, teamID)
 		team = *db.UpdateUserTeam(userID, teamID)
 	} else {
 		team, _ = db.GetTeamByCode(userTeamCode)
@@ -142,10 +143,11 @@ func UpdateTeam(c *fiber.Ctx, userID string, db *database.ContestDB) error {
 	return c.SendString("")
 }
 
-func LeaveTeam(c *fiber.Ctx, userID string, db *database.ContestDB) error {
+func LeaveTeam(c *fiber.Ctx, userID string, db *database.ContestDB, ts *models.TokenService) error {
 	db.LeaveTeam(userID)
 
 	team, members := db.GetTeamByCode(db.GetUser(userID).TeamCode)
+	ts.ChangeConnections(userID, team.Code)
 
 	return c.JSON(map[string]interface{}{
 		"team":    team,

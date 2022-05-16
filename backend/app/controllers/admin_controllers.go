@@ -78,3 +78,7 @@ func DownloadStandings(c *fiber.Ctx, db *database.ContestDB, config *models.Conf
 	database.WriteStandingsToCSV(db, db.AdvancedCache, "Advanced", config)
 	return c.SendFile("StandingsAdvanced.csv", true)
 }
+
+func ConnectionMetrics(c *fiber.Ctx, ts *models.TokenService) error {
+	return c.JSON(ts.GetConnMetrics())
+}

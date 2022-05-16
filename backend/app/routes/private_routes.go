@@ -68,7 +68,7 @@ func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
-		return controllers.UpdateUserTeam(c, userID, db, config)
+		return controllers.UpdateUserTeam(c, userID, db, config, ts)
 	})
 
 	router.Post("/update", func(c *fiber.Ctx) error {
@@ -101,6 +101,6 @@ func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 		if err != nil {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
-		return controllers.LeaveTeam(c, userID, db)
+		return controllers.LeaveTeam(c, userID, db, ts)
 	})
 }
