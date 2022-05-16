@@ -21,7 +21,7 @@
 			Scoreboard is frozen. Final results will be revealed at the closing ceremony in the
 			Auditorium.
 		{:else}
-			Refresh page to update.
+			Refresh page to update. Tiebreaker is the time of the most recent submission.
 		{/if}
 	</Subtitle>
 </Header>
