@@ -91,7 +91,7 @@
 			};
 			// only update the user's submissions when standings are frozen
 			if ($TeamInfoData.team && res.ID === $TeamInfoData.team.ID) {
-				res.Submissions = $submissionData;
+				res.Submissions = fillEmptyVerdicts($submissionData, problems);
 			}
 			Object.keys(res.Submissions).forEach((problemID) => {
 				// filter out sample problems
