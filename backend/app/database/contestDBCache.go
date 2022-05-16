@@ -9,7 +9,7 @@ func NewContestDB(path string, contestCache ...*models.ContestData) (*ContestDB,
 	}
 
 	if len(contestCache) > 0 {
-		db.ProblemsCache = contestCache[0]
+		db.StandardCache = contestCache[0]
 	}
 
 	return db, err

@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"os"
 	"servermodule/app/controllers"
 	"servermodule/app/database"
 	"servermodule/app/models"
@@ -24,9 +23,9 @@ func handleAdminAuth(c *fiber.Ctx, ADMIN_ACCOUNTS []string, ts *models.TokenServ
 	if err != nil {
 		return false
 	}
-	if c.FormValue("ADMIN_TOKEN") != os.Getenv("ADMIN_TOKEN") {
-		return false
-	}
+	// if c.FormValue("ADMIN_TOKEN") != os.Getenv("ADMIN_TOKEN") {
+	// 	return false
+	// }
 	if !isAdminAcc(ADMIN_ACCOUNTS, userEmail) {
 		return false
 	}
@@ -36,28 +35,34 @@ func handleAdminAuth(c *fiber.Ctx, ADMIN_ACCOUNTS []string, ts *models.TokenServ
 /* AdminAPIRoutes - Public routes requiring a passcode. */
 func AdminAPIRoutes(router fiber.Router, ADMIN_ACCOUNTS []string, config *models.Configuration, ts *models.TokenService,
 	db *database.ContestDB) {
-	router.Post("/admin/create", func(c *fiber.Ctx) error {
-		if c.FormValue("ADMIN_TOKEN") == os.Getenv("ADMIN_TOKEN") {
-			return controllers.CreateUser(c, db)
-		}
-		return c.SendStatus(constants.StatusUnauthorized)
-	})
-	router.Post("/admin/dangerous/clear", func(c *fiber.Ctx) error {
-		if handleAdminAuth(c, ADMIN_ACCOUNTS, ts) {
-			return controllers.ClearSubmissions(c, db)
-		}
-		return c.SendStatus(constants.StatusUnauthorized)
+	// router.Post("/admin/create", func(c *fiber.Ctx) error {
+	// 	if c.FormValue("ADMIN_TOKEN") == os.Getenv("ADMIN_TOKEN") {
+	// 		return controllers.CreateUser(c, db)
+	// 	}
+	// 	return c.SendStatus(constants.StatusUnauthorized)
+	// })
+	// router.Post("/admin/dangerous/clear", func(c *fiber.Ctx) error {
+	// 	if handleAdminAuth(c, ADMIN_ACCOUNTS, ts) {
+	// 		return controllers.ClearSubmissions(c, db)
+	// 	}
+	// 	return c.SendStatus(constants.StatusUnauthorized)
 
-	})
-	router.Post("/admin/dangerous/delete", func(c *fiber.Ctx) error {
+	// })
+	// router.Post("/admin/dangerous/delete", func(c *fiber.Ctx) error {
+	// 	if handleAdminAuth(c, ADMIN_ACCOUNTS, ts) {
+	// 		return controllers.DeleteUser(c, db)
+	// 	}
+	// 	return c.SendStatus(constants.StatusUnauthorized)
+	// })
+	router.Post("/admin/standings", func(c *fiber.Ctx) error {
 		if handleAdminAuth(c, ADMIN_ACCOUNTS, ts) {
-			return controllers.DeleteUser(c, db)
+			return controllers.SecretStandings(c, db)
 		}
 		return c.SendStatus(constants.StatusUnauthorized)
 	})
-	router.Post("/admin/standings", func(c *fiber.Ctx) error {
-		if c.FormValue("ADMIN_TOKEN") == os.Getenv("ADMIN_TOKEN") {
-			return controllers.SecretStandings(c, db)
+	router.Post("/admin/download", func(c *fiber.Ctx) error {
+		if handleAdminAuth(c, ADMIN_ACCOUNTS, ts) {
+			return controllers.DownloadStandings(c, db, config)
 		}
 		return c.SendStatus(constants.StatusUnauthorized)
 	})

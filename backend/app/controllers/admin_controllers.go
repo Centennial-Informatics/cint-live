@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"servermodule/app/database"
+	"servermodule/app/models"
 	"servermodule/configs/constants"
 
 	"github.com/gofiber/fiber/v2"
@@ -66,4 +67,14 @@ func DeleteUser(c *fiber.Ctx, db *database.ContestDB) error {
 	db.DeleteUser(c.FormValue("email"))
 
 	return c.SendStatus(constants.StatusOk)
+}
+
+func DownloadStandings(c *fiber.Ctx, db *database.ContestDB, config *models.Configuration) error {
+	if c.FormValue("division") == "Standard" {
+		database.WriteStandingsToCSV(db, db.StandardCache, "Standard", config)
+		return c.SendFile("StandingsStandard.csv", true)
+	}
+
+	database.WriteStandingsToCSV(db, db.AdvancedCache, "Advanced", config)
+	return c.SendFile("StandingsAdvanced.csv", true)
 }

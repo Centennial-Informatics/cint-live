@@ -1,6 +1,7 @@
 package workers
 
 import (
+	"log"
 	"servermodule/app/database"
 	"servermodule/app/models"
 	"servermodule/utils"
@@ -24,15 +25,13 @@ func StandingsWorker(db *database.ContestDB,
 				/* Stop updating standings when contest ends, but continue to allow submissions. */
 				if !updatedOnce || utils.IsBefore(startFreeze) {
 					db.UpdateStandings()
-					updatedOnce = true
 				} else if utils.IsAfter(startFreeze) && utils.IsBefore(endFreeze) {
 					db.SecretStandingsCache = database.AggStandings(db) // only admin accounts can view secret standings
 				} else {
-					// log.Println("Contest is over. Scoreboard no longer updating.")
+					log.Println("Contest is over. Scoreboard no longer updating.")
 					if db.SecretStandingsCache != nil {
 						db.StandingsCache = db.SecretStandingsCache
 					}
-					// TODO: write csv
 					ticker.Stop()
 					return
 				}

@@ -46,7 +46,8 @@ type StandingsEntry struct {
 
 type ContestDB struct {
 	db                   *gorm.DB
-	ProblemsCache        *models.ContestData
+	StandardCache        *models.ContestData
+	AdvancedCache        *models.ContestData
 	StandingsCache       []StandingsEntry
 	SecretStandingsCache []StandingsEntry
 }
@@ -63,7 +64,7 @@ func NewDB(path string) (*ContestDB, error) {
 	return &ContestDB{db: db}, err
 }
 
-func NewPostgresDB(dsn string) (*ContestDB, error) {
+func NewPostgresDB(dsn string, standardCache *models.ContestData, advancedCache *models.ContestData) (*ContestDB, error) {
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
@@ -72,7 +73,7 @@ func NewPostgresDB(dsn string) (*ContestDB, error) {
 	// migrate schema
 	db.AutoMigrate(&User{}, &Team{}, &Submission{})
 
-	return &ContestDB{db: db}, err
+	return &ContestDB{db: db, StandardCache: standardCache, AdvancedCache: advancedCache}, err
 }
 
 func NewEmptyDB(path string) (*ContestDB, error) {

@@ -61,7 +61,7 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 		clients = append(clients, c)
 	}
 
-	db, err := database.NewPostgresDB(os.Getenv("DATABASE_URL"))
+	db, err := database.NewPostgresDB(os.Getenv("DATABASE_URL"), appClient.Cached, appClient2.Cached)
 	if err != nil {
 		log.Fatal(err)
 	}

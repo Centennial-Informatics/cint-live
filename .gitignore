@@ -5,3 +5,4 @@ servermodule
 env.sh
 
 *.db
+*.csv
