@@ -29,6 +29,7 @@ func Login(c *fiber.Ctx, config *models.Configuration, ts *models.TokenService, 
 	if err != nil {
 		tokenInfo, err = utils.VerifyToken(c.FormValue("id_token"))
 
+		/* This will (most likely) only occur maliciously, unless the whole google sign-in flow breaks. */
 		if err != nil {
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
@@ -40,7 +41,9 @@ func Login(c *fiber.Ctx, config *models.Configuration, ts *models.TokenService, 
 		if !contestStarted && !hasUser {
 			db.CreateUser(c.FormValue("name"), tokenInfo.Email, "Standard")
 		} else if !hasUser {
-			return c.SendStatus(constants.StatusUnauthorized)
+			return c.JSON(map[string]string{
+				"error": "No new registrations allowed. Contest has already started. Make sure you're using the correct Google email. Ask an organizer if you need help.",
+			})
 		}
 
 		userID = tokenInfo.Email
