@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { STANDARD } from '$lib/data/constants/division';
 
-	import { brand } from '$lib/data/stores/userInfo';
 	export let division = STANDARD;
 </script>
 

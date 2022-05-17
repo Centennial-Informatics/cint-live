@@ -24,7 +24,6 @@
 	import { onMount, setContext } from 'svelte';
 	import {
 		contestData,
-		problemNames,
 		problemPages,
 		submissionData,
 		submissionWS
@@ -38,8 +37,8 @@
 	import CollectAdvanced from '$lib/utils/networking/collectAdvanced';
 	import { ADVANCED } from '$lib/data/constants/division';
 	import Loading from '$lib/components/templates/loading.svelte';
-	import { BASE_URL } from '$lib/data/constants/url';
-	import fetchType from '$lib/utils/networking/serverFetch';
+	// import { BASE_URL } from '$lib/data/constants/url';
+	// import fetchType from '$lib/utils/networking/serverFetch';
 
 	// export let contestDataObj: ContestData;
 	// contestData.set(contestDataObj);

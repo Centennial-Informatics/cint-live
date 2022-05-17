@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Page from '$lib/components/templates/page/page.svelte';
 	import { PENDING } from '$lib/data/constants/status';
-	import { contestData, contestInfo, contestLanguages } from '$lib/data/stores/contestData';
+	import { contestLanguages } from '$lib/data/stores/contestData';
 	import { contestEnded } from '$lib/data/stores/currentTime';
 	import { IDToken } from '$lib/data/stores/userInfo';
 	import Submit from '$lib/utils/networking/submit';

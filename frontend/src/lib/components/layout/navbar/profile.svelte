@@ -31,7 +31,7 @@
 						picture: decoded.picture
 					});
 				}
-			},
+			}, // @ts-expect-error itp_support is not yet in the type
 			itp_support: true,
 			cancel_on_tap_outside: false,
 			auto_select: false
