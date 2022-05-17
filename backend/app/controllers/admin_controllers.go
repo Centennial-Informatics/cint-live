@@ -83,3 +83,14 @@ func DownloadStandings(c *fiber.Ctx, db *database.ContestDB, config *models.Conf
 func ConnectionMetrics(c *fiber.Ctx, ts *models.TokenService) error {
 	return c.JSON(ts.GetConnMetrics())
 }
+
+func MakeAnnouncement(c *fiber.Ctx, ts *models.TokenService) error {
+	if c.FormValue("title") != "" {
+		err := ts.Announce(c.FormValue("title"), c.FormValue("details"))
+		if err != nil {
+			return c.SendStatus(constants.StatusError)
+		}
+	}
+
+	return c.SendStatus(constants.StatusOk)
+}

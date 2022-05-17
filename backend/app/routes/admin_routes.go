@@ -66,9 +66,15 @@ func AdminAPIRoutes(router fiber.Router, ADMIN_ACCOUNTS []string, config *models
 		}
 		return c.SendStatus(constants.StatusUnauthorized)
 	})
-	router.Get("/admin/connections", func(c *fiber.Ctx) error {
+	router.Post("/admin/connections", func(c *fiber.Ctx) error {
 		if handleAdminAuth(c, ADMIN_ACCOUNTS, ts) {
 			return controllers.ConnectionMetrics(c, ts)
+		}
+		return c.SendStatus(constants.StatusUnauthorized)
+	})
+	router.Post("/admin/announce", func(c *fiber.Ctx) error {
+		if handleAdminAuth(c, ADMIN_ACCOUNTS, ts) {
+			return controllers.MakeAnnouncement(c, ts)
 		}
 		return c.SendStatus(constants.StatusUnauthorized)
 	})

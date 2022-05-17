@@ -151,3 +151,23 @@ func (ts *TokenService) DeleteUser(userID string) {
 		delete(ts.token, userID)
 	}
 }
+
+func (ts *TokenService) Announce(title string, details string) error {
+	for _, user := range ts.user {
+		for _, conn := range user.Conn {
+			if conn.Conn != nil {
+				err := conn.WriteJSON(map[string]string{
+					"type":    "announcement",
+					"title":   title,
+					"details": details,
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
+}

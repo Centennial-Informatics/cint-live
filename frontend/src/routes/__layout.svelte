@@ -32,7 +32,7 @@
 	import { DefaultConfig } from '$lib/data/configs/default';
 	import { IDToken, TeamInfoData } from '$lib/data/stores/userInfo';
 	import NewWebSocket from '$lib/utils/networking/ws';
-	import type { SubmissionVerdict } from 'src/types/contestData';
+	import type { Announcement, SubmissionVerdict } from 'src/types/contestData';
 	import { convertVerdictsToMap } from '$lib/utils/verdictStatus';
 	import GetTeam from '$lib/utils/networking/team';
 	import CollectAdvanced from '$lib/utils/networking/collectAdvanced';
@@ -50,14 +50,15 @@
 		contestData.set(await CollectStandard());
 	});
 
+	function onMessage(data: string) {
+		const parsed: Announcement | SubmissionVerdict[] = JSON.parse(data);
+		if (Array.isArray(parsed))
+			submissionData.set(convertVerdictsToMap(parsed, Object.keys($problemPages)));
+		else alert(parsed.title + '\n' + parsed.details);
+	}
+
 	$: if ($IDToken && !$submissionWS) {
-		submissionWS.set(
-			NewWebSocket($IDToken, (data) => {
-				submissionData.set(
-					convertVerdictsToMap(JSON.parse(data) as SubmissionVerdict[], Object.keys($problemPages))
-				);
-			})
-		);
+		submissionWS.set(NewWebSocket($IDToken, onMessage));
 	}
 
 	$: if ($IDToken && !$TeamInfoData.members) {

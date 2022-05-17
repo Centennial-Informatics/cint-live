@@ -16,6 +16,12 @@ export interface ContestInfo {
 	Website: string;
 }
 
+export interface Announcement {
+	type: 'announcement';
+	title: string;
+	details: string;
+}
+
 export interface ContestLanguage {
 	Ext: string;
 	ID: string;

@@ -27,8 +27,11 @@
 </script>
 
 <div>
-	<SectionTitle>Manually Register or Update a User</SectionTitle>
-	<Subtitle>If email is already registered, nothing will happen.</Subtitle>
+	<SectionTitle>Manually Register a User</SectionTitle>
+	<Subtitle
+		>If email is already registered, nothing will happen. After the contest begins, this is only way
+		to add a new user.</Subtitle
+	>
 	<form on:submit|preventDefault={onSubmit} class="space-y-2 py-2">
 		<input
 			class="outline-none bg-gray-800 p-3 rounded-lg w-full text-gray-50 font-bold"
