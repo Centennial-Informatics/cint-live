@@ -163,7 +163,7 @@
 	}
 </script>
 
-<Wrapper transparent>
+<Wrapper transparent fullHeight>
 	<Page>
 		<div class="relative">
 			<StandingsHeader
