@@ -7,14 +7,15 @@
 	export let tier: SponsorTiers;
 
 	const size = {
-		[SponsorTiers.GOLD]: 'w-96 h-72',
-		[SponsorTiers.SILVER]: 'w-72 h-48',
-		[SponsorTiers.BRONZE]: 'w-32 h-24'
+		[SponsorTiers.PLATINUM]: 'h-72',
+		[SponsorTiers.GOLD]: 'w-72 h-52',
+		[SponsorTiers.SILVER]: 'w-48 h-28',
+		[SponsorTiers.BRONZE]: 'w-28 h-16'
 	};
 </script>
 
 <a href={link} target="_blank">
 	<div class={size[tier] + ' relative overflow-hidden'}>
-		<img class="object-contain w-full h-full" src={logo} alt={name} />
+		<img class="object-contain w-full w- h-full" src={logo} alt={name} />
 	</div>
 </a>

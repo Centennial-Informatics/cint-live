@@ -50,8 +50,18 @@
 	</Wrapper>
 	{#if standingsData}
 		<div class="h-screen">
-			<Standings standingsDataObj={standingsData} frozenOverride divisionOverride={STANDARD} />
-			<Standings standingsDataObj={standingsData} frozenOverride divisionOverride={ADVANCED} />
+			<Standings
+				standingsDataObj={standingsData}
+				frozenOverride
+				divisionOverride={STANDARD}
+				showFooter={false}
+			/>
+			<Standings
+				standingsDataObj={standingsData}
+				frozenOverride
+				divisionOverride={ADVANCED}
+				showFooter={false}
+			/>
 		</div>
 	{/if}
 </div>

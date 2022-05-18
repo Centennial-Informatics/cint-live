@@ -39,10 +39,12 @@
 	import { fillEmptyVerdicts } from '$lib/utils/verdictStatus';
 	import { ADVANCED, STANDARD } from '$lib/data/constants/division';
 	import { contestEnded, currentTime } from '$lib/data/stores/currentTime';
+	import Footer from '$lib/components/layout/footer/footer.svelte';
 
 	export let standingsDataObj: StandingsData[];
 	export let frozenOverride = false;
 	export let divisionOverride = '';
+	export let showFooter = true;
 
 	$: if (standingsDataObj) standingsData.set(standingsDataObj);
 
@@ -88,6 +90,7 @@
 		const entries = newData.map((entry) => {
 			let res: StandingsEntry = {
 				Name: entry.team_name,
+				Display: Object.keys(entry.verdicts).length > 0, // only >0 submissions are displayed in leaderboard (in order to hide observers/admins)
 				Submissions: fillEmptyVerdicts(entry.verdicts, problems),
 				TotalPoints: 0,
 				Points: {},
@@ -110,6 +113,7 @@
 			});
 			return res;
 		});
+		// .filter((entry) => entry.Display);
 
 		/* Sort by total points and most recent submission */
 		entries.sort((a, b) => {
@@ -208,6 +212,9 @@
 					totalItems={standingsEntries.length}
 					{displayPage}
 				/>
+				{#if showFooter}
+					<Footer />
+				{/if}
 			</div>
 		</div>
 	</Page>

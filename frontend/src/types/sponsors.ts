@@ -6,6 +6,7 @@ export interface Sponsor {
 }
 
 export enum SponsorTiers {
+	PLATINUM = 'Platinum',
 	GOLD = 'Gold',
 	SILVER = 'Silver',
 	BRONZE = 'Bronze'

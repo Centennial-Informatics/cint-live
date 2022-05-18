@@ -82,6 +82,7 @@ export interface StandingsData {
 
 export interface StandingsEntry {
 	Name: string;
+	Display: boolean;
 	Submissions: SubmissionVerdictUpdate;
 	Points: { [key: string]: number };
 	TotalPoints: number;

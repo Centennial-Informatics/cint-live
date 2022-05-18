@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import Footer from '$lib/components/layout/footer/footer.svelte';
 	import ProblemStatement from '$lib/components/page/problem/problemStatement.svelte';
 	import StatusAlert from '$lib/components/page/problem/statusAlert.svelte';
 	import SubmissionStatus from '$lib/components/page/problem/submissionStatus.svelte';
@@ -59,4 +60,5 @@
 			/>
 		{/if}
 	</Wrapper>
+	<Footer />
 </div>

@@ -37,8 +37,6 @@
 	import CollectAdvanced from '$lib/utils/networking/collectAdvanced';
 	import { ADVANCED } from '$lib/data/constants/division';
 	import Loading from '$lib/components/templates/loading.svelte';
-	import Footer from '$lib/components/layout/footer/footer.svelte';
-	import { currentPage } from '$lib/data/stores/currentPage';
 	// import { BASE_URL } from '$lib/data/constants/url';
 	// import fetchType from '$lib/utils/networking/serverFetch';
 
@@ -89,7 +87,6 @@
 				<Navbar />
 				<div class="md:min-h-screen md:ml-60 w-full dark:bg-gray-800">
 					<slot />
-					<Footer bumpUp={$currentPage === 'home'} />
 				</div>
 			</div>
 		</div>

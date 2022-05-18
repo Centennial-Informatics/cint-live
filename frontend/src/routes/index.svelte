@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Footer from '$lib/components/layout/footer/footer.svelte';
 	import TeamEditor from '$lib/components/page/home/teamEditor.svelte';
 	import Header from '$lib/components/templates/page/header.svelte';
 	import Page from '$lib/components/templates/page/page.svelte';
@@ -83,4 +84,5 @@
 			</div>
 		{/if}
 	</Page>
+	<Footer />
 </Wrapper>
