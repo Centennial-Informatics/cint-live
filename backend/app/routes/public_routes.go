@@ -43,6 +43,10 @@ func PublicTimeAPIRoutes(router fiber.Router, config *models.Configuration, stan
 		return controllers.Collect(c, config, standardClient)
 	})
 
+	router.Get("/challenges", func(c *fiber.Ctx) error {
+		return controllers.Challenges(c, config)
+	})
+
 	router.Get("/collect/advanced", func(c *fiber.Ctx) error {
 		if time.Since(config.StartTime) < 0 {
 			return controllers.Collect(c, config, clientPre)

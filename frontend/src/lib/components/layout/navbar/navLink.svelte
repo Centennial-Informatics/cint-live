@@ -3,6 +3,7 @@
 	import { brand } from '$lib/data/stores/userInfo';
 	import Home from 'svelte-material-icons/Home.svelte';
 	import Poll from 'svelte-material-icons/Poll.svelte';
+	import CodeTags from 'svelte-material-icons/CodeTags.svelte';
 
 	export let to = '/';
 	export let tabId = '';
@@ -20,6 +21,8 @@
 			<span class="mr-2"><Home width="20" height="20" /></span>
 		{:else if tabId === 'standings'}
 			<span class="mr-2"><Poll width="20" height="20" /></span>
+		{:else if tabId === 'challenges'}
+			<span class="mr-2"><CodeTags width="20" height="20" /></span>
 		{/if}
 		<span class="max-w-10 overflow-hidden overflow-ellipsis whitespace-nowrap">
 			<slot />

@@ -3,6 +3,8 @@ package controllers
 import (
 	"servermodule/app/models"
 	"servermodule/app/scraper"
+	"servermodule/utils"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -31,4 +33,29 @@ func Collect(c *fiber.Ctx, config *models.Configuration, client *scraper.Client)
 	}
 
 	return c.JSON(page)
+}
+
+var challenges = []string{
+	"/",
+	"/",
+}
+
+func Challenges(c *fiber.Ctx, config *models.Configuration) error {
+	times := []time.Time{
+		config.StartTime,
+		utils.XAfter(time.Duration(30*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(60*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(90*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(120*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(150*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(180*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(225*time.Minute), config.StartTime),
+	}
+	for i, time := range times {
+		if utils.IsBefore(time) {
+			return c.JSON(challenges[:i+1])
+		}
+	}
+
+	return c.JSON(challenges)
 }
