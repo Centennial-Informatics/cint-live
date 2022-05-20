@@ -9,6 +9,7 @@
 	import Title from '$lib/components/templates/typography/title.svelte';
 	import { contestData, contestInfo } from '$lib/data/stores/contestData';
 	import { currentPage } from '$lib/data/stores/currentPage';
+	import { contestEnded } from '$lib/data/stores/currentTime';
 	import { onMount } from 'svelte';
 
 	onMount(() => {
@@ -57,31 +58,29 @@
 	<Page>
 		{#if $contestData.Info}
 			<Header>
-				<a
-					class="text-xl font-bold text-white rounded-lg p-3 bg-alt-darkest hover:bg-alt-dark"
-					href="https://docs.google.com/document/d/1JTN0ENdYsaMEsUhO96iPPwOQWm6ZQQ6IsmW4sdvperM/edit"
-				>
-					Note all website issues <a
-						class="text-alt-light hover:underline"
-						href="https://docs.google.com/document/d/1JTN0ENdYsaMEsUhO96iPPwOQWm6ZQQ6IsmW4sdvperM/edit"
-						>Here</a
-					>
-				</a>
 				<Title>{$contestInfo.Name}</Title>
 				<Subtitle>{dateString}</Subtitle>
 				<Subtitle>{startTimeString} – {stopTimeString}</Subtitle>
 				<Subtitle>{location}</Subtitle>
 			</Header>
-
 			<Paragraph>{$contestInfo.Description}</Paragraph>
 			<Paragraph>
-				Teams may have up to four participants. Each team member’s submission will score for the
-				entire team. Enter a team code down below to join a team, or share your code to invite
-				others to your team. Team names and members will be locked at the start of the competition.
+				{#if !$contestEnded}
+					Teams may have up to four participants. Each team member’s submission will score for the
+					entire team. Enter a team code down below to join a team, or share your code to invite
+					others to your team. Team names and members will be locked at the start of the
+					competition.
+				{:else}
+					CInT 2022 has concluded. Standings will be revealed in the Auditorium and updated on this
+					site later. Use the links above if you wish to make practice submissions to the contest
+					problems. Thank you for attending and we hope to have you back next year!
+				{/if}
 			</Paragraph>
-			<div id="register">
-				<TeamEditor />
-			</div>
+			{#if !$contestEnded}
+				<div id="register">
+					<TeamEditor />
+				</div>
+			{/if}
 		{/if}
 	</Page>
 	<Footer />

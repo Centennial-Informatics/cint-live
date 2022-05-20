@@ -56,6 +56,9 @@
 			<Subtitle>Only 1 challenge link is active at a time.</Subtitle>
 			<ChallengeLinks links={challengeLinks} />
 			<SectionTitle>Challenge Release Schedule</SectionTitle>
+			<Subtitle
+				>Challenges are due before the release of the next challenge or the end of the competition.</Subtitle
+			>
 			<Paragraph>
 				<div class="flex flex-col">
 					<span> 4:15pm - Challenge 1</span>
