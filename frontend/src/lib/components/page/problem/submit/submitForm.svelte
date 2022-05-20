@@ -55,6 +55,10 @@
 			>Note that you may need to use the "long" data type in Java or "long long" in C++ if the
 			problem or your solution involves large (> 100 million) numbers.</Subtitle
 		>
+		<Subtitle
+			>The text box will be cleared after each submission, so try to code somewhere else (replit.com
+			is a great option) and paste it here.</Subtitle
+		>
 	</div>
 	<form
 		on:submit|preventDefault={() => handleSubmit(submissionText)}

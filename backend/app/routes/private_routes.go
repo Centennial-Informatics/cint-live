@@ -50,6 +50,8 @@ func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 
 		if utils.IsBefore(config.StartTime) {
 			return controllers.Submit(c, userID, ts, config, practiceClient, s, db)
+		} else if c.FormValue("problem") == "S1" || c.FormValue("problem") == "S2" {
+			return c.SendStatus(constants.StatusUnauthorized)
 		}
 
 		team, _ := db.GetTeamByCode(db.GetUser(userID).TeamCode)

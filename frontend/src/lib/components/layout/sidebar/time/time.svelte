@@ -14,6 +14,7 @@
 	function alertStart() {
 		alert('CInT has begun!');
 		window.location.href = '/';
+		window.location.reload();
 	}
 
 	function alertEnd() {
