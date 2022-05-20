@@ -1,7 +1,7 @@
 contestid: 381918
 contesturl: https://codeforces.com/gym/381918
-starttime: "2022-05-20T00:05:00-04:00" # required
-stoptime: "2022-05-20T00:07:00-04:00" # required
+starttime: "2022-05-20T17:00:00-04:00" # required
+stoptime: "2022-05-20T20:45:00-04:00" # required
 maxteamsize: 4
 points: # required
   s1: 100
@@ -21,4 +21,4 @@ points: # required
   m: 700
   n: 750
   o: 800
-scoreboardfreeze: 300 # seconds until contest end when scoreboard is initially frozen
+scoreboardfreeze: 2400 # seconds until contest end when scoreboard is initially frozen

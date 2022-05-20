@@ -46,7 +46,11 @@
 	setContext('contestConfig', DefaultConfig);
 
 	onMount(async () => {
-		contestData.set(await CollectStandard());
+		if ($TeamInfoData.team && $TeamInfoData.team.division === ADVANCED) {
+			contestData.set(await CollectAdvanced());
+		} else {
+			contestData.set(await CollectStandard());
+		}
 	});
 
 	function onMessage(data: string) {

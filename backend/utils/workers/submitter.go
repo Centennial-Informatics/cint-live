@@ -4,6 +4,7 @@ import (
 	"log"
 	"servermodule/app/models"
 	"servermodule/app/scraper"
+	"strconv"
 	"time"
 )
 
@@ -25,6 +26,7 @@ func (s *Submitter) ProcessNextSubmission(client *scraper.Client) bool {
 	if len(s.SubmissionQueue) > 0 {
 		sub := s.SubmissionQueue[0]
 
+		log.Println(sub.ContestURL, client.Cached.ContestURL)
 		// check if submission is on the correct contest scraper
 		if sub.ContestURL == client.Cached.ContestURL {
 			log.Println("Processing submission", client.Name, sub.SubmissionID, client.Cached.ContestURL)
@@ -34,12 +36,23 @@ func (s *Submitter) ProcessNextSubmission(client *scraper.Client) bool {
 				submissionID, err := client.Submit(sub.ContestURL, sub.ProblemID,
 					sub.Source, sub.File, sub.Language)
 
-				client.Verdict[submissionID].UserID = &sub.UserID
-				client.Verdict[submissionID].SubmissionID = sub.SubmissionID
+				_, good := client.Verdict[submissionID]
 
-				if err != nil {
+				if err != nil || !good { // happens when submitting a non-public java class
 					log.Println(err)
+					// report compilation error instead of stuck on pending
+					client.Verdict[strconv.Itoa(sub.SubmissionID)] = &models.Verdict{
+						Status:       "Final",
+						Verdict:      "Compilation error", // should be a constant but im too tired to fix it
+						UserID:       &sub.UserID,
+						SubmissionID: sub.SubmissionID,
+						ProblemID:    &sub.ProblemID,
+					}
+				} else {
+					client.Verdict[submissionID].UserID = &sub.UserID
+					client.Verdict[submissionID].SubmissionID = sub.SubmissionID
 				}
+
 			}()
 
 			return true
@@ -54,7 +67,12 @@ func (s *Submitter) ProcessNextSubmission(client *scraper.Client) bool {
 /* UpdateVerdicts - Updates cached verdicts only. */
 func (s *Submitter) UpdateVerdicts(client *scraper.Client, cbs ...models.SubmissionCallback) {
 	for submissionID := range client.Verdict {
-		v := client.Status(client.Cached.ContestURL, submissionID)
+		var v *models.Verdict
+		if client.Verdict[submissionID].Status != "Final" {
+			v = client.Status(client.Cached.ContestURL, submissionID)
+		} else { // if verdict was error and manually overriden
+			v = client.Verdict[submissionID]
+		}
 		for _, cb := range cbs {
 			cb(submissionID, v)
 		}

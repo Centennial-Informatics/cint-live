@@ -54,19 +54,25 @@
 		if (!standingsDataObj) standingsData.set(await Standings());
 	}
 
+	const freezeDuration = 300;
+
 	function updateFrozen(currentTime: number) {
 		if (!frozenOverride) {
 			const sinceEnd = Math.abs($stopTime.valueOf() / 1000 - Math.floor(currentTime / 1000));
 			if ($contestEnded && sinceEnd < 1800) {
 				frozen = true;
-			} else if (!$contestEnded && sinceEnd <= 1200) {
+			} else if (!$contestEnded && sinceEnd <= freezeDuration) {
 				frozen = true;
 			} else {
 				frozen = false;
 			}
 
-			if (!$contestEnded && sinceEnd == 1200) {
-				alert('Scoreboard is now frozen. Results will not update during the final 20 minutes.');
+			if (!$contestEnded && sinceEnd == freezeDuration) {
+				alert(
+					`Scoreboard is now frozen. Results will not update during the final ${
+						freezeDuration / 60
+					} minutes.`
+				);
 			} else if ($contestEnded && sinceEnd == 1800) {
 				alert('Final results are now available.');
 			}

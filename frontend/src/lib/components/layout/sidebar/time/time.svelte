@@ -12,13 +12,21 @@
 	$: time = fmtTime($startTime.valueOf(), $stopTime.valueOf(), $currentTime);
 
 	function alertStart() {
-		if (confirm('CInT has begun! Reload the page.')) {
-			window.location.href = '/';
-		}
+		alert('CInT has begun!');
+		window.location.href = '/';
+	}
+
+	function alertEnd() {
+		alert('CInT has ended. Results will be revealed in the Auditorium!');
+		window.location.reload();
 	}
 
 	$: if (Math.floor($currentTime / 1000) == $startTime.valueOf() / 1000) {
 		alertStart();
+	}
+
+	$: if (Math.floor($currentTime / 1000) == $stopTime.valueOf() / 1000) {
+		alertEnd();
 	}
 </script>
 

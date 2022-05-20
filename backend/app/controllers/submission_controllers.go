@@ -2,11 +2,13 @@ package controllers
 
 import (
 	"log"
+	"math/rand"
 	"servermodule/app/database"
 	"servermodule/app/models"
 	"servermodule/app/scraper"
 	"servermodule/configs/constants"
 	"servermodule/utils/workers"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -32,7 +34,9 @@ func Submit(c *fiber.Ctx, userID string, ts *models.TokenService, config *models
 
 	file, err := c.FormFile("file")
 
-	sub := db.CreateSubmission("none", c.FormValue("problem"), team.Code, int64(time.Since(config.StartTime)/time.Second))
+	tempID := rand.Intn(10000000) + 10000000
+
+	sub := db.CreateSubmission(strconv.Itoa(tempID), c.FormValue("problem"), team.Code, int64(time.Since(config.StartTime)/time.Second))
 
 	submission := models.QueuedSubmission{
 		UserID:       userID,
@@ -44,7 +48,7 @@ func Submit(c *fiber.Ctx, userID string, ts *models.TokenService, config *models
 		ContestURL:   client.Cached.ContestURL,
 	}
 
-	log.Println("New Submission: ", submission.SubmissionID, submission.ContestURL)
+	log.Println("New Submission:", submission.SubmissionID, submission.ContestURL)
 
 	if err != nil {
 		submission.File = nil

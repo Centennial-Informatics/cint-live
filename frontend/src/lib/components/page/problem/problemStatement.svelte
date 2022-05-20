@@ -7,6 +7,7 @@
 	import SectionTitle from '$lib/components/templates/typography/sectionTitle.svelte';
 	import Subtitle from '$lib/components/templates/typography/subtitle.svelte';
 	import Title from '$lib/components/templates/typography/title.svelte';
+	import { TeamInfoData } from '$lib/data/stores/userInfo';
 	import type { ProblemPage } from 'src/types/contestData';
 	import { onMount } from 'svelte';
 	import SampleTest from './sampleTest.svelte';
@@ -22,7 +23,7 @@
 			}
 		}
 	});
-	$: if (visible) {
+	$: if (visible || $TeamInfoData) {
 		// @ts-ignore mathjax is loaded from cdn
 		if (typeof window !== 'undefined' && window.MathJax.typeset) {
 			// @ts-ignore mathjax is loaded from cdn

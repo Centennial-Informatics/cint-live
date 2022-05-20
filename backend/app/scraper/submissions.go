@@ -86,6 +86,7 @@ func (client *Client) Submit(contestURL string, problemID string, submission str
 
 	err = client.C.Visit(submitURL)
 	if err != nil {
+		client.Available = true
 		return "Error", err
 	}
 
@@ -104,6 +105,7 @@ func (client *Client) Submit(contestURL string, problemID string, submission str
 		log.Println(err)
 		log.Println("Scraper", client.Name, "disconnected. Logging back in.")
 		client.Login()
+		client.Available = true
 		return submissionID, err
 	}
 
@@ -114,6 +116,7 @@ func (client *Client) Submit(contestURL string, problemID string, submission str
 			ProblemID: &problemID,
 		}
 	} else {
+		client.Available = true
 		return submissionID, errors.New("error during submission")
 	}
 

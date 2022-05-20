@@ -14,37 +14,37 @@
 	let ref: HTMLElement;
 
 	onMount(() => {
-		if (!$contestEnded) {
-			window.google.accounts.id.initialize({
-				client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
-				callback: async (res) => {
-					const decoded: DecodedCredential = jwt_decode(res.credential);
-					const loginInfo = await Login(res.credential, decoded.name);
-					if (loginInfo.error) {
-						alert(loginInfo.error);
-						window.google.accounts.id.prompt();
-					} else {
-						IDToken.set(loginInfo.token);
-						TeamID.set(loginInfo.team_id);
-						userInfo.set({
-							ID: decoded.sub,
-							name: decoded.name,
-							email: decoded.email,
-							picture: decoded.picture
-						});
-					}
-				}, // @ts-expect-error itp_support is not yet in the type
-				itp_support: true,
-				cancel_on_tap_outside: false,
-				auto_select: false
-			});
-			window.google.accounts.id.renderButton(ref, {
-				type: 'standard'
-			});
-			if (!$IDToken) {
-				window.google.accounts.id.prompt();
-			}
+		// if (!$contestEnded) {
+		window.google.accounts.id.initialize({
+			client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
+			callback: async (res) => {
+				const decoded: DecodedCredential = jwt_decode(res.credential);
+				const loginInfo = await Login(res.credential, decoded.name);
+				if (loginInfo.error) {
+					alert(loginInfo.error);
+					window.google.accounts.id.prompt();
+				} else {
+					IDToken.set(loginInfo.token);
+					TeamID.set(loginInfo.team_id);
+					userInfo.set({
+						ID: decoded.sub,
+						name: decoded.name,
+						email: decoded.email,
+						picture: decoded.picture
+					});
+				}
+			}, // @ts-expect-error itp_support is not yet in the type
+			itp_support: true,
+			cancel_on_tap_outside: false,
+			auto_select: false
+		});
+		window.google.accounts.id.renderButton(ref, {
+			type: 'standard'
+		});
+		if (!$IDToken) {
+			window.google.accounts.id.prompt();
 		}
+		// }
 	});
 </script>
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Page from '$lib/components/templates/page/page.svelte';
+	import Subtitle from '$lib/components/templates/typography/subtitle.svelte';
 	import { PENDING } from '$lib/data/constants/status';
 	import { contestLanguages } from '$lib/data/stores/contestData';
 	import { contestEnded } from '$lib/data/stores/currentTime';
@@ -45,6 +46,15 @@
 	<div class="text-center text-gray-100 text-2xl font-bold mt-24">
 		<span class="font-normal text-gray-400">Submit solution to</span>
 		{title}
+	</div>
+	<div class="w-full text-center pt-2">
+		<Subtitle
+			>For Java submissions, make sure your solution is a public class (not just class).</Subtitle
+		>
+		<Subtitle
+			>Note that you may need to use the "long" data type in Java or "long long" in C++ if the
+			problem or your solution involves large (> 100 million) numbers.</Subtitle
+		>
 	</div>
 	<form
 		on:submit|preventDefault={() => handleSubmit(submissionText)}
