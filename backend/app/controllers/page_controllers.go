@@ -47,26 +47,26 @@ var challenges = []string{
 }
 
 func Challenges(c *fiber.Ctx, config *models.Configuration) error {
-	// times := []time.Time{
-	// 	config.StartTime,
-	// 	utils.XAfter(time.Duration(30*time.Minute), config.StartTime),
-	// 	utils.XAfter(time.Duration(60*time.Minute), config.StartTime),
-	// 	utils.XAfter(time.Duration(90*time.Minute), config.StartTime),
-	// 	utils.XAfter(time.Duration(120*time.Minute), config.StartTime),
-	// 	utils.XAfter(time.Duration(150*time.Minute), config.StartTime),
-	// 	utils.XAfter(time.Duration(180*time.Minute), config.StartTime),
-	// 	utils.XAfter(time.Duration(225*time.Minute), config.StartTime),
-	// }
 	times := []time.Time{
 		config.StartTime,
-		utils.XAfter(time.Duration(1*time.Minute), config.StartTime),
-		utils.XAfter(time.Duration(2*time.Minute), config.StartTime),
-		utils.XAfter(time.Duration(3*time.Minute), config.StartTime),
-		utils.XAfter(time.Duration(4*time.Minute), config.StartTime),
-		utils.XAfter(time.Duration(5*time.Minute), config.StartTime),
-		utils.XAfter(time.Duration(6*time.Minute), config.StartTime),
-		utils.XAfter(time.Duration(7*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(30*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(60*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(90*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(120*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(150*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(180*time.Minute), config.StartTime),
+		utils.XAfter(time.Duration(225*time.Minute), config.StartTime),
 	}
+	// times := []time.Time{
+	// 	config.StartTime,
+	// 	utils.XAfter(time.Duration(1*time.Minute), config.StartTime),
+	// 	utils.XAfter(time.Duration(2*time.Minute), config.StartTime),
+	// 	utils.XAfter(time.Duration(3*time.Minute), config.StartTime),
+	// 	utils.XAfter(time.Duration(4*time.Minute), config.StartTime),
+	// 	utils.XAfter(time.Duration(5*time.Minute), config.StartTime),
+	// 	utils.XAfter(time.Duration(6*time.Minute), config.StartTime),
+	// 	utils.XAfter(time.Duration(7*time.Minute), config.StartTime),
+	// }
 	for i, time := range times {
 		if utils.IsBefore(time) {
 			return c.JSON(challenges[:i+1])
