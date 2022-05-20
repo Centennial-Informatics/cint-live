@@ -54,7 +54,7 @@
 		if (!standingsDataObj) standingsData.set(await Standings());
 	}
 
-	const freezeDuration = 300;
+	const freezeDuration = 2400;
 
 	function updateFrozen(currentTime: number) {
 		if (!frozenOverride) {

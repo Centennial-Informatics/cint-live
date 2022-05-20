@@ -10,13 +10,13 @@ RUN apk add build-base
 RUN go build .
 
 # Build static frontend files
-FROM node:18-alpine3.14 as frontend_build
+# FROM node:18-alpine3.14 as frontend_build
 
-COPY frontend /app/frontend
+# COPY frontend /app/frontend
 
-ENV PATH /app/node_modules/.bin:$PATH
+# ENV PATH /app/node_modules/.bin:$PATH
 
-WORKDIR /app/frontend
+# WORKDIR /app/frontend
 
 # RUN npm ci
 # RUN npm run build
