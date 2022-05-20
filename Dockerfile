@@ -22,7 +22,7 @@ RUN go build .
 # RUN npm run build
 
 # Slim production container with go binary and static files
-FROM alpine
+# FROM alpine
 
 ARG BUILD_ENV
 ENV BUILD ${BUILD_ENV}
@@ -35,9 +35,9 @@ ENV PORT 8000
 EXPOSE ${PORT}
 
 # COPY --from=frontend_build /app/frontend/build /app/frontend/build
-COPY --from=backend_build /go/src/app/backend/servermodule /app/backend/servermodule
-COPY --from=backend_build /go/src/app/backend/configs/data /app/backend/configs/data
+# COPY --from=backend_build /go/src/app/backend/servermodule /app/backend/servermodule
+# COPY --from=backend_build /go/src/app/backend/configs/data /app/backend/configs/data
 
-WORKDIR /app/backend
+# WORKDIR /app/backend
 
 CMD ["./servermodule"]
