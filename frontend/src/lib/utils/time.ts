@@ -68,7 +68,7 @@ export default function fmtTime(startTime: number, stopTime: number, currentTime
 export function fmtTimeHS(seconds: number): string {
 	const absSeconds = Math.abs(seconds); // before contest is negative
 	const hours = Math.floor(absSeconds / 3600);
-	const minutes = absSeconds % 60;
+	const minutes = Math.floor(absSeconds / 60);
 
 	return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`;
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
-	export let link: string = '/challenges';
-	export let name: string = '';
-	export let active: boolean = false;
+	export let link = '/challenges';
+	export let name = '';
+	export let active = false;
 </script>
 
 {#if !active}

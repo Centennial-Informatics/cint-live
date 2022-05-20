@@ -87,33 +87,34 @@
 			else if ($TeamInfoData.team) return entry.division === $TeamInfoData.team.division;
 			else return entry.division === STANDARD;
 		});
-		const entries = newData.map((entry) => {
-			let res: StandingsEntry = {
-				Name: entry.team_name,
-				Display: Object.keys(entry.verdicts).length > 0, // only >0 submissions are displayed in leaderboard (in order to hide observers/admins)
-				Submissions: fillEmptyVerdicts(entry.verdicts, problems),
-				TotalPoints: 0,
-				Points: {},
-				ID: entry.team_id
-			};
-			// only update the user's submissions when standings are frozen
-			if (
-				Object.keys($submissionData).length === problems.length &&
-				$TeamInfoData.team &&
-				res.ID === $TeamInfoData.team.ID
-			) {
-				res.Submissions = fillEmptyVerdicts($submissionData, problems);
-			}
-			Object.keys(res.Submissions).forEach((problemID) => {
-				// filter out sample problems
-				if (problemID in $problemPages) {
-					res.Points[problemID] = res.Submissions[problemID].points;
-					res.TotalPoints += res.Points[problemID];
+		const entries = newData
+			.map((entry) => {
+				let res: StandingsEntry = {
+					Name: entry.team_name,
+					Display: Object.keys(entry.verdicts).length > 0, // only >0 submissions are displayed in leaderboard (in order to hide observers/admins)
+					Submissions: fillEmptyVerdicts(entry.verdicts, problems),
+					TotalPoints: 0,
+					Points: {},
+					ID: entry.team_id
+				};
+				// only update the user's submissions when standings are frozen
+				if (
+					Object.keys($submissionData).length === problems.length &&
+					$TeamInfoData.team &&
+					res.ID === $TeamInfoData.team.ID
+				) {
+					res.Submissions = fillEmptyVerdicts($submissionData, problems);
 				}
-			});
-			return res;
-		});
-		// .filter((entry) => entry.Display);
+				Object.keys(res.Submissions).forEach((problemID) => {
+					// filter out sample problems
+					if (problemID in $problemPages) {
+						res.Points[problemID] = res.Submissions[problemID].points;
+						res.TotalPoints += res.Points[problemID];
+					}
+				});
+				return res;
+			})
+			.filter((entry) => entry.Display);
 
 		/* Sort by total points and most recent submission */
 		entries.sort((a, b) => {

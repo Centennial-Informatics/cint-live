@@ -8,7 +8,7 @@
 	import SectionTitle from '$lib/components/templates/typography/sectionTitle.svelte';
 	import Subtitle from '$lib/components/templates/typography/subtitle.svelte';
 	import Title from '$lib/components/templates/typography/title.svelte';
-	import { contestData, contestInfo } from '$lib/data/stores/contestData';
+	import { contestData } from '$lib/data/stores/contestData';
 	import { currentPage } from '$lib/data/stores/currentPage';
 	import CollectChallenges from '$lib/utils/networking/challenges';
 	import { onMount } from 'svelte';
