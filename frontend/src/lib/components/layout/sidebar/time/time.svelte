@@ -13,7 +13,7 @@
 
 	function alertStart() {
 		if (confirm('CInT has begun! Reload the page.')) {
-			window.location.reload();
+			window.location.href = '/';
 		}
 	}
 

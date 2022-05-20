@@ -21,14 +21,14 @@
 		<DivisionButton
 			active={$TeamInfoData.team.division === STANDARD}
 			onClick={updateStandard}
-			division={$TeamInfoData.team.division}
+			division={STANDARD}
 		/>
 	{/if}
 	{#if !$contestStarted || $TeamInfoData.team.division === ADVANCED}
 		<DivisionButton
 			active={$TeamInfoData.team.division === ADVANCED}
 			onClick={updateAdvanced}
-			division={$TeamInfoData.team.division}
+			division={ADVANCED}
 		/>
 	{/if}
 </div>
