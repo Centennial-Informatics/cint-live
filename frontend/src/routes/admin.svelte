@@ -13,6 +13,9 @@
 	import Create from '$lib/components/page/admin/create.svelte';
 	import Delete from '$lib/components/page/admin/delete.svelte';
 	import Announce from '$lib/components/page/admin/announce.svelte';
+	import UpdateCache from '$lib/utils/networking/admin/updateCache';
+	import UpdateStart from '$lib/components/page/admin/updateStart.svelte';
+	import UpdateEnd from '$lib/components/page/admin/updateEnd.svelte';
 
 	let standingsData: StandingsData[];
 	let valid = false;
@@ -20,6 +23,10 @@
 	async function setAdminStandings() {
 		standingsData = await AdminStandings($IDToken);
 		valid = !!standingsData;
+	}
+
+	async function updateCache() {
+		await UpdateCache($IDToken);
 	}
 
 	$: if ($IDToken) {
@@ -39,7 +46,13 @@
 						<Download />
 						<Create />
 						<Delete />
+						<UpdateStart />
+						<UpdateEnd />
 					</div>
+					<button
+						class="bg-gray-500 text-white font-bold text-xl w-full py-4 rounded-xl hover:opacity-70"
+						on:click={updateCache}>Update contest data</button
+					>
 					<button
 						class="bg-gray-500 text-white font-bold text-xl w-full py-4 rounded-xl hover:opacity-70"
 						on:click={setAdminStandings}>Refresh Standings</button

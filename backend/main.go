@@ -135,7 +135,7 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 	routes.PrivateAPIRoutes(v1, standardConfig, ts, appClient, db)
 	routes.PrivateTimeAPIRoutes(v1, standardConfig, ts, appClient, appClient2, appClient3, submitWorker, db)
 	routes.WsRoutes(app, standardConfig, ts, db)
-	routes.AdminAPIRoutes(v1, ADMIN_ACCOUNTS, standardConfig, ts, db)
+	routes.AdminAPIRoutes(v1, ADMIN_ACCOUNTS, standardConfig, ts, db, []*scraper.Client{appClient, appClient2})
 
 	port := os.Getenv("PORT")
 	if len(port) == 0 {

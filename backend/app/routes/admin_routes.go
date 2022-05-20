@@ -4,7 +4,9 @@ import (
 	"servermodule/app/controllers"
 	"servermodule/app/database"
 	"servermodule/app/models"
+	"servermodule/app/scraper"
 	"servermodule/configs/constants"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -34,7 +36,7 @@ func handleAdminAuth(c *fiber.Ctx, ADMIN_ACCOUNTS []string, ts *models.TokenServ
 
 /* AdminAPIRoutes - Public routes requiring a passcode. */
 func AdminAPIRoutes(router fiber.Router, ADMIN_ACCOUNTS []string, config *models.Configuration, ts *models.TokenService,
-	db *database.ContestDB) {
+	db *database.ContestDB, scrapers []*scraper.Client) {
 	router.Post("/admin/create", func(c *fiber.Ctx) error {
 		if handleAdminAuth(c, ADMIN_ACCOUNTS, ts) {
 			return controllers.CreateUser(c, db)
@@ -75,6 +77,39 @@ func AdminAPIRoutes(router fiber.Router, ADMIN_ACCOUNTS []string, config *models
 	router.Post("/admin/announce", func(c *fiber.Ctx) error {
 		if handleAdminAuth(c, ADMIN_ACCOUNTS, ts) {
 			return controllers.MakeAnnouncement(c, ts)
+		}
+		return c.SendStatus(constants.StatusUnauthorized)
+	})
+	router.Post("/admin/updatestart", func(c *fiber.Ctx) error {
+		if handleAdminAuth(c, ADMIN_ACCOUNTS, ts) {
+			t, err := time.Parse(time.RFC3339, c.FormValue("start_time"))
+			if err != nil {
+				return c.SendStatus(constants.StatusError)
+			} else {
+				config.StartTime = t
+				return c.SendStatus(constants.StatusOk)
+			}
+		}
+		return c.SendStatus(constants.StatusUnauthorized)
+	})
+	router.Post("/admin/updateend", func(c *fiber.Ctx) error {
+		if handleAdminAuth(c, ADMIN_ACCOUNTS, ts) {
+			t, err := time.Parse(time.RFC3339, c.FormValue("end_time"))
+			if err != nil {
+				return c.SendStatus(constants.StatusError)
+			} else {
+				config.StopTime = t
+				return c.SendStatus(constants.StatusOk)
+			}
+		}
+		return c.SendStatus(constants.StatusUnauthorized)
+	})
+	router.Post("/admin/updatecache", func(c *fiber.Ctx) error {
+		if handleAdminAuth(c, ADMIN_ACCOUNTS, ts) {
+			for _, scraper := range scrapers {
+				scraper.UpdateCache()
+			}
+			return c.SendStatus(constants.StatusOk)
 		}
 		return c.SendStatus(constants.StatusUnauthorized)
 	})
