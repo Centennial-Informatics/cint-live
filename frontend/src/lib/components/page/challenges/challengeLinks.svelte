@@ -6,6 +6,6 @@
 
 <div class="flex flex-row flex-wrap py-4 items-center">
 	{#each links as link, i}
-		<ChallengeLink active={i === links.length - 1} {link} name={'Challenge ' + (i + 1)} />
+		<ChallengeLink active {link} name={'Challenge ' + (i + 1)} />
 	{/each}
 </div>
