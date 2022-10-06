@@ -1,5 +1,19 @@
 # Live Competition Server
-A live competition server for coding competitions. Relies heavily on the [Codeforces](https://codeforces.com) platform.
+A live competition server for coding competitions. Relies heavily on the [Codeforces](https://codeforces.com) platform. Used for the [Centennial Informatics Tournament (CInT)](https://cint.info) on May 26, 2022.
+
+### Problem Page
+Uses a Codeforces-style problem statement with MathJax rendering for equations and math symbols.
+![image](pics/problem.png)
+
+### Submit Solution
+
+![image](pics/solution.png)
+
+### Submission Verdict
+![image](pics/ac.png)
+
+### Contest Scoreboard
+![image](pics/scoreboard.png)
 
 ### Frontend Development
 See [frontend/README.md](frontend/README.md)
