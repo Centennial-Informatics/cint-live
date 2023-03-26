@@ -96,7 +96,6 @@ func SubmitWorker(clients []*scraper.Client, interval time.Duration,
 				for i := range clients {
 					client := submitter.Clients[front]
 					if !submitted && client.Available {
-						log.Println("Submit", front, len(submitter.Clients))
 						submitted = submitter.ProcessNextSubmission(client)
 						front = (front + 1) % len(submitter.Clients)
 					}
