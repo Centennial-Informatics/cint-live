@@ -58,7 +58,7 @@
 	<Page>
 		{#if $contestData.Info}
 			<Header>
-				<a
+				<!-- <a
 					class="text-xl font-bold text-white rounded-lg p-3 bg-brand hover:bg-brand-light"
 					href="https://codeforces.com/contestInvitation/b259e34a22093ddbb25c365d8c92a4a7ca39d914"
 				>
@@ -69,7 +69,7 @@
 					href="https://codeforces.com/contestInvitation/b6b614c34df0daf281d0de77f1634267d9336601"
 				>
 					Practice Advanced problems
-				</a>
+				</a> -->
 				<Title>{$contestInfo.Name}</Title>
 				<Subtitle>{dateString}</Subtitle>
 				<Subtitle>{startTimeString} – {stopTimeString}</Subtitle>

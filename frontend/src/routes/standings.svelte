@@ -186,7 +186,7 @@
 					: STANDARD}
 			/>
 			<div class="absolute left-0 right-0">
-				<div class="overflow-x-scroll">
+				<div class="overflow-x-auto">
 					<StandingsTable>
 						<StandingsHead
 							division={divisionOverride
