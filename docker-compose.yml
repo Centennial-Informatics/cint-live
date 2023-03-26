@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: backend
+      dockerfile: dev.Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - CF_ACCOUNTS=${CF_ACCOUNTS}
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+      - DATABASE_URL=postgres://user:pass@db:5432/contest
+      - ADMIN_ACCOUNTS=${ADMIN_ACCOUNTS}
+    volumes:
+      - ./backend/:/go/src/app/backend/
+  frontend:
+    build:
+      context: frontend
+      dockerfile: dev.Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - BACKEND_HOST=backend:8000
+    volumes:
+      - ./frontend/:/app/
+      - /app/node_modules
+  db:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=contest
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+volumes:
+  postgres-db:
+    

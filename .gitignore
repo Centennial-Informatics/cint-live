@@ -7,3 +7,5 @@ env.sh
 *.db
 *.csv
 *.csv.*
+
+tmp

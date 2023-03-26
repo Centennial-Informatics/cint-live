@@ -22,4 +22,5 @@ type Configuration struct {
 	WriteInterval          time.Duration
 	Standard               []string // only 2 divisions for now
 	Advanced               []string
+	AllowLateRegistration  bool
 }

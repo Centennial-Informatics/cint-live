@@ -1,13 +1,19 @@
 # ~35mb final image size
 
 # Build backend binary file
-FROM golang:1.16-alpine as backend_build
+FROM golang:1.20-alpine as backend_build
 
-COPY backend /go/src/app/backend
+COPY . /go/src/app/backend
 
 WORKDIR /go/src/app/backend
-RUN apk add build-base
-RUN go build .
+
+# air hot reload (only in Dev)
+RUN go install github.com/cosmtrek/air@latest
+RUN go mod download
+# RUN air init
+
+# RUN apk add build-base
+# RUN go build .
 
 # Build static frontend files
 # FROM node:18-alpine3.14 as frontend_build
@@ -40,4 +46,5 @@ EXPOSE ${PORT}
 
 # WORKDIR /app/backend
 
-CMD ["./servermodule"]
+CMD ["air", "-c", ".air.toml"]
+# CMD ["sleep", "10000"]

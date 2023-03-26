@@ -1,6 +1,6 @@
 export const BASE_URL = {
 	production: 'https://' + import.meta.env.VITE_BACKEND_HOST, //'https://live-judge.herokuapp.com',
-	development: 'http://localhost:8000'
+	development: 'http://127.0.0.1:8000'
 };
 
 export const WS_URL = {

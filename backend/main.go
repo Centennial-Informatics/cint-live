@@ -48,8 +48,8 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 	clients := make([]*scraper.Client, 0)
 
 	clients = append(clients, appClient)
-	clients = append(clients, appClient2)
-	clients = append(clients, appClient3)
+	// clients = append(clients, appClient2)
+	// clients = append(clients, appClient3)
 
 	for i, acc := range accounts[1:] {
 		c, err := scraper.NewClient(acc.User, acc.User, acc.Pass)
@@ -157,12 +157,12 @@ func LiveServer(standardConfig *models.Configuration, advancedConfig *models.Con
 // @BasePath /api/v1
 
 func main() {
-	standardConfig, err := configs.CintStd()
+	standardConfig, err := configs.Demo()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	advancedConfig, err := configs.CintAdv()
+	advancedConfig, err := configs.Demo()
 	if err != nil {
 		log.Fatal(err)
 	}

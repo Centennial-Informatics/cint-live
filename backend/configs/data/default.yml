@@ -1,7 +1,7 @@
 contestid: 328477 # required — arbitrary, not required to be the codeforces contest id
 contesturl: https://codeforces.com/gym/328477 # required
-starttime: "2022-02-05T00:00:00-05:00" # required
-stoptime: "2022-02-06T00:00:00-05:00" # required
+starttime: "2023-02-05T00:00:00-05:00" # required
+stoptime: "2023-05-06T00:00:00-05:00" # required
 maxteamsize: 2
 pointspolicy: full # full: only award points on full AC, partial: award partial credit TODO: implement partial
 points: # required
@@ -27,3 +27,4 @@ authtokenlength: 16
 submissiongrace: 600 # seconds after competition where on-time submissions will continue to be graded
 scoreboardfreeze: 1200 # seconds until contest end when scoreboard is initially frozen
 scoreboardunfreeze: 1800 # seconds after contest end when final scoreboard revealed
+allowlateregistration: true
