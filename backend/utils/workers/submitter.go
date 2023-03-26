@@ -91,17 +91,17 @@ func SubmitWorker(clients []*scraper.Client, interval time.Duration,
 		for {
 			select {
 			case <-ticker.C:
-				submitted := false
+				submitted := len(submitter.SubmissionQueue) == 0
 				// update all verdicts and submit on the first valid and available worker
-				for range clients {
+				for i := range clients {
 					client := submitter.Clients[front]
 					if !submitted && client.Available {
+						log.Println("Submit", front, len(submitter.Clients))
 						submitted = submitter.ProcessNextSubmission(client)
+						front = (front + 1) % len(submitter.Clients)
 					}
 
-					go submitter.UpdateVerdicts(client, cbs...)
-
-					front = (front + 1) % len(submitter.Clients)
+					go submitter.UpdateVerdicts(submitter.Clients[i], cbs...)
 				}
 
 			case <-quit:
