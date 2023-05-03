@@ -1,7 +1,7 @@
 contestid: 382834
 contesturl: https://codeforces.com/gym/382834
-starttime: "2023-05-20T17:00:00-04:00" # required
-stoptime: "2024-05-20T20:45:00-04:00" # required
+starttime: "2023-05-05T17:00:00-04:00" # required
+stoptime: "2024-05-05T20:45:00-04:00" # required
 maxteamsize: 4
 points: # required
   s1: 100
@@ -21,4 +21,4 @@ points: # required
   m: 700
   n: 750
   o: 800
-scoreboardfreeze: 2400 # seconds until contest end when scoreboard is initially frozen
+scoreboardfreeze: 2700 # seconds until contest end when scoreboard is initially frozen
