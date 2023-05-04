@@ -16,22 +16,26 @@
 
 	async function loginWithToken(credential: string | null) {
 		if (!credential) return false;
-		const decoded: DecodedCredential = jwt_decode(credential);
-		const loginInfo = await Login(credential, decoded.name);
-		if (loginInfo.error) {
-			alert(loginInfo.error);
-			window.google.accounts.id.prompt();
+		try {
+			const decoded: DecodedCredential = jwt_decode(credential);
+			const loginInfo = await Login(credential, decoded.name);
+			if (loginInfo.error) {
+				alert(loginInfo.error);
+				window.google.accounts.id.prompt();
+				return false;
+			} else {
+				IDToken.set(loginInfo.token);
+				TeamID.set(loginInfo.team_id);
+				userInfo.set({
+					ID: decoded.sub,
+					name: decoded.name,
+					email: decoded.email,
+					picture: decoded.picture
+				});
+				return true;
+			}
+		} catch {
 			return false;
-		} else {
-			IDToken.set(loginInfo.token);
-			TeamID.set(loginInfo.team_id);
-			userInfo.set({
-				ID: decoded.sub,
-				name: decoded.name,
-				email: decoded.email,
-				picture: decoded.picture
-			});
-			return true;
 		}
 	}
 
@@ -49,7 +53,8 @@
 		});
 		(async () => {
 			const creds = getCookie('jwt_login');
-			if (!(await loginWithToken(creds))) {
+			const success = await loginWithToken(creds);
+			if (!success) {
 				eraseCookie('jwt_login');
 				window.google.accounts.id.renderButton(ref, {
 					type: 'standard'
