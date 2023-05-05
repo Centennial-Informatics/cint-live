@@ -18,7 +18,7 @@
 	}
 
 	function alertEnd() {
-		alert('CInT has ended. Results will be revealed in the Auditorium!');
+		alert('CInT has ended. Results will be revealed in the Media Center!');
 		window.location.reload();
 	}
 
