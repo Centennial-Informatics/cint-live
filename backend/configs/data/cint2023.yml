@@ -8,7 +8,7 @@ points: # required
   s2: 200
   a: 100
   b: 150
-  c: 200
+#  c: 200
   d: 250
   e: 300
   f: 350
