@@ -62,18 +62,21 @@ func (ts *TokenService) UpdateToken(userID string, teamID string, length int) st
 		}
 	}
 
-	ts.token[userID] = utils.GenerateSecureToken(length)
-	if _, ok := ts.user[ts.token[userID]]; !ok {
-		ts.user[ts.token[userID]] = &AuthUser{
+	newToken := utils.GenerateSecureToken(length)
+
+	if _, ok := ts.user[newToken]; !ok {
+		ts.user[newToken] = &AuthUser{
 			ID:     userID,
 			TeamID: teamID,
 			Conn:   make([]*websocket.Conn, 0),
 		}
 	}
 
+	ts.token[userID] = newToken
+
 	ts.newTeamIfNecessary(teamID)
 
-	return ts.token[userID]
+	return newToken
 }
 
 func (ts *TokenService) SetConnection(token string, c interface{}) error {

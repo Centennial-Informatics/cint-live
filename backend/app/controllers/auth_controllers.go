@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"servermodule/app/database"
 	"servermodule/app/models"
 	"servermodule/app/scraper"
@@ -51,8 +52,17 @@ func Login(c *fiber.Ctx, config *models.Configuration, ts *models.TokenService, 
 
 	team, _ := db.GetTeamByCode(db.GetUser(userID).TeamCode)
 
+	token := ts.UpdateToken(userID, team.Code, config.AuthTokenLength)
+
+	user, err := ts.AuthorizeUser(token)
+	if err != nil {
+		log.Println("Failed to authorize", user)
+	}
+
+	log.Println("logging in", token)
+
 	return c.JSON(map[string]string{
-		"token":   ts.UpdateToken(userID, team.Code, config.AuthTokenLength),
+		"token":   token,
 		"team_id": team.Code,
 	})
 }
