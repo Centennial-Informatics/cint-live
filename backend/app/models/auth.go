@@ -1,9 +1,9 @@
 package models
 
 import (
+	"encoding/base64"
 	"errors"
 	"log"
-	"servermodule/utils"
 
 	"github.com/gofiber/websocket/v2"
 )
@@ -60,10 +60,14 @@ func (ts *TokenService) UpdateToken(userID string, teamID string, length int) st
 		if _, ok = ts.user[ts.token[userID]]; ok {
 			log.Println("Returning old token", ts.token[userID])
 			return ts.token[userID]
+		} else {
+			log.Println("User has token but not in mem", ts.user)
 		}
+	} else {
+		log.Println("No user token", ts.token)
 	}
 
-	newToken := utils.GenerateSecureToken(length)
+	newToken := base64.StdEncoding.EncodeToString([]byte(userID + teamID))
 
 	log.Println("Return new token", newToken)
 
