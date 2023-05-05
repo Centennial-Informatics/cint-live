@@ -17,7 +17,7 @@
 	<div class="flex space-x-10">
 		<NavLink to="/" tabId="home">Home</NavLink>
 		<NavLink to="/standings" tabId="standings">Scoreboard</NavLink>
-		<NavLink to="/challenges" tabId="challenges">Challenges</NavLink>
+		<!--<NavLink to="/challenges" tabId="challenges">Challenges</NavLink>-->
 		<div class="flex-grow" />
 		<Profile />
 	</div>
