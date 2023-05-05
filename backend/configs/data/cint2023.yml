@@ -21,4 +21,5 @@ points: # required
   m: 700
   n: 750
   o: 800
+  p: 100
 scoreboardfreeze: 2700 # seconds until contest end when scoreboard is initially frozen
