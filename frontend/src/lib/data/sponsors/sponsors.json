@@ -6,63 +6,21 @@
 		"tier": "Platinum"
 	},
 	{
-		"name": "Star League",
-		"link": "https://starleague.us/",
-		"logo": "/sponsors/star-league.png",
-		"tier": "Platinum"
-	},
-	{
-		"name": "Dragos",
-		"link": "https://www.dragos.com/",
-		"logo": "/sponsors/dragos.png",
+		"name": "IndSoft",
+		"link": "https://independentsoftware.com/",
+		"logo": "/sponsors/IndSoft.png",
 		"tier": "Gold"
 	},
 	{
-		"name": "X-Camp",
-		"link": "https://x-camp.academy/",
-		"logo": "/sponsors/x-camp.png",
+		"name": "Wegmans",
+		"link": "https://www.wegmans.com/",
+		"logo": "/sponsors/wegmans.png",
 		"tier": "Gold"
 	},
 	{
-		"name": "Comso",
-		"link": "https://comso.com/",
-		"logo": "/sponsors/comso.png",
-		"tier": "Silver"
-	},
-	{
-		"name": "Smyth Jewelers",
-		"link": "https://www.smythjewelers.com/",
-		"logo": "/sponsors/smyth-jewelers.png",
-		"tier": "Silver"
-	},
-	{
-		"name": "AoPS",
+		"name": "AOPS",
 		"link": "https://artofproblemsolving.com/",
 		"logo": "/sponsors/aops.png",
-		"tier": "Silver"
-	},
-	{
-		"name": "CyberWire",
-		"link": "https://thecyberwire.com/",
-		"logo": "/sponsors/cyberwire.png",
-		"tier": "Silver"
-	},
-	{
-		"name": "Linode",
-		"link": "https://www.linode.com/",
-		"logo": "/sponsors/linode.png",
-		"tier": "Silver"
-	},
-	{
-		"name": "1Password",
-		"link": "https://1password.com/",
-		"logo": "/sponsors/1password.png",
-		"tier": "Bronze"
-	},
-	{
-		"name": "Balsamiq",
-		"link": "https://balsamiq.com/",
-		"logo": "/sponsors/balsamiq.png",
 		"tier": "Bronze"
 	},
 	{
@@ -72,21 +30,9 @@
 		"tier": "Bronze"
 	},
 	{
-		"name": "JetBrains",
-		"link": "https://www.jetbrains.com/",
-		"logo": "/sponsors/jetbrains.png",
-		"tier": "Bronze"
-	},
-	{
 		"name": "Taskade",
 		"link": "https://www.taskade.com/",
 		"logo": "/sponsors/taskade.png",
-		"tier": "Bronze"
-	},
-	{
-		"name": "Wolfram",
-		"link": "https://www.wolfram.com/",
-		"logo": "/sponsors/wolfram.png",
 		"tier": "Bronze"
 	}
 ]
