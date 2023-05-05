@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"log"
 	"servermodule/utils"
 
 	"github.com/gofiber/websocket/v2"
@@ -35,6 +36,8 @@ func (ts *TokenService) AuthorizeUser(token string) (string, error) {
 	user, ok := ts.user[token]
 
 	if !ok {
+		log.Println("Failed login:", token)
+		log.Println(ts.user)
 		return "", errors.New("Unauthorized")
 	}
 

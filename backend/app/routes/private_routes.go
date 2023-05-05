@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"log"
 	"servermodule/app/controllers"
 	"servermodule/app/database"
 	"servermodule/app/models"
@@ -45,6 +46,9 @@ func PrivateTimeAPIRoutes(router fiber.Router, config *models.Configuration,
 	router.Post("/submit", func(c *fiber.Ctx) error {
 		userID, err := ts.AuthorizeUser(c.FormValue("token"))
 		if err != nil || utils.IsAfter(config.StopTime) { // no new submissions after contest ends
+			if err != nil {
+				log.Println("Submission error:", err)
+			}
 			return c.SendStatus(constants.StatusUnauthorized)
 		}
 

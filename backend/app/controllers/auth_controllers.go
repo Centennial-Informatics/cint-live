@@ -166,7 +166,7 @@ func LeaveTeam(c *fiber.Ctx, userID string, db *database.ContestDB, ts *models.T
 
 func UpdateTeamDivision(c *fiber.Ctx, userID string, db *database.ContestDB) error {
 	code := db.GetUser(userID).TeamCode
-	team, _ := db.GetTeamByCode(code)
+	// team, _ := db.GetTeamByCode(code)
 
 	if division := c.FormValue("division"); division != "" {
 		if division == "Standard" || division == "Advanced" {
