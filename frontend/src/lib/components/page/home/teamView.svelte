@@ -61,10 +61,6 @@
 	<div class="py-8 flex flex-col w-full px-8 items-center space-y-6">
 		<TeamCode teamCode={teamInfo.code} />
 		<div class="w-full space-y-2">
-			<div>
-				<Subtitle>Division Selection</Subtitle>
-				<DivisionSelect {updateTeamDivision} />
-			</div>
 			<Subtitle>
 				{#if error === ''}
 					Team Name
