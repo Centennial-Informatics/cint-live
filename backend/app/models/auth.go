@@ -58,11 +58,14 @@ func (ts *TokenService) UpdateToken(userID string, teamID string, length int) st
 	_, ok := ts.token[userID]
 	if ok {
 		if _, ok = ts.user[ts.token[userID]]; ok {
+			log.Println("Returning old token", ts.token[userID])
 			return ts.token[userID]
 		}
 	}
 
 	newToken := utils.GenerateSecureToken(length)
+
+	log.Println("Return new token", newToken)
 
 	if _, ok := ts.user[newToken]; !ok {
 		ts.user[newToken] = &AuthUser{

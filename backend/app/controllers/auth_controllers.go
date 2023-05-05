@@ -52,12 +52,9 @@ func Login(c *fiber.Ctx, config *models.Configuration, ts *models.TokenService, 
 
 	team, _ := db.GetTeamByCode(db.GetUser(userID).TeamCode)
 
-	token := ts.UpdateToken(userID, team.Code, config.AuthTokenLength)
+	log.Println("Login stuff", userID, team.Code)
 
-	user, err := ts.AuthorizeUser(token)
-	if err != nil {
-		log.Println("Failed to authorize", user)
-	}
+	token := ts.UpdateToken(userID, team.Code, config.AuthTokenLength)
 
 	log.Println("logging in", token)
 
