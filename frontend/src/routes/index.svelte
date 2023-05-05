@@ -51,7 +51,7 @@
 		startTimeString = startTimeStr;
 		stopTimeString = stopTimeStr;
 	});
-	let location = 'Centennial High School Cafeteria';
+	let location = 'Centennial High School Media Center';
 </script>
 
 <Wrapper transparent>
@@ -83,7 +83,7 @@
 					others to your team. Team names and members will be locked at the start of the
 					competition.
 				{:else}
-					CInT 2022 has concluded. Standings will be revealed in the Auditorium and updated on this
+					CInT 2023 has concluded. Standings will be revealed in the Media Center and updated on this
 					site later. Use the links above if you wish to make practice submissions to the contest
 					problems. Thank you for attending and we hope to have you back next year!
 				{/if}
