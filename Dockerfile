@@ -1,7 +1,7 @@
 # ~35mb final image size
 
 # Build backend binary file
-FROM golang:1.16-alpine as backend_build
+FROM golang:1.20-alpine as backend_build
 
 COPY backend /go/src/app/backend
 
