@@ -38,8 +38,10 @@ func (ts *TokenService) AuthorizeUser(token string) (string, error) {
 	if !ok {
 		log.Println("Failed login:", token)
 		log.Println(ts.user)
+		log.Println(ts.token)
 		return "", errors.New("Unauthorized")
 	}
+	log.Println("ok", ts.user)
 
 	return user.ID, nil
 }
@@ -53,8 +55,11 @@ func (ts *TokenService) newTeamIfNecessary(teamID string) {
 }
 
 func (ts *TokenService) UpdateToken(userID string, teamID string, length int) string {
-	if _, ok := ts.token[userID]; ok {
-		return ts.token[userID]
+	_, ok := ts.token[userID]
+	if ok {
+		if _, ok = ts.user[ts.token[userID]]; ok {
+			return ts.token[userID]
+		}
 	}
 
 	ts.token[userID] = utils.GenerateSecureToken(length)
