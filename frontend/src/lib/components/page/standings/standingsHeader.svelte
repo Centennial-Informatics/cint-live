@@ -20,7 +20,7 @@
 	<Subtitle>
 		{#if frozen}
 			Scoreboard is frozen. Final results will be revealed at the closing ceremony in the
-			Auditorium.
+			Media Center.
 		{:else}
 			Refresh page to update. Tiebreaker is the time of the most recent submission. Submit at least
 			once to be included in the standings.
