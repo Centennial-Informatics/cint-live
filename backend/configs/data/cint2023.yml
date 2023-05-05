@@ -1,6 +1,6 @@
 contestid: 382834
 contesturl: https://codeforces.com/gym/382834
-starttime: "2023-05-05T2:10:00-04:00" # required
+starttime: "2023-05-05T17:00:00-04:00" # required
 stoptime: "2023-05-05T20:45:00-04:00" # required
 maxteamsize: 4
 points: # required
